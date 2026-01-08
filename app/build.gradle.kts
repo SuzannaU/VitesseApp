@@ -63,8 +63,8 @@ dependencies {
 
     // Kotlin
     implementation(libs.androidx.core.ktx)
-    implementation(libs.coroutines.core)
-    implementation(libs.coroutines.android)
+    runtimeOnly(libs.coroutines.core)
+    runtimeOnly(libs.coroutines.android)
     testImplementation(libs.coroutines.test)
 
     // Koin
