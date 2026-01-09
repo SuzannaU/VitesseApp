@@ -9,10 +9,33 @@ data class CandidateDto(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "candidateId")
-    var id: Long = 0,
+    var candidateId: Long = 0,
 
     @ColumnInfo(name = "firstname")
-    var name: String,
+    var firstname: String,
 
+    @ColumnInfo(name = "lastname")
+    var lastname: String,
+
+    @ColumnInfo(name = "photo")
+    var photo: String,
+
+    @ColumnInfo(name = "phone")
+    var phone: String,
+
+    @ColumnInfo(name = "email")
+    var email: String,
+
+    @ColumnInfo(name = "birthdate")
+    var birthdate: Long,
+
+    @ColumnInfo(name = "salary_in_euro")
+    var salaryInEur: Int,
+
+    @ColumnInfo(name = "notes")
+    var notes: String,
+
+    @ColumnInfo(name = "is_favorite")
+    var isFavorite: Boolean = false,
 ) {
 }

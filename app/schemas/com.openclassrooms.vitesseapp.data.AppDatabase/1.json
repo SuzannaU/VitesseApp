@@ -2,22 +2,70 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f5f812c47a274d821d06cd73385f2e1a",
+    "identityHash": "ffe79f1226d6acf639a70a2787a6b4eb",
     "entities": [
       {
         "tableName": "candidates",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`candidateId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `firstname` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`candidateId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `firstname` TEXT NOT NULL, `lastname` TEXT NOT NULL, `photo` TEXT NOT NULL, `phone` TEXT NOT NULL, `email` TEXT NOT NULL, `birthdate` INTEGER NOT NULL, `salary_in_euro` INTEGER NOT NULL, `notes` TEXT NOT NULL, `is_favorite` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
+            "fieldPath": "candidateId",
             "columnName": "candidateId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "name",
+            "fieldPath": "firstname",
             "columnName": "firstname",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastname",
+            "columnName": "lastname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photo",
+            "columnName": "photo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "birthdate",
+            "columnName": "birthdate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "salaryInEur",
+            "columnName": "salary_in_euro",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "is_favorite",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -31,7 +79,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f5f812c47a274d821d06cd73385f2e1a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ffe79f1226d6acf639a70a2787a6b4eb')"
     ]
   }
 }

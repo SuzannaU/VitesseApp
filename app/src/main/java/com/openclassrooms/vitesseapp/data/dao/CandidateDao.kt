@@ -13,7 +13,7 @@ interface CandidateDao {
     suspend fun saveCandidate(candidate: CandidateDto)
 
     @Query("SELECT * FROM candidates")
-    fun getAllCandidates(): Flow<CandidateDto>
+    fun getAllCandidates(): Flow<List<CandidateDto>>
 
     @Query("SELECT * FROM candidates WHERE candidateId = :id")
     suspend fun getCandidateById(id: Long): CandidateDto

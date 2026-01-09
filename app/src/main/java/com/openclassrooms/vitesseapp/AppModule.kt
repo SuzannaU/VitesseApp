@@ -5,9 +5,13 @@ import androidx.room.Room
 import com.openclassrooms.vitesseapp.data.AppDatabase
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepository
+import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
+import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
+import com.openclassrooms.vitesseapp.ui.AddViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 //fun provideCoroutineScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -31,5 +35,8 @@ val appModule = module {
     single { provideDatabase(get()) }
     single { provideCandidateDao(get()) }
     single { CandidateRepository(get()) }
+    single { LoadCandidateUseCase(get()) }
+    single { SaveCandidateUseCase(get()) }
+    viewModel { AddViewModel(get()) }
 
 }
