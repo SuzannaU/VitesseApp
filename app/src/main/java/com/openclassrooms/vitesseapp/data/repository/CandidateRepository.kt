@@ -1,6 +1,7 @@
 package com.openclassrooms.vitesseapp.data.repository
 
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
+import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -12,8 +13,9 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
         return Candidate.fromDto(candidateDto, 98)
     }
 
-    suspend fun saveCandidate(candidate: Candidate) {
-        candidateDao.saveCandidate(candidate.toDto())
+    suspend fun saveCandidate(candidate: CandidateDto) {
+        //candidateDao.saveCandidate(candidate.toDto())
+        candidateDao.saveCandidate(candidate)
     }
 
     suspend fun deleteCandidate(candidateId: Long) {

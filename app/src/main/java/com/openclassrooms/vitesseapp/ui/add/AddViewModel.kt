@@ -1,8 +1,8 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.ui.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +15,7 @@ class AddViewModel(
     private var _uiState = MutableStateFlow<AddUiState>(AddUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun saveCandidate(candidate: Candidate) {
+    fun saveCandidate(candidate: CandidateDto) {
         viewModelScope.launch {
             saveCandidateUseCase.execute(candidate)
         }
