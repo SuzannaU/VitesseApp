@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">VitesseApp</string>
-    <string name="profile_pic_descr">Profile picture</string>
+    <string name="profile_pic_descr">Photo de profil</string>
     <string name="person_icon">person icon</string>
-    <string name="firstname">Firstname</string>
-    <string name="lastname">Lastname</string>
-    <string name="save">Save</string>
-    <string name="phone">Phone</string>
+    <string name="firstname">Prénom</string>
+    <string name="lastname">Nom</string>
+    <string name="save">Sauvegarder</string>
+    <string name="phone">PHone</string>
     <string name="email">Email</string>
     <string name="select_a_date">Select a date</string>
     <string name="expected_salary">Expected salary</string>

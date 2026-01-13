@@ -27,12 +27,12 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add(binding.fragmentContainer.id, AddFragment.newInstance())
-            }
-        }
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.commit {
+//                setReorderingAllowed(true)
+//                replace(binding.fragmentContainer.id, AddFragment.newInstance())
+//            }
+//        }
 
         val toolbar: MaterialToolbar = binding.toolbar
         setSupportActionBar(toolbar)
