@@ -33,8 +33,5 @@ class MainActivity : AppCompatActivity() {
 //                replace(binding.fragmentContainer.id, AddFragment.newInstance())
 //            }
 //        }
-
-        val toolbar: MaterialToolbar = binding.toolbar
-        setSupportActionBar(toolbar)
     }
 }

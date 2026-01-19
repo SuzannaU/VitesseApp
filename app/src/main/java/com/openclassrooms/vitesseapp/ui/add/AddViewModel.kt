@@ -2,7 +2,6 @@ package com.openclassrooms.vitesseapp.ui.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.ui.CandidateFromForm
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -5,9 +5,12 @@ import androidx.room.Room
 import com.openclassrooms.vitesseapp.data.AppDatabase
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepository
+import com.openclassrooms.vitesseapp.data.storage.ImageStorage
+import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -29,8 +32,9 @@ val appModule = module {
     single { provideDatabase(get()) }
     single { provideCandidateDao(get()) }
     single { CandidateRepository(get()) }
-    single { LoadCandidateUseCase(get()) }
-    single { SaveCandidateUseCase(get()) }
+    single<ImageStorage> { InternalImageStorage(context = androidContext()) }
+    factory { LoadCandidateUseCase(get()) }
+    factory { SaveCandidateUseCase(get(), get()) }
     viewModel { AddViewModel(get()) }
 
 }

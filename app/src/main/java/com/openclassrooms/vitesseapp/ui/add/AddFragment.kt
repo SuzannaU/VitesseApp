@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.ui.CandidateFromForm
+import okio.IOException
 import okio.use
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -42,15 +42,16 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupToolbar()
+        setupNavigation()
         setupDatePicker()
         setupPhotoPicker()
         setupClickListeners()
     }
 
-    private fun setupToolbar() {
-        val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
-        toolbar?.title = R.string.add_candidate.toString()
+    private fun setupNavigation() {
+        binding.toolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStackImmediate()
+        }
     }
 
     private fun setupDatePicker() {
@@ -96,21 +97,16 @@ class AddFragment : Fragment() {
         binding.apply {
             btnSave.setOnClickListener {
 
-                var photoPath: String? = null
-                if (photoUri != null) {
-                    val savedFile = saveToInternalStorage(photoUri!!, "image_${System.currentTimeMillis()}.jpg")
-                    photoPath = savedFile?.absolutePath
-                }
-
                 val salaryString = tietSalary.text.toString()
-                val salaryInEur = if (salaryString.isNotEmpty()) Integer.parseInt(salaryString) else null
+                val salaryInEur =
+                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString) else null
 
                 val candidate = CandidateFromForm(
                     firstname = tietFirstname.text.toString(),
                     lastname = tietLastname.text.toString(),
-                    photo = photoPath,
+                    photoUri = photoUri,
                     phone = tietPhone.text.toString(),
-                    email =tietEmail.text.toString(),
+                    email = tietEmail.text.toString(),
                     birthdate = birthdateMillis,
                     salaryInEur = salaryInEur,
                     notes = tietNotes.text.toString(),
@@ -119,21 +115,5 @@ class AddFragment : Fragment() {
                 viewModel.saveCandidate(candidate)
             }
         }
-    }
-
-    private fun saveToInternalStorage(uri: Uri, fileName: String): File? {
-
-        val file = File(requireContext().filesDir, fileName)
-
-        val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return null
-        val outputStream = FileOutputStream(file)
-
-        inputStream.use { inputStream ->
-            outputStream.use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-        }
-
-        return file
     }
 }
