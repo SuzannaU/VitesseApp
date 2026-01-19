@@ -18,6 +18,7 @@ fun provideDatabase(application: Application): AppDatabase {
         AppDatabase::class.java,
         "app_database"
     )
+        .fallbackToDestructiveMigration(true)
         .build()
     return database
 }

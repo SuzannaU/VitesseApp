@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
+import com.openclassrooms.vitesseapp.ui.CandidateFromForm
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,11 +16,11 @@ class AddViewModel(
     private var _uiState = MutableStateFlow<AddUiState>(AddUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun saveCandidate(candidate: CandidateDto) {
+    fun saveCandidate(candidate: CandidateFromForm) {
         viewModelScope.launch {
             saveCandidateUseCase.execute(candidate)
         }
     }
 
-    class AddUiState()
+    class AddUiState()  // sealed interface?
 }

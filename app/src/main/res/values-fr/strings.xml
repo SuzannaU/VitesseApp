@@ -16,4 +16,5 @@
     <string name="dollar_icon">dollar icon</string>
     <string name="pen_icon">pen icon</string>
     <string name="note">Note</string>
+    <string name="add_candidate">Ajouter un candidat</string>
 </resources>

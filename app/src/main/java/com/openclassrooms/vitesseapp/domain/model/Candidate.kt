@@ -4,45 +4,27 @@ import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
-import java.time.ZoneOffset
+import java.time.ZoneId
 
 data class Candidate(
-    var candidateId: Long = 0,
-    var firstname: String,
-    var lastname: String,
-    var photo: String,
-    var phone: String,
-    var email: String,
-    var birthdate: LocalDate,
-    var age: Int,
-    var salaryInEur: Int,
-    var salaryInGbp: Int,
-    var notes: String,
-    var isFavorite: Boolean = false,
+    val candidateId: Long,
+    val firstname: String,
+    val lastname: String,
+    val photo: String?,
+    val phone: String,
+    val email: String,
+    val birthdate: Long,
+    val age: Int,
+    val salaryInEur: Int?,
+    val salaryInGbp: Int?,
+    val notes: String?,
+    val isFavorite: Boolean,
 ) {
-
-    fun toDto(): CandidateDto {
-        return CandidateDto(
-            this.candidateId,
-            this.firstname,
-            this.lastname,
-            this.photo,
-            this.phone,
-            this.email,
-            this.birthdate.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
-                .toEpochMilli(),
-            this.salaryInEur,
-            this.notes,
-            this.isFavorite
-        )
-    }
 
     companion object {
         fun fromDto(candidateDto: CandidateDto, rateToGbp: Int): Candidate {
-            val instant = Instant.ofEpochMilli(candidateDto.birthdate)
-            val birthdate = LocalDate.ofInstant(instant, ZoneOffset.systemDefault())
-            val age = Period.between(birthdate, LocalDate.now()).years
-            val salaryInGbp = candidateDto.salaryInEur * rateToGbp
+            val age = calculateAge(candidateDto.birthdate)
+            val salaryInGbp = candidateDto.salaryInEur?.let { it * rateToGbp }
 
             return Candidate(
                 candidateDto.candidateId,
@@ -51,13 +33,20 @@ data class Candidate(
                 candidateDto.photo,
                 candidateDto.phone,
                 candidateDto.email,
-                birthdate,
+                candidateDto.birthdate,
                 age,
                 candidateDto.salaryInEur,
                 salaryInGbp,
                 candidateDto.notes,
                 candidateDto.isFavorite,
             )
+        }
+
+        private fun calculateAge(birthdate: Long): Int {
+            val birthdateLocalDate = Instant.ofEpochMilli(birthdate)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+            return Period.between(birthdateLocalDate, LocalDate.now()).years
         }
     }
 

@@ -18,7 +18,7 @@ data class CandidateDto(
     var lastname: String,
 
     @ColumnInfo(name = "photo")
-    var photo: String,
+    var photo: String?,
 
     @ColumnInfo(name = "phone")
     var phone: String,
@@ -30,10 +30,10 @@ data class CandidateDto(
     var birthdate: Long,
 
     @ColumnInfo(name = "salary_in_euro")
-    var salaryInEur: Int,
+    var salaryInEur: Int?,
 
     @ColumnInfo(name = "notes")
-    var notes: String,
+    var notes: String?,
 
     @ColumnInfo(name = "is_favorite")
     var isFavorite: Boolean = false,

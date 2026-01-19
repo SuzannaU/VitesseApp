@@ -14,7 +14,6 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
     }
 
     suspend fun saveCandidate(candidate: CandidateDto) {
-        //candidateDao.saveCandidate(candidate.toDto())
         candidateDao.saveCandidate(candidate)
     }
 
