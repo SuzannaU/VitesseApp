@@ -51,6 +51,14 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    testOptions {
+        unitTests {
+            all {
+                it.useJUnitPlatform()
+            }
+        }
+    }
 }
 
 ksp {
@@ -95,6 +103,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     // Testing
+    runtimeOnly(libs.junit.platform)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)

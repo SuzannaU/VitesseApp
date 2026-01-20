@@ -47,6 +47,7 @@ moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", v
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil"}
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil"}
 
+junit-platform = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit"}
 junit = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
