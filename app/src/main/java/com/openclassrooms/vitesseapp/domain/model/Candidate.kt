@@ -7,19 +7,32 @@ import java.time.Period
 import java.time.ZoneId
 
 data class Candidate(
-    val candidateId: Long,
+    val candidateId: Long?,
     val firstname: String,
     val lastname: String,
     val photo: String?,
     val phone: String,
     val email: String,
     val birthdate: Long,
-    val age: Int,
+    val age: Int?,
     val salaryInEur: Int?,
     val salaryInGbp: Int?,
     val notes: String?,
-    val isFavorite: Boolean,
+    val isFavorite: Boolean?,
 ) {
+
+    fun toDto(): CandidateDto {
+        return CandidateDto(
+            firstname = this.firstname,
+            lastname = this.lastname,
+            photo = this.photo,
+            phone = this.phone,
+            email = this.email,
+            birthdate = this.birthdate,
+            salaryInEur = this.salaryInEur,
+            notes = this.notes,
+        )
+    }
 
     companion object {
         fun fromDto(candidateDto: CandidateDto, rateToGbp: Int): Candidate {

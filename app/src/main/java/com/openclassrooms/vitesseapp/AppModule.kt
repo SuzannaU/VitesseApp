@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.room.Room
 import com.openclassrooms.vitesseapp.data.AppDatabase
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
-import com.openclassrooms.vitesseapp.data.repository.CandidateRepository
-import com.openclassrooms.vitesseapp.data.storage.ImageStorage
+import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
+import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
 import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
+import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
@@ -30,11 +31,15 @@ fun provideCandidateDao(appDatabase: AppDatabase): CandidateDao = appDatabase.ge
 val appModule = module {
 
     single { provideDatabase(get()) }
+
     single { provideCandidateDao(get()) }
-    single { CandidateRepository(get()) }
-    single<ImageStorage> { InternalImageStorage(context = androidContext()) }
+
+    single<CandidateRepository> { CandidateRepositoryImpl(get()) }
+    single<ImageRepository> { InternalImageStorage(context = androidContext()) }
+
     factory { LoadCandidateUseCase(get()) }
     factory { SaveCandidateUseCase(get(), get()) }
+
     viewModel { AddViewModel(get()) }
 
 }

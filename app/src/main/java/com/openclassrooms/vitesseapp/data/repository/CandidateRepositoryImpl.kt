@@ -2,27 +2,28 @@ package com.openclassrooms.vitesseapp.data.repository
 
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.entity.CandidateDto
+import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class CandidateRepository(private val candidateDao: CandidateDao) {
+class CandidateRepositoryImpl(private val candidateDao: CandidateDao) : CandidateRepository{
 
-    suspend fun fetchCandidate(candidateId: Long): Candidate {
+    override suspend fun fetchCandidate(candidateId: Long): Candidate {
         val candidateDto = candidateDao.getCandidateById(candidateId)
         return Candidate.fromDto(candidateDto, 98)
     }
 
-    suspend fun saveCandidate(candidate: CandidateDto) {
+    override suspend fun saveCandidate(candidate: CandidateDto) {
         candidateDao.saveCandidate(candidate)
     }
 
-    suspend fun deleteCandidate(candidateId: Long) {
+    override suspend fun deleteCandidate(candidateId: Long) {
         candidateDao.deleteCandidateById(candidateId)
     }
 
     // at this point the list could be empty
-    fun fetchAllCandidates(): Flow<List<Candidate>> {
+    override fun fetchAllCandidates(): Flow<List<Candidate>> {
         return candidateDao.getAllCandidates()
             .map { dtoList ->
                 dtoList.map { dto ->

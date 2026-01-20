@@ -16,4 +16,6 @@
     <string name="pen_icon">pen icon</string>
     <string name="note">Note</string>
     <string name="add_candidate">Add a candidate</string>
+    <string name="mandatory_field">Mandatory field</string>
+    <string name="invalid_format">Invalid format</string>
 </resources>

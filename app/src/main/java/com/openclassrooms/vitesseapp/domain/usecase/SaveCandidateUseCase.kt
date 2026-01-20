@@ -1,18 +1,17 @@
 package com.openclassrooms.vitesseapp.domain.usecase
 
-import com.openclassrooms.vitesseapp.data.repository.CandidateRepository
-import com.openclassrooms.vitesseapp.data.storage.ImageStorage
-import com.openclassrooms.vitesseapp.domain.model.toDto
-import com.openclassrooms.vitesseapp.ui.CandidateFromForm
+import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
+import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
+import com.openclassrooms.vitesseapp.ui.CandidateUI
 
 class SaveCandidateUseCase(
     private val candidateRepository: CandidateRepository,
-    private val imageStorage: ImageStorage,
+    private val imageRepository: ImageRepository,
 ) {
-    suspend fun execute(candidate: CandidateFromForm) {
+    suspend fun execute(candidate: CandidateUI) {
 
         val photoPath = candidate.photoUri?.let {
-            imageStorage.saveImage(it)
+            imageRepository.saveImage(it)
         }
 
         val candidateDto = candidate.toDto(photoPath)

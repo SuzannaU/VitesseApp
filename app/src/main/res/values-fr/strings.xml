@@ -17,4 +17,6 @@
     <string name="pen_icon">pen icon</string>
     <string name="note">Note</string>
     <string name="add_candidate">Ajouter un candidat</string>
+    <string name="mandatory_field">Champ obligatoire</string>
+    <string name="invalid_format">Format invalide</string>
 </resources>

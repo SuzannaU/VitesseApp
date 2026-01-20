@@ -3,12 +3,13 @@ package com.openclassrooms.vitesseapp.data.storage
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
 import okio.IOException
 import okio.use
 import java.io.File
 import java.io.FileOutputStream
 
-class InternalImageStorage(private val context: Context) : ImageStorage {
+class InternalImageStorage(private val context: Context) : ImageRepository {
     override suspend fun saveImage(uri: Uri): String {
 
         lateinit var file: File

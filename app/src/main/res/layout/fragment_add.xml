@@ -58,6 +58,7 @@
                 android:textColorHint="?attr/colorOnSurfaceVariant"
                 app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
+                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/person_icon"
                 app:layout_constraintTop_toBottomOf="@id/profile_photo">
 
@@ -82,6 +83,7 @@
                 android:textColorHint="?attr/colorOnSurfaceVariant"
                 app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
+                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/person_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_firstname">
 
@@ -116,6 +118,7 @@
                 android:textColorHint="?attr/colorOnSurfaceVariant"
                 app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
+                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/phone_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_lastname">
 
@@ -150,6 +153,7 @@
                 android:textColorHint="?attr/colorOnSurfaceVariant"
                 app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
+                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/email_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_phone">
 
@@ -184,6 +188,7 @@
                 android:textColorHint="?attr/colorOnSurfaceVariant"
                 app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
+                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/cake_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_email">
 

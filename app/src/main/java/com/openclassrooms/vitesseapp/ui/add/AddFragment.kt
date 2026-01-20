@@ -2,32 +2,29 @@ package com.openclassrooms.vitesseapp.ui.add
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
-import com.openclassrooms.vitesseapp.ui.CandidateFromForm
-import okio.IOException
-import okio.use
+import com.openclassrooms.vitesseapp.ui.CandidateUI
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class AddFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = AddFragment()
-    }
 
     private lateinit var binding: FragmentAddBinding
     private val viewModel: AddViewModel by viewModel()
 
-    private lateinit var datePicker: MaterialDatePicker<Long>
     private var birthdateMillis: Long = 0
     private var photoUri: Uri? = null
 
@@ -45,7 +42,8 @@ class AddFragment : Fragment() {
         setupNavigation()
         setupDatePicker()
         setupPhotoPicker()
-        setupClickListeners()
+        setupSaveButton()
+        setupEmailListener()
     }
 
     private fun setupNavigation() {
@@ -55,9 +53,15 @@ class AddFragment : Fragment() {
     }
 
     private fun setupDatePicker() {
-        datePicker = MaterialDatePicker.Builder.datePicker()
+
+        val constraintsBuilder = CalendarConstraints.Builder().setValidator(
+            DateValidatorPointBackward.now()
+        )
+
+        val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(R.string.select_a_date)
             .setInputMode(MaterialDatePicker.INPUT_MODE_TEXT)
+            .setCalendarConstraints(constraintsBuilder.build())
             .build()
 
         binding.tietBirthdate.setOnClickListener {
@@ -93,15 +97,15 @@ class AddFragment : Fragment() {
         }
     }
 
-    private fun setupClickListeners() {
+    private fun setupSaveButton() {
         binding.apply {
             btnSave.setOnClickListener {
 
                 val salaryString = tietSalary.text.toString()
                 val salaryInEur =
-                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString) else null
+                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()) else null
 
-                val candidate = CandidateFromForm(
+                val candidate = CandidateUI(
                     firstname = tietFirstname.text.toString(),
                     lastname = tietLastname.text.toString(),
                     photoUri = photoUri,
@@ -112,8 +116,74 @@ class AddFragment : Fragment() {
                     notes = tietNotes.text.toString(),
                 )
 
-                viewModel.saveCandidate(candidate)
+                if (validateCandidate(candidate)) {
+                    viewModel.saveCandidate(candidate)
+                    // TODO : go back to home screen
+                }
             }
         }
+    }
+
+    private fun validateCandidate(candidate: CandidateUI): Boolean {
+        var isValid = true
+        binding.apply {
+            isValid = validateField(!candidate.firstname.isBlank(), tipFirstname) && isValid
+            isValid = validateField(!candidate.lastname.isBlank(), tipLastname) && isValid
+            isValid = validateField(!candidate.phone.isBlank(), tipPhone) && isValid
+            isValid = validateField(!candidate.email.isBlank(), tipEmail) && isValid
+            isValid = validateField(candidate.birthdate != 0L, tipBirthdate) && isValid
+        }
+        return isValid
+    }
+
+    private fun validateField(
+        validCondition: Boolean,
+        tip: TextInputLayout,
+    ) : Boolean {
+
+        val errorMessage = getString(R.string.mandatory_field)
+        if(validCondition) {
+            tip.error = null
+            return true
+        } else {
+            tip.error = errorMessage
+            return false
+        }
+    }
+
+    private fun setupEmailListener() {
+        binding.tietEmail.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (Patterns.EMAIL_ADDRESS.matcher(binding.tietEmail.text.toString())
+                        .matches()
+                ) {
+                    binding.tipEmail.error = null
+                } else {
+                    binding.tipEmail.error = getString(R.string.invalid_format)
+                }
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+            }
+
+        })
+    }
+
+
+    companion object {
+        fun newInstance() = AddFragment()
     }
 }
