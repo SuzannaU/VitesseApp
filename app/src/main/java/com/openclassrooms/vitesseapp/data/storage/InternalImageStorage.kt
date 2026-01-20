@@ -10,6 +10,9 @@ import java.io.File
 import java.io.FileOutputStream
 
 class InternalImageStorage(private val context: Context) : ImageRepository {
+
+    // TODO : if enough time, make the whole class testable
+
     override suspend fun saveImage(uri: Uri): String {
 
         lateinit var file: File
