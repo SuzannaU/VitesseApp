@@ -2,11 +2,12 @@ package com.openclassrooms.vitesseapp.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.vitesseapp.databinding.ItemCandidateBinding
-import com.openclassrooms.vitesseapp.ui.CandidateUI
+import com.openclassrooms.vitesseapp.domain.model.Candidate
 
-class CandidateAdapter(var candidates: List<CandidateUI>) : RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
+class CandidateAdapter(var candidates: List<Candidate>) : RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
 
 
     override fun onCreateViewHolder(
@@ -29,15 +30,16 @@ class CandidateAdapter(var candidates: List<CandidateUI>) : RecyclerView.Adapter
         return candidates.size
     }
 
-    fun updateCandidates(candidates: List<CandidateUI>) {
+    fun updateCandidates(candidates: List<Candidate>) {
         this.candidates = candidates
         notifyDataSetChanged()
     }
 
-    inner class CandidateViewHolder(val binding: ItemCandidateBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CandidateViewHolder(val binding: ItemCandidateBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(candidate: CandidateUI) {
+        fun bind(candidate: Candidate) {
             binding.apply {
+                ivThumbnail.setImageURI(candidate.photoPath?.toUri())
                 tvName.text = candidate.firstname
                 tvNotes.text = candidate.notes
             }

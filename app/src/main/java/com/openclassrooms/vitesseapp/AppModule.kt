@@ -8,10 +8,12 @@ import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
 import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
 import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
+import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
+import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -39,9 +41,11 @@ val appModule = module {
     single<ImageRepository> { InternalImageStorage(context = androidContext()) }
 
     factory { LoadCandidateUseCase(get()) }
+    factory { LoadAllCandidatesUseCase(get()) }
     factory { SaveCandidateUseCase(get()) }
     factory { SaveImageUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
+    viewModel { HomeViewModel(get()) }
 
 }

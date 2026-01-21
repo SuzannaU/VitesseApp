@@ -23,7 +23,7 @@ data class CandidateUI(
         return Candidate(
             firstname = this.firstname,
             lastname = this.lastname,
-            photo = photoPath,
+            photoPath = photoPath,
             phone = this.phone,
             email = this.email,
             birthdate = this.birthdate,
@@ -38,5 +38,20 @@ data class CandidateUI(
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
         return Period.between(birthdateLocalDate, LocalDate.now()).years
+    }
+
+    companion object {
+        fun fromDomain(candidate: Candidate): CandidateUI {
+            return CandidateUI(
+                firstname = candidate.firstname,
+                lastname = candidate.lastname,
+                photoUri = null,
+                phone = candidate.phone,
+                email = candidate.email,
+                birthdate = candidate.birthdate,
+                salaryInEur = candidate.salaryInEur,
+                notes = candidate.notes,
+            )
+        }
     }
 }

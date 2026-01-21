@@ -9,5 +9,5 @@ interface CandidateRepository {
     suspend fun fetchCandidate(candidateId: Long): Candidate
     suspend fun saveCandidate(candidate: CandidateDto)
     suspend fun deleteCandidate(candidateId: Long)
-    fun fetchAllCandidates(): Flow<List<Candidate>>
+    fun fetchAllCandidates(): Flow<List<CandidateDto>>
 }

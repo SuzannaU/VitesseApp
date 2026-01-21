@@ -23,12 +23,7 @@ class CandidateRepositoryImpl(private val candidateDao: CandidateDao) : Candidat
     }
 
     // at this point the list could be empty
-    override fun fetchAllCandidates(): Flow<List<Candidate>> {
+    override fun fetchAllCandidates(): Flow<List<CandidateDto>> {
         return candidateDao.getAllCandidates()
-            .map { dtoList ->
-                dtoList.map { dto ->
-                    Candidate.fromDto(dto, 98)
-                }
-            }
     }
 }
