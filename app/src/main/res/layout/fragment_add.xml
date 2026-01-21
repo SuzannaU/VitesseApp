@@ -7,19 +7,18 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/VitesseToolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="?attr/colorSurface"
-        app:title="@string/add_candidate"
-        app:titleTextColor="?attr/colorOnSurface"
-        android:fontFamily="@font/roboto_regular"
+        app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_left_alt_24dp_on_surface_variant"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:title="@string/add_candidate" />
 
     <ScrollView
         android:id="@+id/add_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
@@ -32,9 +31,10 @@
                 android:id="@+id/profile_photo"
                 android:layout_width="373dp"
                 android:layout_height="195dp"
+                android:background="?attr/colorSurfaceVariant"
                 android:contentDescription="@string/profile_pic_descr"
-                android:src="@drawable/photo_library_72dp_on_surface_variant"
                 android:scaleType="centerInside"
+                android:src="@drawable/photo_library_72dp_on_surface_variant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -51,50 +51,42 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_firstname"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/firstname"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
-                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/person_icon"
                 app:layout_constraintTop_toBottomOf="@id/profile_photo">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_firstname"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
                     android:lineHeight="24dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp"
                     tools:text="John" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_lastname"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/lastname"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
-                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/person_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_firstname">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_lastname"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
                     android:lineHeight="24dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp"
                     tools:text="Doe" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -111,26 +103,22 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_phone"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/phone"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
-                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/phone_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_lastname">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_phone"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
                     android:inputType="phone"
-                    android:lineHeight="24dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp" />
+                    android:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,26 +134,22 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_email"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/email"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
-                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/email_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_phone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_email"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
                     android:inputType="textEmailAddress"
-                    android:lineHeight="24dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp" />
+                    android:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -181,27 +165,23 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_birthdate"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/select_a_date"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
                 app:errorEnabled="true"
-                app:errorTextColor="?attr/colorError"
                 app:layout_constraintStart_toEndOf="@id/cake_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_birthdate"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:fontFamily="@font/roboto_regular"
                     android:inputType="none"
-                    android:lineHeight="24dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp" />
+                    android:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -217,25 +197,21 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_salary"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/expected_salary"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
-                app:errorEnabled="true"
                 app:layout_constraintStart_toEndOf="@id/money_icon"
                 app:layout_constraintTop_toBottomOf="@id/tip_birthdate">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_salary"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
                     android:inputType="numberSigned"
-                    android:lineHeight="24dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp" />
+                    android:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -251,29 +227,26 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_notes"
+                style="@style/VitesseTextInputLayout"
                 android:layout_width="332dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="100dp"
                 android:hint="@string/note"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                app:boxStrokeColor="?attr/colorOutline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/edit_icon"
-                app:layout_constraintTop_toBottomOf="@id/tip_salary"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/tip_salary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tiet_notes"
+                    style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top|start"
-                    android:fontFamily="@font/roboto_regular"
                     android:inputType="textMultiLine"
                     android:lineHeight="24dp"
                     android:lines="5"
-                    android:maxLines="10"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp" />
+                    android:maxLines="10" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -281,16 +254,13 @@
 
     </ScrollView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_save"
+        style="@style/VitesseButton"
         android:layout_width="364dp"
         android:layout_height="40dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:fontFamily="@font/roboto_medium"
         android:lineHeight="20dp"
         android:text="@string/save"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!---           Button style            -->
+    <style name="VitesseFloatingActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
+        <item name="tint">?attr/colorPrimary</item>
+    </style>
+    <style name="VitesseButton" parent="ShapeAppearanceOverlay.Material3.Button">
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!---           Text Input layout style            -->
+    <style name="VitesseTextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/VitesseTextAppearanceLabel</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="boxStrokeColor">?attr/colorOutline</item>
+        <item name="errorTextColor">?attr/colorError</item>
+    </style>
+    <style name="VitesseTextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="VitesseTextAppearanceLabel" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!---           Tab layout style            -->
+    <style name="VitesseTabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabTextAppearance">@style/VitesseTextAppearanceTab</item>
+        <item name="tabSelectedTextAppearance">@style/VitesseTextAppearanceSelectedTab</item>
+    </style>
+    <style name="VitesseTextAppearanceTab" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+    <style name="VitesseTextAppearanceSelectedTab" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <!---           Toolbar style            -->
+    <style name="VitesseToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="navigationIconTint">?attr/colorOnSurfaceVariant</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="titleTextAppearance">@style/VitesseTextAppearanceToolbar</item>
+    </style>
+    <style name="VitesseTextAppearanceToolbar" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+</resources>

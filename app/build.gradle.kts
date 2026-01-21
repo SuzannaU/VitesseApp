@@ -103,7 +103,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     // Testing
-    runtimeOnly(libs.junit.platform)
+    testRuntimeOnly(libs.junit.platform)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
