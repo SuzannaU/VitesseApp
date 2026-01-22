@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.vitesseapp.databinding.ItemCandidateBinding
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 
-class CandidateAdapter(var candidates: List<Candidate>) : RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
+class CandidateAdapter(var candidates: List<Candidate>) :
+    RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
 
 
     override fun onCreateViewHolder(
@@ -15,7 +16,8 @@ class CandidateAdapter(var candidates: List<Candidate>) : RecyclerView.Adapter<C
         viewType: Int
     ): CandidateViewHolder {
 
-        val binding = ItemCandidateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCandidateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CandidateViewHolder(binding)
     }
 
@@ -35,12 +37,17 @@ class CandidateAdapter(var candidates: List<Candidate>) : RecyclerView.Adapter<C
         notifyDataSetChanged()
     }
 
-    class CandidateViewHolder(val binding: ItemCandidateBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CandidateViewHolder(val binding: ItemCandidateBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(candidate: Candidate) {
             binding.apply {
                 ivThumbnail.setImageURI(candidate.photoPath?.toUri())
-                tvName.text = candidate.firstname
+                tvName.text = buildString {
+                    append(candidate.firstname)
+                    append(" ")
+                    append(candidate.lastname.uppercase())
+                }
                 tvNotes.text = candidate.notes
             }
         }

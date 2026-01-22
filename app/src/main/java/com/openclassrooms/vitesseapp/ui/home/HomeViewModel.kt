@@ -15,10 +15,6 @@ class HomeViewModel(
     private val _candidatesFlow = MutableStateFlow<List<Candidate>>(emptyList())
     val candidateFlow = _candidatesFlow.asStateFlow()
 
-    init {
-        loadAllCandidates()
-    }
-
     fun loadAllCandidates() {
         viewModelScope.launch {
             loadAllCandidatesUseCase.execute()

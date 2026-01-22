@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -18,6 +19,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.ui.CandidateUI
+import com.openclassrooms.vitesseapp.ui.home.HomeFragment
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : Fragment() {
@@ -117,8 +120,13 @@ class AddFragment : Fragment() {
                 )
 
                 if (validateCandidate(candidate)) {
-                    viewModel.saveCandidate(candidate)
-                    // TODO : go back to home screen
+                    lifecycleScope.launch {
+                        viewModel.saveCandidate(candidate)
+                    }
+                    parentFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, HomeFragment.newInstance())
+                        .commit()
                 }
             }
         }
@@ -181,7 +189,6 @@ class AddFragment : Fragment() {
 
         })
     }
-
 
     companion object {
         fun newInstance() = AddFragment()

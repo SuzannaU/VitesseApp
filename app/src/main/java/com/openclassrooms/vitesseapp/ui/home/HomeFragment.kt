@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
+import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentHomeBinding
 import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.ui.add.AddFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -38,6 +40,8 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
 
+        viewModel.loadAllCandidates()
+
         lifecycleScope.launch {
             viewModel.candidateFlow.collect { candidatesValue ->
                 candidates = candidatesValue
@@ -60,5 +64,18 @@ class HomeFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
+
+        val addFab = binding.fabAdd
+        addFab.setOnClickListener {
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, AddFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    companion object {
+        fun newInstance() = HomeFragment()
     }
 }
