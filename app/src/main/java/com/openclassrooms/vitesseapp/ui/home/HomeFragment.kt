@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var adapter: CandidateAdapter
+    var candidates: List<Candidate> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,23 +34,51 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var candidates: List<Candidate> = emptyList()
-
-        adapter = CandidateAdapter(candidates)
-        val recyclerView = binding.recyclerView
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = adapter
-
+        setupRecyclerView()
+        setupTabLayout()
+        setupButtons()
+        observeUiState()
         viewModel.loadAllCandidates()
+    }
 
+    private fun observeUiState() {
         lifecycleScope.launch {
-            viewModel.candidateFlow.collect { candidatesValue ->
-                candidates = candidatesValue
-                adapter.updateCandidates(candidates)
+            viewModel.homeStateFlow.collect { uiState ->
+                binding.apply {
+                    barLoading.isVisible = uiState is HomeViewModel.HomeUiState.LoadingState
+                    when (uiState) {
+
+                        is HomeViewModel.HomeUiState.CandidatesFound -> {
+                            candidates = uiState.candidates
+                            adapter.updateCandidates(candidates)
+                        }
+
+                        HomeViewModel.HomeUiState.LoadingState -> {
+                            barLoading.isVisible = true
+                        }
+
+                        HomeViewModel.HomeUiState.NoCandidateFound -> {
+                            tvNoCandidates.isVisible =
+                                true
+                        }
+                    }
+                }
             }
         }
+    }
 
+    private fun setupButtons() {
+        val addFab = binding.fabAdd
+        addFab.setOnClickListener {
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, AddFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun setupTabLayout() {
         val tabLayout = binding.tabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -64,15 +94,15 @@ class HomeFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
+    }
 
-        val addFab = binding.fabAdd
-        addFab.setOnClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, AddFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
-        }
+    private fun setupRecyclerView() {
+        adapter = CandidateAdapter(candidates)
+
+        val recyclerView = binding.recyclerView
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = adapter
     }
 
     companion object {

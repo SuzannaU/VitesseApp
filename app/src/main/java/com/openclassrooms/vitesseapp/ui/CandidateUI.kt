@@ -39,19 +39,4 @@ data class CandidateUI(
             .toLocalDate()
         return Period.between(birthdateLocalDate, LocalDate.now()).years
     }
-
-    companion object {
-        fun fromDomain(candidate: Candidate): CandidateUI {
-            return CandidateUI(
-                firstname = candidate.firstname,
-                lastname = candidate.lastname,
-                photoUri = null,
-                phone = candidate.phone,
-                email = candidate.email,
-                birthdate = candidate.birthdate,
-                salaryInEur = candidate.salaryInEur,
-                notes = candidate.notes,
-            )
-        }
-    }
 }

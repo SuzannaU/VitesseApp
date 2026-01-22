@@ -16,7 +16,6 @@ data class Candidate(
     val birthdate: Long,
     val age: Int?,
     val salaryInEur: Int?,
-    //val salaryInGbp: Int?,
     val notes: String?,
     val isFavorite: Boolean = false,
 ) {
@@ -36,9 +35,8 @@ data class Candidate(
 
     companion object {
 
-        fun fromDto(candidateDto: CandidateDto, rateToGbp: Int): Candidate {
+        fun fromDto(candidateDto: CandidateDto): Candidate {
             val age = calculateAge(candidateDto.birthdate)
-            //val salaryInGbp = candidateDto.salaryInEur?.let { it * rateToGbp }
 
             return Candidate(
                 candidateDto.candidateId,
@@ -50,7 +48,6 @@ data class Candidate(
                 candidateDto.birthdate,
                 age,
                 candidateDto.salaryInEur,
-                //salaryInGbp,
                 candidateDto.notes,
                 candidateDto.isFavorite,
             )
