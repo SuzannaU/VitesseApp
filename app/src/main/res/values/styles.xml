@@ -59,4 +59,15 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <!---           Searchbar style            -->
+    <style name="VitesseSearchbar" parent="Widget.Material3.SearchBar">
+        <item name="navigationIconTint">?attr/colorOnSurfaceVariant</item>
+        <item name="android:backgroundTint">?attr/colorSurfaceContainerHigh</item>
+        <item name="android:textAppearance">@style/VitesseTextAppearanceSearch</item>
+    </style>
+    <style name="VitesseTextAppearanceSearch" parent="TextAppearance.Material3.SearchBar">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+    </style>
 </resources>

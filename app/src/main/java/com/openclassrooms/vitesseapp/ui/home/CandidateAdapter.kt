@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.vitesseapp.databinding.ItemCandidateBinding
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 
-class CandidateAdapter(var candidates: List<Candidate>) :
+class CandidateAdapter(
+    var candidates: List<Candidate>,
+    val listener: OnItemClickListener,
+) :
     RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
 
 
@@ -25,7 +28,7 @@ class CandidateAdapter(var candidates: List<Candidate>) :
         holder: CandidateViewHolder,
         position: Int
     ) {
-        holder.bind(candidates[position])
+        holder.bind(candidates[position], listener)
     }
 
     override fun getItemCount(): Int {
@@ -37,21 +40,32 @@ class CandidateAdapter(var candidates: List<Candidate>) :
         notifyDataSetChanged()
     }
 
-    class CandidateViewHolder(val binding: ItemCandidateBinding) :
+    class CandidateViewHolder(
+        val binding: ItemCandidateBinding,
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(candidate: Candidate) {
+        fun bind(
+            candidate: Candidate,
+            listener: OnItemClickListener
+        ) {
+
+            val fullname = buildString {
+                append(candidate.firstname)
+                append(" ")
+                append(candidate.lastname.uppercase())
+            }
+
             binding.apply {
                 ivThumbnail.setImageURI(candidate.photoPath?.toUri())
-                tvName.text = buildString {
-                    append(candidate.firstname)
-                    append(" ")
-                    append(candidate.lastname.uppercase())
-                }
+                tvName.text = fullname
                 tvNotes.text = candidate.notes
+                root.setOnClickListener { listener.onItemCLick(candidate) }
             }
         }
     }
+}
 
-
+interface OnItemClickListener {
+    fun onItemCLick(item: Candidate)
 }

@@ -12,7 +12,7 @@ class LoadAllCandidatesUseCase(
         return candidateRepository.fetchAllCandidates()
             .map { candidatesDto ->
                 candidatesDto.map { dto ->
-                    Candidate.fromDto(dto, 98)
+                    Candidate.fromDto(dto)
                 }
             }
     }

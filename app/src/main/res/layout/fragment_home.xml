@@ -5,12 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/text_search"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:maxLength="100"
+        android:hint="Rechercher"
+        />
+
+    <com.google.android.material.search.SearchBar
+        style="@style/VitesseSearchbar"
+        android:id="@+id/search_bar"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        app:layout_constraintTop_toBottomOf="@id/text_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="@string/search"/>
+
+    <com.google.android.material.search.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Recherche"
+        app:layout_anchor="@+id/search_bar"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        app:layout_constraintStart_toStartOf="parent">
+    </com.google.android.material.search.SearchView>
+
     <com.google.android.material.tabs.TabLayout
         style="@style/VitesseTabLayout"
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
         >
 
         <com.google.android.material.tabs.TabItem
