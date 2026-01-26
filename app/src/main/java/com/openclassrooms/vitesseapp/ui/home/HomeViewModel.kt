@@ -3,6 +3,7 @@ package com.openclassrooms.vitesseapp.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val loadAllCandidatesUseCase: LoadAllCandidatesUseCase
+    private val loadAllCandidatesUseCase: LoadAllCandidatesUseCase,
+    private val filterByNameUseCase: FilterByNameUseCase,
 ) : ViewModel() {
 
     private val _homeStateFlow = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
@@ -19,7 +21,7 @@ class HomeViewModel(
 
     fun loadAllCandidates() {
         viewModelScope.launch {
-            delay(1000)
+            delay(1000)         // for demonstration purposes
             loadAllCandidatesUseCase.execute()
                 .collect { loadedCandidates ->
                     if (loadedCandidates.isEmpty()) {
@@ -32,22 +34,16 @@ class HomeViewModel(
         }
     }
 
-    fun loadSearchedCandidates(searchedText: String?) {
+    fun loadFilteredCandidates(searchedText: String?) {
         _homeStateFlow.value = HomeUiState.LoadingState
         viewModelScope.launch {
-            delay(1000)
-            if (searchedText != null && searchedText.isNotEmpty()) {
-                val filteredCandidates = allCandidates.filter {
-                    it.firstname == searchedText || it.lastname == searchedText
-                }
-                if (filteredCandidates.isEmpty()) {
-                    _homeStateFlow.value = HomeUiState.NoCandidateFound
-                } else {
-                    _homeStateFlow.value =
-                        HomeUiState.CandidatesFound(filteredCandidates)
-                }
+            delay(1000)         // for demonstration purposes
+            val filteredCandidates = filterByNameUseCase.execute(allCandidates, searchedText)
+            if (filteredCandidates.isEmpty()) {
+                _homeStateFlow.value = HomeUiState.NoCandidateFound
             } else {
-                _homeStateFlow.value = HomeUiState.CandidatesFound(allCandidates)
+                _homeStateFlow.value =
+                    HomeUiState.CandidatesFound(filteredCandidates)
             }
         }
     }

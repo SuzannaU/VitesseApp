@@ -8,6 +8,7 @@ import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
 import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
 import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
+import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
@@ -40,12 +41,13 @@ val appModule = module {
     single<CandidateRepository> { CandidateRepositoryImpl(get()) }
     single<ImageRepository> { InternalImageStorage(context = androidContext()) }
 
+    factory { FilterByNameUseCase() }
     factory { LoadCandidateUseCase(get()) }
     factory { LoadAllCandidatesUseCase(get()) }
     factory { SaveCandidateUseCase(get()) }
     factory { SaveImageUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 
 }

@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
     private fun setupSearchBar() {
         binding.tietSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                viewModel.loadSearchedCandidates(s.toString())
+                viewModel.loadFilteredCandidates(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
