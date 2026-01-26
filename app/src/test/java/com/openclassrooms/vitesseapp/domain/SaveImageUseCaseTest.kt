@@ -16,7 +16,7 @@ class SaveImageUseCaseTest {
     val saveImageUseCase = SaveImageUseCase(imageRepository)
 
     @Test
-    fun executeTest_shouldSendUriToRepository() = runTest {
+    fun execute_shouldSendUriToRepository() = runTest {
 
         val uri = mockk<Uri>()
         coEvery { imageRepository.saveImage(any()) } returns "path"

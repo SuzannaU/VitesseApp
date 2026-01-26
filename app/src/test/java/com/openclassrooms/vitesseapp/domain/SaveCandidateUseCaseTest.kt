@@ -18,12 +18,12 @@ class SaveCandidateUseCaseTest {
     val saveCandidateUseCase = SaveCandidateUseCase(candidateRepository)
 
     @Test
-    fun executeTest_shouldSendCandidateDtoToRepository() = runTest {
+    fun execute_shouldSendCandidateDtoToRepository() = runTest {
 
         val candidate = Candidate(
             firstname = "firstname",
             lastname = "lastname",
-            photo = "path",
+            photoPath = "path",
             phone = "123456",
             email = "email",
             birthdate = 1L,
@@ -35,7 +35,7 @@ class SaveCandidateUseCaseTest {
         val expectedCandidateDto = CandidateDto(
             firstname = "firstname",
             lastname = "lastname",
-            photo = "path",
+            photoPath = "path",
             phone = "123456",
             email = "email",
             birthdate = 1L,
@@ -52,5 +52,4 @@ class SaveCandidateUseCaseTest {
         assertEquals(expectedCandidateDto, candidateDtoCapture.captured)
         coVerify { candidateRepository.saveCandidate(any()) }
     }
-
 }
