@@ -25,7 +25,6 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var adapter: CandidateAdapter
     var candidates: List<Candidate> = emptyList()
-    var searchedText: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +50,7 @@ class HomeFragment : Fragment() {
             viewModel.homeStateFlow.collect { uiState ->
                 binding.apply {
                     barLoading.isVisible = uiState is HomeViewModel.HomeUiState.LoadingState
+                    tvNoCandidates.isVisible = uiState is HomeViewModel.HomeUiState.NoCandidateFound
                     when (uiState) {
 
                         is HomeViewModel.HomeUiState.CandidatesFound -> {
@@ -59,12 +59,13 @@ class HomeFragment : Fragment() {
                         }
 
                         HomeViewModel.HomeUiState.LoadingState -> {
-                            barLoading.isVisible = true
+                            candidates = emptyList()
+                            adapter.updateCandidates(candidates)
                         }
 
                         HomeViewModel.HomeUiState.NoCandidateFound -> {
-                            tvNoCandidates.isVisible =
-                                true
+                            candidates = emptyList()
+                            adapter.updateCandidates(candidates)
                         }
                     }
                 }
@@ -87,11 +88,10 @@ class HomeFragment : Fragment() {
         val tabLayout = binding.tabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val searchedCandidates = searchCandidates(candidates, searchedText)
                 when (tab?.position) {
-                    0 -> adapter.updateCandidates(searchedCandidates)
-                    1 -> adapter.updateCandidates(searchedCandidates
-                            .filter { it.isFavorite }
+                    0 -> adapter.updateCandidates(candidates)
+                    1 -> adapter.updateCandidates(
+                        candidates.filter { it.isFavorite }
                     )
                 }
             }
@@ -105,14 +105,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupSearchBar() {
-        binding.textSearch.addTextChangedListener(object : TextWatcher {
+        binding.tietSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                searchedText = s?.toString()
-                s?.let {
-                    adapter.updateCandidates(
-                        searchCandidates(candidates, s.toString())
-                    )
-                }
+                viewModel.loadSearchedCandidates(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -146,16 +141,6 @@ class HomeFragment : Fragment() {
             false
         )
         recyclerView.adapter = adapter
-    }
-
-    private fun searchCandidates(candidates: List<Candidate>, searchedName: String?): List<Candidate> {
-        return if (searchedName == null || searchedName.isEmpty()) {
-            candidates
-        } else {
-            candidates.filter {
-                it.firstname == searchedName || it.lastname == searchedName
-            }
-        }
     }
 
     companion object {
