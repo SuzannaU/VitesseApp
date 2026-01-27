@@ -19,7 +19,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.ui.CandidateUI
-import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -123,10 +122,7 @@ class AddFragment : Fragment() {
                     lifecycleScope.launch {
                         viewModel.saveCandidate(candidate)
                     }
-                    parentFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, HomeFragment.newInstance())
-                        .commit()
+                    parentFragmentManager.popBackStackImmediate()
                 }
             }
         }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface CandidateRepository {
 
     suspend fun fetchCandidate(candidateId: Long): Candidate
-    suspend fun saveCandidate(candidate: CandidateDto)
+    suspend fun saveCandidate(candidate: Candidate)
     suspend fun deleteCandidate(candidateId: Long)
-    fun fetchAllCandidates(): Flow<List<CandidateDto>>
+    fun fetchAllCandidates(): Flow<List<Candidate>>
 }

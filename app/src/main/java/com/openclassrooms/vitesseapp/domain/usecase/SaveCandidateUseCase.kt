@@ -7,6 +7,6 @@ class SaveCandidateUseCase(
     private val candidateRepository: CandidateRepository,
 ) {
     suspend fun execute(candidate: Candidate) {
-        candidateRepository.saveCandidate(candidate.toDto())
+        candidateRepository.saveCandidate(candidate)
     }
 }

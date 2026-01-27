@@ -1,6 +1,5 @@
 package com.openclassrooms.vitesseapp.domain
 
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
@@ -18,7 +17,7 @@ class SaveCandidateUseCaseTest {
     val saveCandidateUseCase = SaveCandidateUseCase(candidateRepository)
 
     @Test
-    fun execute_shouldSendCandidateDtoToRepository() = runTest {
+    fun execute_shouldSendCandidateToRepository() = runTest {
 
         val candidate = Candidate(
             firstname = "firstname",
@@ -32,24 +31,12 @@ class SaveCandidateUseCaseTest {
             age = null,
         )
 
-        val expectedCandidateDto = CandidateDto(
-            firstname = "firstname",
-            lastname = "lastname",
-            photoPath = "path",
-            phone = "123456",
-            email = "email",
-            birthdate = 1L,
-            notes = null,
-            salaryInEur = 1,
-        )
-
-        val candidateDtoCapture = slot<CandidateDto>()
-
-        coEvery { candidateRepository.saveCandidate(capture(candidateDtoCapture)) } returns Unit
+        val candidateCapture = slot<Candidate>()
+        coEvery { candidateRepository.saveCandidate(capture(candidateCapture)) } returns Unit
 
         saveCandidateUseCase.execute(candidate)
 
-        assertEquals(expectedCandidateDto, candidateDtoCapture.captured)
+        assertEquals(candidate, candidateCapture.captured)
         coVerify { candidateRepository.saveCandidate(any()) }
     }
 }

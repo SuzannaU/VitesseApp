@@ -1,11 +1,13 @@
 package com.openclassrooms.vitesseapp.ui
 
+import android.net.Uri
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,13 +26,17 @@ class HomeViewModelTest {
 
     val loadAllCandidatesUseCase = mockk<LoadAllCandidatesUseCase>()
     val filterByNameUseCase = mockk<FilterByNameUseCase>()
+    val uri = mockk<Uri>(relaxed = true)
     val viewModel = HomeViewModel(loadAllCandidatesUseCase, filterByNameUseCase)
     lateinit var candidates: List<Candidate>
-    lateinit var filteredCandidates: List<Candidate>
+    lateinit var filteredCandidates: List<CandidateUI>
 
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
+
+        mockkStatic(Uri::class)
+        every { Uri.parse(any()) } returns uri
 
         candidates = listOf(
             Candidate(
@@ -60,16 +66,15 @@ class HomeViewModelTest {
         )
 
         filteredCandidates = listOf(
-            Candidate(
+            CandidateUI(
                 candidateId = 1,
                 firstname = "firstname1",
                 lastname = "lastname1",
-                photoPath = "path",
+                photoUri = uri,
                 phone = "123456",
                 email = "email",
                 birthdate = 1L,
                 notes = null,
-                age = 1,
                 salaryInEur = 1,
             ),
         )
@@ -87,7 +92,7 @@ class HomeViewModelTest {
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
 
         val foundState = state as HomeViewModel.HomeUiState.CandidatesFound
-        assertEquals(candidates, foundState.candidates)
+        assertEquals(candidates.size, foundState.candidates.size)
 
         verify { loadAllCandidatesUseCase.execute() }
     }

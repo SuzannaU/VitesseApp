@@ -1,13 +1,12 @@
 package com.openclassrooms.vitesseapp.ui
 
 import android.net.Uri
+import androidx.core.net.toUri
+import com.openclassrooms.vitesseapp.domain.calculateAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
-import java.time.Instant
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
 
 data class CandidateUI(
+    val candidateId: Long? = 0,
     val firstname: String,
     val lastname: String,
     val photoUri: Uri?,
@@ -16,6 +15,7 @@ data class CandidateUI(
     val birthdate: Long,
     val salaryInEur: Int?,
     val notes: String?,
+    val isFavorite: Boolean = false,
 ){
 
     fun toDomain(photoPath: String?): Candidate {
@@ -33,10 +33,22 @@ data class CandidateUI(
         )
     }
 
-    private fun calculateAge(birthdate: Long): Int {
-        val birthdateLocalDate = Instant.ofEpochMilli(birthdate)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-        return Period.between(birthdateLocalDate, LocalDate.now()).years
+    companion object {
+
+        fun fromDomain(candidate: Candidate): CandidateUI {
+
+            return CandidateUI(
+                candidateId = candidate.candidateId,
+                firstname = candidate.firstname,
+                lastname = candidate.lastname,
+                photoUri = candidate.photoPath?.toUri(),
+                phone = candidate.phone,
+                email = candidate.email,
+                birthdate = candidate.birthdate,
+                salaryInEur = candidate.salaryInEur,
+                notes = candidate.notes,
+                isFavorite = candidate.isFavorite,
+            )
+        }
     }
 }

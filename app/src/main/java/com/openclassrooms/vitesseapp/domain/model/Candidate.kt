@@ -1,10 +1,7 @@
 package com.openclassrooms.vitesseapp.domain.model
 
 import com.openclassrooms.vitesseapp.data.entity.CandidateDto
-import java.time.Instant
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
+import com.openclassrooms.vitesseapp.domain.calculateAge
 
 data class Candidate(
     val candidateId: Long? = 0,
@@ -51,13 +48,6 @@ data class Candidate(
                 candidateDto.notes,
                 candidateDto.isFavorite,
             )
-        }
-
-        private fun calculateAge(birthdate: Long): Int {
-            val birthdateLocalDate = Instant.ofEpochMilli(birthdate)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-            return Period.between(birthdateLocalDate, LocalDate.now()).years
         }
     }
 

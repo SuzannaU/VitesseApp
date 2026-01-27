@@ -1,6 +1,7 @@
 package com.openclassrooms.vitesseapp.ui
 
 import android.net.Uri
+import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.test.assertEquals
-import kotlin.time.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddViewModelTest {
@@ -123,13 +123,5 @@ class AddViewModelTest {
         assertEquals(expectedCandidate, candidateCapture.captured)
         coVerify(exactly = 0) { saveImageUseCase.execute(any()) }
         coVerify { saveCandidateUseCase.execute(any()) }
-    }
-
-    private fun createBirthdateForAge(age: Int): Long {
-        return LocalDate.now()
-            .minusYears(age.toLong())
-            .atStartOfDay(ZoneId.of("UTC"))
-            .toInstant()
-            .toEpochMilli()
     }
 }

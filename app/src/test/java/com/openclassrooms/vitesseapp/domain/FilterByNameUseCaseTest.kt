@@ -1,7 +1,10 @@
 package com.openclassrooms.vitesseapp.domain
 
+import android.net.Uri
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
+import com.openclassrooms.vitesseapp.ui.CandidateUI
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -15,7 +18,7 @@ class FilterByNameUseCaseTest {
     @ParameterizedTest
     @MethodSource("provider")
     fun execute_shouldFilterCandidates(
-        candidates: List<Candidate>,
+        candidates: List<CandidateUI>,
         filter: String?,
         expectedSize: Int,
     ) {
@@ -57,28 +60,27 @@ class FilterByNameUseCaseTest {
             )
         }
 
+        val uri = mockk<Uri>()
         val candidates = listOf(
-            Candidate(
+            CandidateUI(
                 candidateId = 1,
                 firstname = "firstname1",
                 lastname = "lastname1",
-                photoPath = "path",
+                photoUri = uri,
                 phone = "123456",
                 email = "email",
                 birthdate = 1L,
                 notes = null,
-                age = 1,
                 salaryInEur = 1,
             ),
-            Candidate(
+            CandidateUI(
                 candidateId = 2,
                 firstname = "firstname2",
                 lastname = "lastname2",
-                photoPath = "path",
+                photoUri = uri,
                 phone = "123456",
                 email = "email",
                 birthdate = 1L,
-                age = 1,
                 notes = null,
                 salaryInEur = 1,
             ),

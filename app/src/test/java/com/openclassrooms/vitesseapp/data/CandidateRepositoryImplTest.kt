@@ -3,11 +3,14 @@ package com.openclassrooms.vitesseapp.data
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
+import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
+import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -20,13 +23,23 @@ class CandidateRepositoryImplTest {
 
     val candidateDao: CandidateDao = mockk()
     val repository: CandidateRepository = CandidateRepositoryImpl(candidateDao = candidateDao)
-    lateinit var candidateDto: CandidateDto
-    lateinit var candidatesDto: List<CandidateDto>
 
-    @BeforeEach
-    fun init() {
-        candidateDto = CandidateDto(
-            candidateId = 1,
+    @Test
+    fun saveCandidate_shouldSendCandidateToDao() = runTest {
+
+        val candidate = Candidate(
+            firstname = "firstname",
+            lastname = "lastname",
+            photoPath = "path",
+            phone = "123456",
+            email = "email",
+            birthdate = 1L,
+            notes = null,
+            salaryInEur = 1,
+            age = null,
+        )
+
+        val expectedCandidateDto = CandidateDto(
             firstname = "firstname",
             lastname = "lastname",
             photoPath = "path",
@@ -36,7 +49,22 @@ class CandidateRepositoryImplTest {
             notes = null,
             salaryInEur = 1,
         )
-        candidatesDto = listOf(
+
+        val candidateDtoCapture = slot<CandidateDto>()
+        coEvery { candidateDao.saveCandidate(capture(candidateDtoCapture)) } returns Unit
+
+        repository.saveCandidate(candidate)
+
+        assertEquals(expectedCandidateDto, candidateDtoCapture.captured)
+        coVerify { candidateDao.saveCandidate(any()) }
+    }
+
+    @Test
+    fun fetchAllCandidates_shouldCallDaoAndReturnFlowOfCandidate() = runTest {
+        val expectedAge = 30
+        val birthdateMillis = createBirthdateForAge(expectedAge)
+
+        val candidatesDto = listOf(
             CandidateDto(
                 candidateId = 1,
                 firstname = "firstname",
@@ -44,7 +72,7 @@ class CandidateRepositoryImplTest {
                 photoPath = "path",
                 phone = "123456",
                 email = "email",
-                birthdate = 1L,
+                birthdate = birthdateMillis,
                 notes = null,
                 salaryInEur = 1,
             ),
@@ -55,31 +83,44 @@ class CandidateRepositoryImplTest {
                 photoPath = "path",
                 phone = "123456",
                 email = "email",
-                birthdate = 1L,
+                birthdate = birthdateMillis,
                 notes = null,
                 salaryInEur = 1,
             ),
         )
-    }
 
-    @Test
-    fun saveCandidate_shouldCallDao() = runTest {
-
-        coEvery { candidateDao.saveCandidate(any()) } returns Unit
-
-        repository.saveCandidate(candidateDto)
-
-        coVerify { candidateDao.saveCandidate(any()) }
-    }
-
-    @Test
-    fun fetchAllCandidates_shouldCallDaoAndReturnFlowOfCandidateDto() = runTest {
+        val candidates = listOf(
+            Candidate(
+                candidateId = 1,
+                firstname = "firstname",
+                lastname = "lastname",
+                photoPath = "path",
+                phone = "123456",
+                email = "email",
+                birthdate = birthdateMillis,
+                notes = null,
+                age = expectedAge,
+                salaryInEur = 1,
+            ),
+            Candidate(
+                candidateId = 2,
+                firstname = "firstname",
+                lastname = "lastname",
+                photoPath = "path",
+                phone = "123456",
+                email = "email",
+                birthdate = birthdateMillis,
+                age = expectedAge,
+                notes = null,
+                salaryInEur = 1,
+            ),
+        )
 
         every { candidateDao.getAllCandidates() } returns flowOf(candidatesDto)
 
         val result = repository.fetchAllCandidates().first()
 
-        assertEquals(candidatesDto, result)
+        assertEquals(candidates, result)
         verify { candidateDao.getAllCandidates() }
     }
 }

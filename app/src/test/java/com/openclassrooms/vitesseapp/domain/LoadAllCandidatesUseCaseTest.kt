@@ -20,38 +20,12 @@ class LoadAllCandidatesUseCaseTest {
 
     val candidateRepository: CandidateRepository = mockk()
     val loadAllCandidatesUseCase = LoadAllCandidatesUseCase(candidateRepository)
-    lateinit var candidatesDto: List<CandidateDto>
     lateinit var candidates: List<Candidate>
 
-    @BeforeEach
-    fun init() {
+    @Test
+    fun execute_shouldReturnFlowOfCandidates() = runTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
-
-        candidatesDto = listOf(
-            CandidateDto(
-                candidateId = 1,
-                firstname = "firstname",
-                lastname = "lastname",
-                photoPath = "path",
-                phone = "123456",
-                email = "email",
-                birthdate = birthdateMillis,
-                notes = null,
-                salaryInEur = 1,
-            ),
-            CandidateDto(
-                candidateId = 2,
-                firstname = "firstname",
-                lastname = "lastname",
-                photoPath = "path",
-                phone = "123456",
-                email = "email",
-                birthdate = birthdateMillis,
-                notes = null,
-                salaryInEur = 1,
-            ),
-        )
 
         candidates = listOf(
             Candidate(
@@ -79,12 +53,8 @@ class LoadAllCandidatesUseCaseTest {
                 salaryInEur = 1,
             ),
         )
-    }
 
-    @Test
-    fun execute_shouldReturnFlowOfCandidates() = runTest {
-
-        every { candidateRepository.fetchAllCandidates() } returns flowOf(candidatesDto)
+        every { candidateRepository.fetchAllCandidates() } returns flowOf(candidates)
 
         val result = loadAllCandidatesUseCase.execute().first()
 
@@ -92,13 +62,5 @@ class LoadAllCandidatesUseCaseTest {
         verify { candidateRepository.fetchAllCandidates() }
 
 
-    }
-
-    private fun createBirthdateForAge(age: Int): Long {
-        return LocalDate.now()
-            .minusYears(age.toLong())
-            .atStartOfDay(ZoneId.of("UTC"))
-            .toInstant()
-            .toEpochMilli()
     }
 }
