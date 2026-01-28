@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentHomeBinding
-import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.ui.CandidateUI
 import com.openclassrooms.vitesseapp.ui.add.AddFragment
 import com.openclassrooms.vitesseapp.ui.detail.DetailFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val ALL_CANDIDATES_TAB = 0
+private const val FAVORITES_TAB = 1
 
 class HomeFragment : Fragment() {
 
@@ -90,8 +92,8 @@ class HomeFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    0 -> adapter.updateCandidates(candidates)
-                    1 -> adapter.updateCandidates(
+                    ALL_CANDIDATES_TAB -> adapter.updateCandidates(candidates)
+                    FAVORITES_TAB -> adapter.updateCandidates(
                         candidates.filter { it.isFavorite }
                     )
                 }
