@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentHomeBinding
-import com.openclassrooms.vitesseapp.ui.CandidateUI
 import com.openclassrooms.vitesseapp.ui.add.AddFragment
 import com.openclassrooms.vitesseapp.ui.detail.DetailFragment
+import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var adapter: CandidateAdapter
-    var candidates: List<CandidateUI> = emptyList()
+    var candidates: List<CandidateDisplay> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = CandidateAdapter(candidates, object : OnItemClickListener {
-            override fun onItemCLick(item: CandidateUI) {
+            override fun onItemCLick(item: CandidateDisplay) {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(

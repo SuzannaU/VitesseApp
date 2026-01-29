@@ -2,10 +2,10 @@ package com.openclassrooms.vitesseapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
-import com.openclassrooms.vitesseapp.ui.CandidateUI
+import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ class HomeViewModel(
 
     private val _homeStateFlow = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
     val homeStateFlow = _homeStateFlow.asStateFlow()
-    var allCandidates = emptyList<CandidateUI>()
+    private var allCandidates = emptyList<CandidateDisplay>()
 
     fun loadAllCandidates() {
         viewModelScope.launch {
@@ -28,7 +28,7 @@ class HomeViewModel(
                     if (loadedCandidates.isEmpty()) {
                         _homeStateFlow.value = HomeUiState.NoCandidateFound
                     } else {
-                        allCandidates = loadedCandidates.map { candidate -> CandidateUI.fromDomain(candidate) }
+                        allCandidates = loadedCandidates.map { candidate -> candidate.toCandidateDisplay() }
                         _homeStateFlow.value = HomeUiState.CandidatesFound(allCandidates)
                     }
                 }
@@ -53,7 +53,7 @@ class HomeViewModel(
         object LoadingState : HomeUiState()
 
         data class CandidatesFound(
-            val candidates: List<CandidateUI>
+            val candidates: List<CandidateDisplay>
         ) : HomeUiState()
 
         object NoCandidateFound : HomeUiState()

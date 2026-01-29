@@ -9,11 +9,13 @@
         android:id="@+id/iv_thumbnail"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:contentDescription="@string/gallery_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginVertical="12dp"
-        android:src="@drawable/photo_library_72dp_on_surface_variant"/>
+        android:src="@drawable/photo_library_72dp_000000"
+        app:tint="?attr/colorOnSurfaceVariant" />
 
 
     <TextView

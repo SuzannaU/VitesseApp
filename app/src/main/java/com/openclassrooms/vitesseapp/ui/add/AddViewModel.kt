@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
-import com.openclassrooms.vitesseapp.ui.CandidateUI
+import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.ui.model.toDomain
 import kotlinx.coroutines.launch
 
 class AddViewModel(
@@ -12,12 +13,12 @@ class AddViewModel(
     private val saveImageUseCase: SaveImageUseCase,
 ) : ViewModel() {
 
-    fun saveCandidate(candidateUI: CandidateUI) {
+    fun saveCandidate(candidateFormUI: CandidateFormUI) {
         viewModelScope.launch {
-            val photoPath = candidateUI.photoUri?.let {
-                saveImageUseCase.execute(candidateUI.photoUri)
+            val photoPath = candidateFormUI.photoUri?.let {
+                saveImageUseCase.execute(candidateFormUI.photoUri)
             }
-            saveCandidateUseCase.execute(candidateUI.toDomain(photoPath))
+            saveCandidateUseCase.execute(candidateFormUI.toDomain(photoPath))
         }
     }
 }

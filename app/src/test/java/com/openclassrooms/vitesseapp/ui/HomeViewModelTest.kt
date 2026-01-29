@@ -5,6 +5,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
+import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -29,7 +30,7 @@ class HomeViewModelTest {
     val uri = mockk<Uri>(relaxed = true)
     val viewModel = HomeViewModel(loadAllCandidatesUseCase, filterByNameUseCase)
     lateinit var candidates: List<Candidate>
-    lateinit var filteredCandidates: List<CandidateUI>
+    lateinit var filteredCandidates: List<CandidateDisplay>
 
     @BeforeEach
     fun setup() {
@@ -66,16 +67,16 @@ class HomeViewModelTest {
         )
 
         filteredCandidates = listOf(
-            CandidateUI(
+            CandidateDisplay(
                 candidateId = 1,
                 firstname = "firstname1",
                 lastname = "lastname1",
                 photoUri = uri,
                 phone = "123456",
                 email = "email",
-                birthdate = 1L,
+                birthdate = "birthdate",
                 notes = null,
-                salaryInEur = 1,
+                salaryInEur = "salary",
             ),
         )
     }

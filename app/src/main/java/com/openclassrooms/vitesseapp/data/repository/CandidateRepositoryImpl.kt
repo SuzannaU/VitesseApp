@@ -1,7 +1,8 @@
 package com.openclassrooms.vitesseapp.data.repository
 
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
+import com.openclassrooms.vitesseapp.data.toDomain
+import com.openclassrooms.vitesseapp.data.toDto
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ class CandidateRepositoryImpl(private val candidateDao: CandidateDao) : Candidat
 
     override suspend fun fetchCandidate(candidateId: Long): Candidate {
         val candidateDto = candidateDao.getCandidateById(candidateId)
-        return Candidate.fromDto(candidateDto)
+        return candidateDto.toDomain()
     }
 
     override suspend fun saveCandidate(candidate: Candidate) {
@@ -26,7 +27,7 @@ class CandidateRepositoryImpl(private val candidateDao: CandidateDao) : Candidat
         return candidateDao.getAllCandidates()
             .map { candidatesDto ->
                 candidatesDto.map { dto ->
-                    Candidate.fromDto(dto)
+                    dto.toDomain()
                 }
             }
     }

@@ -6,6 +6,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
+import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -18,8 +19,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.ZoneId
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,7 +40,7 @@ class AddViewModelTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
 
-        val candidateUi = CandidateUI(
+        val candidateFormUi = CandidateFormUI(
             firstname = "firstname",
             lastname = "lastname",
             photoUri = uri,
@@ -71,7 +70,7 @@ class AddViewModelTest {
         coEvery { saveImageUseCase.execute(any()) } returns "path"
         coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
 
-        viewModel.saveCandidate(candidateUi)
+        viewModel.saveCandidate(candidateFormUi)
         advanceUntilIdle()
 
         assertEquals(expectedCandidate, candidateCapture.captured)
@@ -87,7 +86,7 @@ class AddViewModelTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
 
-        val candidateUi = CandidateUI(
+        val candidateFormUi = CandidateFormUI(
             firstname = "firstname",
             lastname = "lastname",
             photoUri = null,
@@ -117,7 +116,7 @@ class AddViewModelTest {
         coEvery { saveImageUseCase.execute(any()) } returns "path"
         coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
 
-        viewModel.saveCandidate(candidateUi)
+        viewModel.saveCandidate(candidateFormUi)
         advanceUntilIdle()
 
         assertEquals(expectedCandidate, candidateCapture.captured)

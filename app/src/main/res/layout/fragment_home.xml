@@ -98,7 +98,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/plus_icon"
-        android:src="@drawable/add_24dp_primary"
+        android:src="@drawable/add_24dp_000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
          />

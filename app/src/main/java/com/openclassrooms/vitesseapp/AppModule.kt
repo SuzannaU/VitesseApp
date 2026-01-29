@@ -14,6 +14,7 @@ import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
+import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -49,5 +50,6 @@ val appModule = module {
 
     viewModel { AddViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get()) }
+    viewModel { DetailViewModel(get()) }
 
 }

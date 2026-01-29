@@ -7,6 +7,13 @@
         <item name="colorSecondary">@color/theme_yellow</item>
         <item name="colorSecondaryVariant">@color/theme_yellow</item>
         <item name="colorOnSecondary">@color/white</item>
+
+        <item name="colorSurface">#FEF7FF</item>
+        <item name="colorSurfaceVariant">#E7E0EC</item>
+        <item name="colorOnSurface">#1D1B20</item>
+        <item name="colorOnSurfaceVariant">#49454F</item>
+        <item name="colorOutline">#79747E</item>
+        <item name="colorOutlineVariant">#CAC4D0</item>
     </style>
 
     <style name="Theme.VitesseApp" parent="Base.Theme.VitesseApp" />

@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.vitesseapp.databinding.ItemCandidateBinding
-import com.openclassrooms.vitesseapp.ui.CandidateUI
+import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 
 class CandidateAdapter(
-    var candidates: List<CandidateUI>,
+    var candidates: List<CandidateDisplay>,
     val listener: OnItemClickListener,
 ) :
     RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
@@ -34,7 +34,7 @@ class CandidateAdapter(
         return candidates.size
     }
 
-    fun updateCandidates(candidates: List<CandidateUI>) {
+    fun updateCandidates(candidates: List<CandidateDisplay>) {
         this.candidates = candidates
         notifyDataSetChanged()
     }
@@ -45,7 +45,7 @@ class CandidateAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            candidate: CandidateUI,
+            candidate: CandidateDisplay,
             listener: OnItemClickListener
         ) {
 
@@ -66,5 +66,5 @@ class CandidateAdapter(
 }
 
 interface OnItemClickListener {
-    fun onItemCLick(item: CandidateUI)
+    fun onItemCLick(item: CandidateDisplay)
 }

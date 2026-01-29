@@ -18,7 +18,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
-import com.openclassrooms.vitesseapp.ui.CandidateUI
+import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -79,7 +79,7 @@ class AddFragment : Fragment() {
     private fun setupPhotoPicker() {
 
         binding.profilePhoto.apply {
-            setImageResource(R.drawable.photo_library_72dp_on_surface_variant)
+            setImageResource(R.drawable.photo_library_72dp_000000)
 
             val pickPhotoLauncher =
                 registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -107,14 +107,14 @@ class AddFragment : Fragment() {
                 val salaryInEur =
                     if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()) else null
 
-                val candidate = CandidateUI(
+                val candidate = CandidateFormUI(
                     firstname = tietFirstname.text.toString(),
                     lastname = tietLastname.text.toString(),
                     photoUri = photoUri,
                     phone = tietPhone.text.toString(),
                     email = tietEmail.text.toString(),
                     birthdate = birthdateMillis,
-                    salaryInEur = salaryInEur,
+                    salaryInEur = salaryInEur?.toLong(),
                     notes = tietNotes.text.toString(),
                 )
 
@@ -128,7 +128,7 @@ class AddFragment : Fragment() {
         }
     }
 
-    private fun validateCandidate(candidate: CandidateUI): Boolean {
+    private fun validateCandidate(candidate: CandidateFormUI): Boolean {
         var isValid = true
         binding.apply {
             isValid = validateField(!candidate.firstname.isBlank(), tipFirstname) && isValid
