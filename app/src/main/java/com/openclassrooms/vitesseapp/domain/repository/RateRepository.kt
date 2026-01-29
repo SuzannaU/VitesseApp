@@ -4,5 +4,5 @@ import java.math.BigDecimal
 
 interface RateRepository {
 
-    suspend fun fetchRatesForEur(): BigDecimal
+    suspend fun fetchRatesForEur(): BigDecimal?
 }

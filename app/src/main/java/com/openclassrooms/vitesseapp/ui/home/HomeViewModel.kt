@@ -22,7 +22,7 @@ class HomeViewModel(
 
     fun loadAllCandidates() {
         viewModelScope.launch {
-            delay(1000)         // for demonstration purposes
+            delay(200)         // for demonstration purposes
             loadAllCandidatesUseCase.execute()
                 .collect { loadedCandidates ->
                     if (loadedCandidates.isEmpty()) {
@@ -38,7 +38,7 @@ class HomeViewModel(
     fun loadFilteredCandidates(searchedText: String?) {
         _homeStateFlow.value = HomeUiState.LoadingState
         viewModelScope.launch {
-            delay(1000)         // for demonstration purposes
+            delay(200)         // for demonstration purposes
             val filteredCandidates = filterByNameUseCase.execute(allCandidates, searchedText)
             if (filteredCandidates.isEmpty()) {
                 _homeStateFlow.value = HomeUiState.NoCandidateFound

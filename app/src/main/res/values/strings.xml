@@ -35,4 +35,5 @@
     <string name="birthdate_age">%1$s (%2$d years old)</string>
     <string name="salary_eur">%1$s €</string>
     <string name="salary_gbp">or £ %1$s</string>
+    <string name="not_available">Not available</string>
 </resources>

@@ -74,14 +74,19 @@ class DetailFragment : Fragment() {
                     it.birthdate,
                     it.age
                 )
-                salaryField.text = getString(
-                    R.string.salary_eur,
-                    it.salaryInEur
-                )
-                convertedSalaryField.text = getString(
-                    R.string.salary_gbp,
-                    it.salaryInGbp
-                )
+
+                if (it.salaryInEur != null) {
+                    salaryField.text = getString(
+                        R.string.salary_eur,
+                        it.salaryInEur
+                    )
+                    convertedSalaryField.text = getString(
+                        R.string.salary_gbp,
+                        it.salaryInGbp
+                    )
+                } else {
+                    salaryField.text = getString(R.string.not_available)
+                }
                 notesFields.text = it.notes
             }
         }
