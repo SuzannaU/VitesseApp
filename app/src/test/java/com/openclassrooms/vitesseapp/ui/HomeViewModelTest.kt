@@ -50,7 +50,7 @@ class HomeViewModelTest {
                 birthdate = 1L,
                 notes = null,
                 age = 1,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
             Candidate(
                 candidateId = 2,
@@ -62,7 +62,7 @@ class HomeViewModelTest {
                 birthdate = 1L,
                 age = 1,
                 notes = null,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
         )
 
@@ -77,6 +77,7 @@ class HomeViewModelTest {
                 birthdate = "birthdate",
                 notes = null,
                 salaryInEur = "salary",
+                age = 1,
             ),
         )
     }

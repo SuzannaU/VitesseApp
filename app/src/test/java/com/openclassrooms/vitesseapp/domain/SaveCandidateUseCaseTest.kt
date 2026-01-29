@@ -27,7 +27,7 @@ class SaveCandidateUseCaseTest {
             email = "email",
             birthdate = 1L,
             notes = null,
-            salaryInEur = 1,
+            salaryCentsInEur = 1,
             age = null,
         )
 

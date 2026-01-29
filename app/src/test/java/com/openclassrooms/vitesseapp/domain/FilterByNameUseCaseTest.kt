@@ -71,6 +71,7 @@ class FilterByNameUseCaseTest {
                 birthdate = "birthdate",
                 notes = null,
                 salaryInEur = "salary",
+                age = 1,
             ),
             CandidateDisplay(
                 candidateId = 2,
@@ -82,6 +83,7 @@ class FilterByNameUseCaseTest {
                 birthdate = "birthdate",
                 notes = null,
                 salaryInEur = "salary",
+                age = 1,
             ),
         )
     }

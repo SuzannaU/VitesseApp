@@ -12,7 +12,7 @@ fun Candidate.toDto() : CandidateDto {
         phone = this.phone,
         email = this.email,
         birthdate = this.birthdate,
-        salaryInEur = this.salaryInEur,
+        salaryCentsInEur = this.salaryCentsInEur,
         notes = this.notes,
     )
 }
@@ -28,7 +28,7 @@ fun CandidateDto.toDomain() : Candidate {
         this.email,
         this.birthdate,
         age,
-        this.salaryInEur,
+        this.salaryCentsInEur,
         this.notes,
         this.isFavorite,
     )

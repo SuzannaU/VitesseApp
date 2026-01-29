@@ -2,6 +2,7 @@ package com.openclassrooms.vitesseapp.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
@@ -12,17 +13,21 @@ import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val loadCandidateUseCase: LoadCandidateUseCase,
+    private val convertEurToGbpUseCase: ConvertEurToGbpUseCase,
 ) : ViewModel() {
 
     private val _detailStateFlow = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
     val detailUiState = _detailStateFlow.asStateFlow()
-    private lateinit var candidate: CandidateDisplay
+    private lateinit var candidateDisplay: CandidateDisplay
 
     fun loadCandidate(candidateId: Long) {
         viewModelScope.launch {
-            delay(1000)         // for demonstration purposes
-            candidate = loadCandidateUseCase.execute(candidateId).toCandidateDisplay()
-            _detailStateFlow.value = DetailUiState.CandidateFound(candidate)
+            delay(500)         // for demonstration purposes
+            val candidate = loadCandidateUseCase.execute(candidateId)
+            val salaryGbp = convertEurToGbpUseCase.execute(candidate.salaryCentsInEur)
+
+            candidateDisplay = candidate.toCandidateDisplay(salaryGbp)
+            _detailStateFlow.value = DetailUiState.CandidateFound(candidateDisplay)
         }
     }
 

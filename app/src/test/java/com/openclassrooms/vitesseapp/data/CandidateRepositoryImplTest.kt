@@ -15,7 +15,6 @@ import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -35,7 +34,7 @@ class CandidateRepositoryImplTest {
             email = "email",
             birthdate = 1L,
             notes = null,
-            salaryInEur = 1,
+            salaryCentsInEur = 1,
             age = null,
         )
 
@@ -47,7 +46,7 @@ class CandidateRepositoryImplTest {
             email = "email",
             birthdate = 1L,
             notes = null,
-            salaryInEur = 1,
+            salaryCentsInEur = 1,
         )
 
         val candidateDtoCapture = slot<CandidateDto>()
@@ -74,7 +73,7 @@ class CandidateRepositoryImplTest {
                 email = "email",
                 birthdate = birthdateMillis,
                 notes = null,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
             CandidateDto(
                 candidateId = 2,
@@ -85,7 +84,7 @@ class CandidateRepositoryImplTest {
                 email = "email",
                 birthdate = birthdateMillis,
                 notes = null,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
         )
 
@@ -100,7 +99,7 @@ class CandidateRepositoryImplTest {
                 birthdate = birthdateMillis,
                 notes = null,
                 age = expectedAge,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
             Candidate(
                 candidateId = 2,
@@ -112,7 +111,7 @@ class CandidateRepositoryImplTest {
                 birthdate = birthdateMillis,
                 age = expectedAge,
                 notes = null,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
         )
 

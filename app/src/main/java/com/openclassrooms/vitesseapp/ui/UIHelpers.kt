@@ -1,11 +1,25 @@
 package com.openclassrooms.vitesseapp.ui
 
-fun formatBirthdateToString(birthdate: Long) : String {
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-    return "10/05/1990"
+fun formatBirthdateToString(birthdate: Long) : String {
+    val locale = Locale.getDefault()
+    val pattern = when (locale.language) {
+        "fr" -> "dd/MM/yyyy"
+        "en" -> "MM/dd/yyyy"
+        else -> "dd/MM/yyyy"
+    }
+
+    val simpleDateFormat = SimpleDateFormat(pattern, locale)
+    val date = Date(birthdate)
+    return simpleDateFormat.format(date)
 }
 
-fun formatSalaryToString(salary: Long) : String {
+fun formatSalaryToString(salaryInCents: Long) : String {
+    val locale = Locale.getDefault()
 
-    return "215 541.00"
+    val string = String.format(locale,"%.2f", salaryInCents.toDouble()/100)
+    return string
 }

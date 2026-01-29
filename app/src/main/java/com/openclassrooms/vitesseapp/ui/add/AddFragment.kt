@@ -79,7 +79,7 @@ class AddFragment : Fragment() {
     private fun setupPhotoPicker() {
 
         binding.profilePhoto.apply {
-            setImageResource(R.drawable.photo_library_72dp_000000)
+            setImageResource(R.drawable.photo_library_72dp)
 
             val pickPhotoLauncher =
                 registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

@@ -6,7 +6,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.ui.formatBirthdateToString
 import com.openclassrooms.vitesseapp.ui.formatSalaryToString
 
-fun Candidate.toCandidateDisplay() : CandidateDisplay {
+fun Candidate.toCandidateDisplay(salaryInGbp: Long?) : CandidateDisplay {
     return CandidateDisplay(
         candidateId = this.candidateId,
         firstname = this.firstname,
@@ -15,7 +15,9 @@ fun Candidate.toCandidateDisplay() : CandidateDisplay {
         phone = this.phone,
         email = this.email,
         birthdate = formatBirthdateToString(this.birthdate),
-        salaryInEur = this.salaryInEur?.let { formatSalaryToString(it) },
+        age = calculateAge(this.birthdate),
+        salaryInEur = this.salaryCentsInEur?.let { formatSalaryToString(it) },
+        salaryInGbp = salaryInGbp?.let { formatSalaryToString(it) },
         notes = this.notes,
         isFavorite = this.isFavorite,
     )
@@ -31,7 +33,7 @@ fun CandidateFormUI.toDomain(photoPath: String?) : Candidate {
         email = this.email,
         birthdate = this.birthdate,
         age = age,
-        salaryInEur = this.salaryInEur,
+        salaryCentsInEur = this.salaryInEur?.times(100L),
         notes = this.notes,
     )
 }

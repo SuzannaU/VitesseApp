@@ -35,7 +35,7 @@
                 android:background="?attr/colorSurfaceVariant"
                 android:contentDescription="@string/profile_pic_descr"
                 android:scaleType="centerInside"
-                android:src="@drawable/photo_library_72dp_000000"
+                android:src="@drawable/photo_library_72dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -234,7 +234,7 @@
 
                     <TextView
                         style="@style/VitesseCardSubText"
-                        android:id="@+id/notes_fiels"
+                        android:id="@+id/notes_fields"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="16dp"

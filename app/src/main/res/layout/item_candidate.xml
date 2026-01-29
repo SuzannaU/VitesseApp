@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginVertical="12dp"
-        android:src="@drawable/photo_library_72dp_000000"
+        android:src="@drawable/photo_library_72dp"
         app:tint="?attr/colorOnSurfaceVariant" />
 
 

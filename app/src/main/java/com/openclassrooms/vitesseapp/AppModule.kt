@@ -5,9 +5,12 @@ import androidx.room.Room
 import com.openclassrooms.vitesseapp.data.AppDatabase
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
+import com.openclassrooms.vitesseapp.data.repository.RateRepositoryImpl
 import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
 import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
+import com.openclassrooms.vitesseapp.domain.repository.RateRepository
+import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
@@ -41,15 +44,17 @@ val appModule = module {
 
     single<CandidateRepository> { CandidateRepositoryImpl(get()) }
     single<ImageRepository> { InternalImageStorage(context = androidContext()) }
+    single<RateRepository> { RateRepositoryImpl() }
 
     factory { FilterByNameUseCase() }
     factory { LoadCandidateUseCase(get()) }
     factory { LoadAllCandidatesUseCase(get()) }
     factory { SaveCandidateUseCase(get()) }
     factory { SaveImageUseCase(get()) }
+    factory { ConvertEurToGbpUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get()) }
-    viewModel { DetailViewModel(get()) }
+    viewModel { DetailViewModel(get(), get()) }
 
 }

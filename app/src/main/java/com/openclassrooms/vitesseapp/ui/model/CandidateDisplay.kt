@@ -10,7 +10,9 @@ data class CandidateDisplay(
     val phone: String,
     val email: String,
     val birthdate: String,
+    val age: Int,
     val salaryInEur: String?,
+    val salaryInGbp: String? = null,
     val notes: String?,
     val isFavorite: Boolean = false,
 )

@@ -29,8 +29,8 @@ data class CandidateDto(
     @ColumnInfo(name = "birthdate")
     var birthdate: Long,
 
-    @ColumnInfo(name = "salary_in_euro")
-    var salaryInEur: Long?,
+    @ColumnInfo(name = "salary_in_cents_euro")
+    var salaryCentsInEur: Long?,
 
     @ColumnInfo(name = "notes")
     var notes: String?,

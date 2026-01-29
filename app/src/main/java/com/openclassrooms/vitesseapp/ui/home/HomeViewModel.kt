@@ -28,7 +28,7 @@ class HomeViewModel(
                     if (loadedCandidates.isEmpty()) {
                         _homeStateFlow.value = HomeUiState.NoCandidateFound
                     } else {
-                        allCandidates = loadedCandidates.map { candidate -> candidate.toCandidateDisplay() }
+                        allCandidates = loadedCandidates.map { candidate -> candidate.toCandidateDisplay(null) }
                         _homeStateFlow.value = HomeUiState.CandidatesFound(allCandidates)
                     }
                 }

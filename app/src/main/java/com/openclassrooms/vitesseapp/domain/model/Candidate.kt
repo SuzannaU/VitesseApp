@@ -9,7 +9,7 @@ data class Candidate(
     val email: String,
     val birthdate: Long,
     val age: Int?,
-    val salaryInEur: Long?,
+    val salaryCentsInEur: Long?,
     val notes: String?,
     val isFavorite: Boolean = false,
 )

@@ -33,4 +33,7 @@
     <string name="modify">Modify</string>
     <string name="delete">Delete</string>
     <string name="notes">Notes</string>
+    <string name="birthdate_age">%1$s (%2$d ans)</string>
+    <string name="salary_eur">%1$s €</string>
+    <string name="salary_gbp">soit £ %1$s</string>
 </resources>

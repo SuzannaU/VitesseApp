@@ -1,6 +1,5 @@
 package com.openclassrooms.vitesseapp.domain
 
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
@@ -11,10 +10,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.ZoneId
 
 class LoadAllCandidatesUseCaseTest {
 
@@ -38,7 +34,7 @@ class LoadAllCandidatesUseCaseTest {
                 birthdate = birthdateMillis,
                 notes = null,
                 age = expectedAge,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
             Candidate(
                 candidateId = 2,
@@ -50,7 +46,7 @@ class LoadAllCandidatesUseCaseTest {
                 birthdate = birthdateMillis,
                 age = expectedAge,
                 notes = null,
-                salaryInEur = 1,
+                salaryCentsInEur = 1,
             ),
         )
 

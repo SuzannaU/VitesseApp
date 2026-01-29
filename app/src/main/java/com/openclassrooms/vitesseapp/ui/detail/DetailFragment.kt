@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentDetailBinding
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import kotlinx.coroutines.launch
@@ -68,8 +69,20 @@ class DetailFragment : Fragment() {
                 }
                 toolbar.title = fullname
 
-                birthdayField.text = it.birthdate
-                salaryField.text = it.salaryInEur
+                birthdayField.text = getString(
+                    R.string.birthdate_age,
+                    it.birthdate,
+                    it.age
+                )
+                salaryField.text = getString(
+                    R.string.salary_eur,
+                    it.salaryInEur
+                )
+                convertedSalaryField.text = getString(
+                    R.string.salary_gbp,
+                    it.salaryInGbp
+                )
+                notesFields.text = it.notes
             }
         }
     }

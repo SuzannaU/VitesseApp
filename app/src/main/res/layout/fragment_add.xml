@@ -19,35 +19,36 @@
         android:id="@+id/add_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fields"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/profile_photo"
-                android:layout_width="373dp"
+                android:layout_width="0dp"
                 android:layout_height="195dp"
                 android:background="?attr/colorSurfaceVariant"
                 android:contentDescription="@string/profile_pic_descr"
                 android:scaleType="centerInside"
-                android:src="@drawable/photo_library_72dp_000000"
+                android:src="@drawable/photo_library_72dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnSurfaceVariant" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
                 android:id="@+id/person_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/person_icon"
-                android:padding="12dp"
                 android:src="@drawable/person_24dp_000000"
+                android:paddingTop="12dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 app:tint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tip_firstname" />
@@ -55,12 +56,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_firstname"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/firstname"
                 app:errorEnabled="true"
                 app:layout_constraintStart_toEndOf="@id/person_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/profile_photo">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -68,7 +70,7 @@
                     style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineHeight="24dp"
+                    app:lineHeight="24dp"
                     tools:text="John" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -76,12 +78,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_lastname"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/lastname"
                 app:errorEnabled="true"
                 app:layout_constraintStart_toEndOf="@id/person_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tip_firstname">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -89,7 +92,7 @@
                     style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineHeight="24dp"
+                    app:lineHeight="24dp"
                     tools:text="Doe" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -99,7 +102,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/phone_icon"
-                android:padding="12dp"
+                android:paddingTop="12dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:src="@drawable/call_24dp_000000"
                 app:tint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintStart_toStartOf="parent"
@@ -108,12 +113,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_phone"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/phone"
                 app:errorEnabled="true"
                 app:layout_constraintStart_toEndOf="@id/phone_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tip_lastname">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -122,7 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
-                    android:lineHeight="24dp" />
+                    app:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,7 +137,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/email_icon"
-                android:padding="12dp"
+                android:paddingTop="12dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:src="@drawable/mail_24dp_000000"
                 app:tint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintStart_toStartOf="parent"
@@ -140,12 +148,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_email"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/email"
                 app:errorEnabled="true"
                 app:layout_constraintStart_toEndOf="@id/email_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tip_phone">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -154,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:lineHeight="24dp" />
+                    app:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -163,7 +172,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/cake_icon"
-                android:padding="12dp"
+                android:paddingTop="12dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:src="@drawable/cake_24dp_000000"
                 app:tint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintStart_toStartOf="parent"
@@ -172,12 +183,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_birthdate"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/select_a_date"
                 app:errorEnabled="true"
                 app:layout_constraintStart_toEndOf="@id/cake_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tip_email">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -187,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:focusable="false"
                     android:inputType="none"
-                    android:lineHeight="24dp" />
+                    app:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -196,7 +208,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/dollar_icon"
-                android:padding="12dp"
+                android:paddingTop="12dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:src="@drawable/attach_money_24dp_000000"
                 app:tint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintStart_toStartOf="parent"
@@ -205,11 +219,12 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_salary"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="89dp"
                 android:layout_marginTop="12dp"
                 android:hint="@string/expected_salary"
                 app:layout_constraintStart_toEndOf="@id/money_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tip_birthdate">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -217,8 +232,8 @@
                     style="@style/VitesseTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberSigned"
-                    android:lineHeight="24dp" />
+                    android:inputType="number"
+                    app:lineHeight="24dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -227,7 +242,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/pen_icon"
-                android:padding="12dp"
+                android:paddingTop="12dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:src="@drawable/pen_24dp_000000"
                 app:tint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintStart_toStartOf="parent"
@@ -236,13 +253,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tip_notes"
                 style="@style/VitesseTextInputLayout"
-                android:layout_width="332dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="100dp"
                 android:hint="@string/note"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/edit_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tip_salary">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -252,7 +270,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="top|start"
                     android:inputType="textMultiLine"
-                    android:lineHeight="24dp"
+                    app:lineHeight="24dp"
                     android:lines="5"
                     android:maxLines="10" />
 
@@ -267,7 +285,7 @@
         style="@style/VitesseButton"
         android:layout_width="364dp"
         android:layout_height="40dp"
-        android:lineHeight="20dp"
+        app:lineHeight="20dp"
         android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
