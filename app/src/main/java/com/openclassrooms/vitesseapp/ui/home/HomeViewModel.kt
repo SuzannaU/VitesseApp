@@ -2,9 +2,9 @@ package com.openclassrooms.vitesseapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.ui.model.filterByName
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val loadAllCandidatesUseCase: LoadAllCandidatesUseCase,
-    private val filterByNameUseCase: FilterByNameUseCase,
 ) : ViewModel() {
 
     private val _homeStateFlow = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
@@ -39,7 +38,7 @@ class HomeViewModel(
         _homeStateFlow.value = HomeUiState.LoadingState
         viewModelScope.launch {
             delay(200)         // for demonstration purposes
-            val filteredCandidates = filterByNameUseCase.execute(allCandidates, searchedText)
+            val filteredCandidates = allCandidates.filterByName(searchedText)
             if (filteredCandidates.isEmpty()) {
                 _homeStateFlow.value = HomeUiState.NoCandidateFound
             } else {

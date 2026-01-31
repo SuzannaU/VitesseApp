@@ -12,7 +12,6 @@ import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.repository.RateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
-import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
@@ -67,7 +66,6 @@ val appModule = module {
     single<ImageRepository> { InternalImageStorage(context = androidContext()) }
     single<RateRepository> { RateRepositoryImpl(get()) }
 
-    factory { FilterByNameUseCase() }
     factory { LoadCandidateUseCase(get()) }
     factory { LoadAllCandidatesUseCase(get()) }
     factory { SaveCandidateUseCase(get()) }
@@ -75,7 +73,7 @@ val appModule = module {
     factory { ConvertEurToGbpUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get()) }
     viewModel { DetailViewModel(get(), get()) }
 
 }

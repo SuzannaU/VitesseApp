@@ -1,8 +1,8 @@
 package com.openclassrooms.vitesseapp.ui
 
 import android.net.Uri
+import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
-import com.openclassrooms.vitesseapp.domain.usecase.FilterByNameUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
@@ -26,11 +26,11 @@ import org.junit.jupiter.api.Test
 class HomeViewModelTest {
 
     val loadAllCandidatesUseCase = mockk<LoadAllCandidatesUseCase>()
-    val filterByNameUseCase = mockk<FilterByNameUseCase>()
     val uri = mockk<Uri>(relaxed = true)
-    val viewModel = HomeViewModel(loadAllCandidatesUseCase, filterByNameUseCase)
+    val viewModel = HomeViewModel(loadAllCandidatesUseCase)
     lateinit var candidates: List<Candidate>
     lateinit var filteredCandidates: List<CandidateDisplay>
+    lateinit var filter: String
 
     @BeforeEach
     fun setup() {
@@ -39,18 +39,22 @@ class HomeViewModelTest {
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } returns uri
 
+        filter = "firstname1"
+        val age = 50
+        val birthdate = createBirthdateForAge(age)
+
         candidates = listOf(
             Candidate(
                 candidateId = 1,
-                firstname = "firstname1",
+                firstname = filter,
                 lastname = "lastname1",
                 photoPath = "path",
                 phone = "123456",
                 email = "email",
-                birthdate = 1L,
+                birthdate = birthdate,
                 notes = null,
-                age = 1,
-                salaryCentsInEur = 1,
+                age = age,
+                salaryCentsInEur = null,
             ),
             Candidate(
                 candidateId = 2,
@@ -62,22 +66,22 @@ class HomeViewModelTest {
                 birthdate = 1L,
                 age = 1,
                 notes = null,
-                salaryCentsInEur = 1,
+                salaryCentsInEur = null,
             ),
         )
 
         filteredCandidates = listOf(
             CandidateDisplay(
                 candidateId = 1,
-                firstname = "firstname1",
+                firstname = filter,
                 lastname = "lastname1",
                 photoUri = uri,
                 phone = "123456",
                 email = "email",
-                birthdate = "birthdate",
+                birthdate = formatBirthdateToString(birthdate),
                 notes = null,
-                salaryInEur = "salary",
-                age = 1,
+                salaryInEur = null,
+                age = age,
             ),
         )
     }
@@ -117,10 +121,9 @@ class HomeViewModelTest {
     fun loadFilteredCandidates_shouldUpdateUiState() = runTest {
 
         every { loadAllCandidatesUseCase.execute() } returns flowOf(candidates)
-        every { filterByNameUseCase.execute(any(), any()) } returns filteredCandidates
         viewModel.loadAllCandidates()
 
-        viewModel.loadFilteredCandidates("filter")
+        viewModel.loadFilteredCandidates(filter)
         advanceUntilIdle()
 
         val state = viewModel.homeStateFlow.value
@@ -130,24 +133,21 @@ class HomeViewModelTest {
         assertEquals(filteredCandidates, foundState.candidates)
 
         verify { loadAllCandidatesUseCase.execute() }
-        verify { filterByNameUseCase.execute(any(), any()) }
     }
 
     @Test
     fun loadFilteredCandidates_withNoCandidates_ShouldUpdateUiState() = runTest {
 
         every { loadAllCandidatesUseCase.execute() } returns flowOf(candidates)
-        every { filterByNameUseCase.execute(any(), any()) } returns emptyList()
         viewModel.loadAllCandidates()
 
-        viewModel.loadFilteredCandidates("filter")
+        viewModel.loadFilteredCandidates("wrong filter")
         advanceUntilIdle()
 
         val state = viewModel.homeStateFlow.value
         assertTrue(state is HomeViewModel.HomeUiState.NoCandidateFound)
 
         verify { loadAllCandidatesUseCase.execute() }
-        verify { filterByNameUseCase.execute(any(), any()) }
     }
 
 }

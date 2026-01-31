@@ -59,7 +59,7 @@ class AddViewModelTest {
             phone = "123456",
             email = "email",
             birthdate = birthdateMillis,
-            salaryCentsInEur = 1,
+            salaryCentsInEur = 100,
             notes = null,
             age = expectedAge,
             isFavorite = false,
