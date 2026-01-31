@@ -1,9 +1,12 @@
 package com.openclassrooms.vitesseapp.ui.detail
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +15,7 @@ import com.openclassrooms.vitesseapp.databinding.FragmentDetailBinding
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.core.net.toUri
 
 private const val ARG_CANDIDATE_ID = "candidateId"
 
@@ -44,6 +48,7 @@ class DetailFragment : Fragment() {
         setupNavigation()
         observeUiState()
         viewModel.loadCandidate(candidateId)
+        setupClickListeners()
     }
 
     private fun observeUiState() {
@@ -95,6 +100,57 @@ class DetailFragment : Fragment() {
     private fun setupNavigation() {
         binding.toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStackImmediate()
+        }
+    }
+
+    private fun setupClickListeners() {
+        binding.apply {
+            callButton.setOnClickListener { dialPhoneNumber() }
+            smsButton.setOnClickListener { sendSms() }
+            emailButton.setOnClickListener { sensEmail() }
+        }
+    }
+
+    private fun dialPhoneNumber() {
+        val phoneNumber = loadedCandidate?.phone ?: return
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = "tel:$phoneNumber".toUri()
+        }
+
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent);
+        } else {
+            Log.w("DetailFragment", "dialing $phoneNumber is impossible");
+            Toast.makeText(requireActivity(), R.string.dial_impossible, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private fun sendSms() {
+        val phoneNumber = loadedCandidate?.phone ?: return
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = "smsto:$phoneNumber".toUri()
+        }
+
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent);
+        } else {
+            Log.w("DetailFragment", "sending SMS to $phoneNumber is impossible");
+            Toast.makeText(requireActivity(), R.string.sms_impossible, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private fun sensEmail() {
+        val email = loadedCandidate?.email ?: return
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = "mailto:".toUri()
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+        }
+
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent);
+        } else {
+            Log.w("DetailFragment", "sending email to $email is impossible");
+            Toast.makeText(requireActivity(), R.string.email_impossible, Toast.LENGTH_SHORT).show();
         }
     }
 

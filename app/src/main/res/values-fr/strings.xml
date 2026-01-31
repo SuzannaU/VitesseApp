@@ -37,4 +37,7 @@
     <string name="salary_eur">%1$s €</string>
     <string name="salary_gbp">soit £ %1$s</string>
     <string name="not_available">Non disponible</string>
+    <string name="dial_impossible">Impossible to dial phone</string>
+    <string name="sms_impossible">Impossible to send SMS</string>
+    <string name="email_impossible">Impossible to send E-mail</string>
 </resources>
