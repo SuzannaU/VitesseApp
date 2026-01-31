@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -16,6 +17,7 @@ import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.core.net.toUri
+import androidx.core.view.get
 
 private const val ARG_CANDIDATE_ID = "candidateId"
 
@@ -45,9 +47,9 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupNavigation()
         observeUiState()
         viewModel.loadCandidate(candidateId)
+        setupNavigation()
         setupClickListeners()
     }
 
@@ -73,6 +75,11 @@ class DetailFragment : Fragment() {
                     append(it.lastname.uppercase())
                 }
                 toolbar.title = fullname
+
+                val starItem = toolbar.menu.findItem(R.id.star_icon)
+                starItem.setIcon(
+                    if(loadedCandidate?.isFavorite ?: false) R.drawable.baseline_star_24 else R.drawable.outline_star_24
+                )
 
                 birthdayField.text = getString(
                     R.string.birthdate_age,
@@ -108,6 +115,23 @@ class DetailFragment : Fragment() {
             callButton.setOnClickListener { dialPhoneNumber() }
             smsButton.setOnClickListener { sendSms() }
             emailButton.setOnClickListener { sensEmail() }
+            toolbar.setOnMenuItemClickListener { item ->
+                when(item.itemId) {
+                    R.id.star_icon -> {
+                        onStarClicked(item)
+                        true
+                    }
+                    R.id.edit_icon -> {
+                        onEditClicked()
+                        true
+                    }
+                    R.id.trash_icon -> {
+                        onTrashClicked()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 
@@ -152,6 +176,20 @@ class DetailFragment : Fragment() {
             Log.w("DetailFragment", "sending email to $email is impossible");
             Toast.makeText(requireActivity(), R.string.email_impossible, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private fun onStarClicked(item: MenuItem) {
+        viewModel.updateFavoriteStatus()
+        val iconRes = if(loadedCandidate?.isFavorite ?: false) R.drawable.baseline_star_24 else R.drawable.outline_star_24
+        item.setIcon(iconRes)
+    }
+
+    private fun onEditClicked() {
+        Toast.makeText(requireActivity(), "edit clicked, not implemented yet", Toast.LENGTH_SHORT).show();
+    }
+
+    private fun onTrashClicked() {
+        Toast.makeText(requireActivity(), "trash clicked, not implemented yet", Toast.LENGTH_SHORT).show();
     }
 
     companion object {

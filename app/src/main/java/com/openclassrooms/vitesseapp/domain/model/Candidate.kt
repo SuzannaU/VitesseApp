@@ -1,7 +1,7 @@
 package com.openclassrooms.vitesseapp.domain.model
 
 data class Candidate(
-    val candidateId: Long? = 0,
+    val candidateId: Long = 0,
     val firstname: String,
     val lastname: String,
     val photoPath: String?,

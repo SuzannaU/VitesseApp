@@ -23,6 +23,3 @@
         android:orderInCategory="3"
         android:title="@string/delete" />
 </menu>
-
-
-    <!--        android:onClick="onClickMethodName"-->

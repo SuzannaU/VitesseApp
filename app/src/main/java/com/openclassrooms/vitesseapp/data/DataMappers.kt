@@ -6,6 +6,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 
 fun Candidate.toDto() : CandidateDto {
     return CandidateDto(
+        candidateId = this.candidateId,
         firstname = this.firstname,
         lastname = this.lastname,
         photoPath = this.photoPath,
@@ -14,6 +15,7 @@ fun Candidate.toDto() : CandidateDto {
         birthdate = this.birthdate,
         salaryCentsInEur = this.salaryCentsInEur,
         notes = this.notes,
+        isFavorite = this.isFavorite,
     )
 }
 

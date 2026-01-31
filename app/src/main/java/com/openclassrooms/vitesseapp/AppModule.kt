@@ -74,6 +74,6 @@ val appModule = module {
 
     viewModel { AddViewModel(get(), get()) }
     viewModel { HomeViewModel(get()) }
-    viewModel { DetailViewModel(get(), get()) }
+    viewModel { DetailViewModel(get(), get(), get()) }
 
 }

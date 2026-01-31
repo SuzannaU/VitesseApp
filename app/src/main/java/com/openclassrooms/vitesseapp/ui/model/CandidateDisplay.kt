@@ -14,5 +14,5 @@ data class CandidateDisplay(
     val salaryInEur: String?,
     val salaryInGbp: String? = null,
     val notes: String?,
-    val isFavorite: Boolean = false,
+    var isFavorite: Boolean = false,
 )
