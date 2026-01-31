@@ -12,6 +12,7 @@ import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.repository.RateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
+import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
@@ -70,10 +71,11 @@ val appModule = module {
     factory { LoadAllCandidatesUseCase(get()) }
     factory { SaveCandidateUseCase(get()) }
     factory { SaveImageUseCase(get()) }
+    factory { DeleteCandidateUseCase(get()) }
     factory { ConvertEurToGbpUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
     viewModel { HomeViewModel(get()) }
-    viewModel { DetailViewModel(get(), get(), get()) }
+    viewModel { DetailViewModel(get(), get(), get(), get()) }
 
 }

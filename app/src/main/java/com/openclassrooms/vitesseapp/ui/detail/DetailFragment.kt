@@ -17,7 +17,8 @@ import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.core.net.toUri
-import androidx.core.view.get
+import com.openclassrooms.vitesseapp.ui.edit.EditFragment
+import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 
 private const val ARG_CANDIDATE_ID = "candidateId"
 
@@ -51,6 +52,7 @@ class DetailFragment : Fragment() {
         viewModel.loadCandidate(candidateId)
         setupNavigation()
         setupClickListeners()
+        setupResultListener()
     }
 
     private fun observeUiState() {
@@ -135,6 +137,24 @@ class DetailFragment : Fragment() {
         }
     }
 
+    private fun setupResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            DeleteDialogFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, result ->
+            if(result.getBoolean("confirmed")) {
+                viewModel.deleteCandidate(loadedCandidate?.candidateId ?: 0)
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        HomeFragment.newInstance()
+                    )
+                    .commit()
+            }
+        }
+    }
+
     private fun dialPhoneNumber() {
         val phoneNumber = loadedCandidate?.phone ?: return
         val intent = Intent(Intent.ACTION_DIAL).apply {
@@ -142,10 +162,10 @@ class DetailFragment : Fragment() {
         }
 
         if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivity(intent);
+            startActivity(intent)
         } else {
-            Log.w("DetailFragment", "dialing $phoneNumber is impossible");
-            Toast.makeText(requireActivity(), R.string.dial_impossible, Toast.LENGTH_SHORT).show();
+            Log.w("DetailFragment", "dialing $phoneNumber is impossible")
+            Toast.makeText(requireActivity(), R.string.dial_impossible, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -156,10 +176,10 @@ class DetailFragment : Fragment() {
         }
 
         if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivity(intent);
+            startActivity(intent)
         } else {
-            Log.w("DetailFragment", "sending SMS to $phoneNumber is impossible");
-            Toast.makeText(requireActivity(), R.string.sms_impossible, Toast.LENGTH_SHORT).show();
+            Log.w("DetailFragment", "sending SMS to $phoneNumber is impossible")
+            Toast.makeText(requireActivity(), R.string.sms_impossible, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -171,10 +191,10 @@ class DetailFragment : Fragment() {
         }
 
         if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivity(intent);
+            startActivity(intent)
         } else {
-            Log.w("DetailFragment", "sending email to $email is impossible");
-            Toast.makeText(requireActivity(), R.string.email_impossible, Toast.LENGTH_SHORT).show();
+            Log.w("DetailFragment", "sending email to $email is impossible")
+            Toast.makeText(requireActivity(), R.string.email_impossible, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -185,11 +205,18 @@ class DetailFragment : Fragment() {
     }
 
     private fun onEditClicked() {
-        Toast.makeText(requireActivity(), "edit clicked, not implemented yet", Toast.LENGTH_SHORT).show();
+        parentFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                EditFragment.newInstance(loadedCandidate?.candidateId ?: 0)
+            )
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun onTrashClicked() {
-        Toast.makeText(requireActivity(), "trash clicked, not implemented yet", Toast.LENGTH_SHORT).show();
+        DeleteDialogFragment().show(childFragmentManager, "DELETE_DIALOG")
     }
 
     companion object {

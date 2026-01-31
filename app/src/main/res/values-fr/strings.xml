@@ -40,4 +40,8 @@
     <string name="dial_impossible">Impossible to dial phone</string>
     <string name="sms_impossible">Impossible to send SMS</string>
     <string name="email_impossible">Impossible to send E-mail</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="deletion">Suppression</string>
+    <string name="deletion_message">Etes-vous sûr de vouloir supprimer ce candidat ? Cette action est irréversible.</string>
 </resources>

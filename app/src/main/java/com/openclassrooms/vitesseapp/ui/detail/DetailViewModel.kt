@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
+import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
@@ -17,6 +18,7 @@ class DetailViewModel(
     private val loadCandidateUseCase: LoadCandidateUseCase,
     private val convertEurToGbpUseCase: ConvertEurToGbpUseCase,
     private val saveCandidateUseCase: SaveCandidateUseCase,
+    private val deleteCandidateUseCase: DeleteCandidateUseCase,
 ) : ViewModel() {
 
     private val _detailStateFlow = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
@@ -46,6 +48,13 @@ class DetailViewModel(
                 )
             )
             _detailStateFlow.value = DetailUiState.CandidateFound(candidateDisplay)
+        }
+    }
+
+    fun deleteCandidate(candidateId: Long) {
+        _detailStateFlow.value = DetailUiState.LoadingState
+        viewModelScope.launch {
+            deleteCandidateUseCase.execute(candidateId)
         }
     }
 
