@@ -1,6 +1,8 @@
 package com.openclassrooms.vitesseapp.ui.model
 
-fun List<CandidateDisplay>.filterByName(filter: String?): List<CandidateDisplay> {
-    if(filter.isNullOrEmpty()) return this
-    return filter { it.firstname == filter || it.lastname == filter }
+fun List<CandidateDisplay>.filterByName(searchText: String): List<CandidateDisplay> {
+    return filter {
+        it.firstname.equals(searchText, ignoreCase = true) ||
+        it.lastname.equals(searchText, ignoreCase = true)
+    }
 }

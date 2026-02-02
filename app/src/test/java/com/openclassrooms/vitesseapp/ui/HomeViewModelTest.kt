@@ -12,11 +12,15 @@ import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -26,15 +30,17 @@ import org.junit.jupiter.api.Test
 class HomeViewModelTest {
 
     val loadAllCandidatesUseCase = mockk<LoadAllCandidatesUseCase>()
-    val uri = mockk<Uri>(relaxed = true)
     val viewModel = HomeViewModel(loadAllCandidatesUseCase)
-    lateinit var candidates: List<Candidate>
+    lateinit var testScope: TestScope
+    lateinit var allCandidates: List<Candidate>
     lateinit var filteredCandidates: List<CandidateDisplay>
     lateinit var filter: String
+    val uri = mockk<Uri>(relaxed = true)
 
     @BeforeEach
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        testScope = TestScope()
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
 
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } returns uri
@@ -43,7 +49,7 @@ class HomeViewModelTest {
         val age = 50
         val birthdate = createBirthdateForAge(age)
 
-        candidates = listOf(
+        allCandidates = listOf(
             Candidate(
                 candidateId = 1,
                 firstname = filter,
@@ -86,10 +92,15 @@ class HomeViewModelTest {
         )
     }
 
-    @Test
-    fun loadAllCandidates_shouldUpdateUiState() = runTest {
+    @AfterEach
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
-        every { loadAllCandidatesUseCase.execute() } returns flowOf(candidates)
+    @Test
+    fun loadAllCandidates_shouldUpdateUiState() = testScope.runTest {
+
+        every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidates)
 
         viewModel.loadAllCandidates()
         advanceUntilIdle()
@@ -98,13 +109,13 @@ class HomeViewModelTest {
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
 
         val foundState = state as HomeViewModel.HomeUiState.CandidatesFound
-        assertEquals(candidates.size, foundState.candidates.size)
+        assertEquals(allCandidates.size, foundState.candidates.size)
 
         verify { loadAllCandidatesUseCase.execute() }
     }
 
     @Test
-    fun loadAllCandidates_withNoCandidates_shouldUpdateUiState() = runTest {
+    fun loadAllCandidates_withNoCandidates_shouldUpdateUiState() = testScope.runTest {
 
         every { loadAllCandidatesUseCase.execute() } returns flowOf(emptyList())
 
@@ -118,36 +129,64 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadFilteredCandidates_shouldUpdateUiState() = runTest {
+    fun loadAllCandidates_withErrorWhileLoading_shouldUpdateUiState() = testScope.runTest {
 
-        every { loadAllCandidatesUseCase.execute() } returns flowOf(candidates)
+        every { loadAllCandidatesUseCase.execute() } returns flow { throw Exception("Fake Exception") }
+
         viewModel.loadAllCandidates()
+        advanceUntilIdle()
+
+        val state = viewModel.homeStateFlow.value
+        println(state.toString())
+        assertTrue(state is HomeViewModel.HomeUiState.ErrorState)
+        verify { loadAllCandidatesUseCase.execute() }
+    }
+
+    @Test
+    fun loadFilteredCandidates_shouldUpdateUiState() = testScope.runTest {
+
+        preloadCandidates()
 
         viewModel.loadFilteredCandidates(filter)
         advanceUntilIdle()
 
         val state = viewModel.homeStateFlow.value
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
-
-        val foundState = state as HomeViewModel.HomeUiState.CandidatesFound
-        assertEquals(filteredCandidates, foundState.candidates)
-
+        state as HomeViewModel.HomeUiState.CandidatesFound
+        assertEquals(filteredCandidates, state.candidates)
         verify { loadAllCandidatesUseCase.execute() }
     }
 
     @Test
-    fun loadFilteredCandidates_withNoCandidates_ShouldUpdateUiState() = runTest {
+    fun loadFilteredCandidates_withNoFilteredCandidates_ShouldUpdateUiState() = testScope.runTest {
 
-        every { loadAllCandidatesUseCase.execute() } returns flowOf(candidates)
-        viewModel.loadAllCandidates()
+        preloadCandidates()
 
         viewModel.loadFilteredCandidates("wrong filter")
         advanceUntilIdle()
 
         val state = viewModel.homeStateFlow.value
         assertTrue(state is HomeViewModel.HomeUiState.NoCandidateFound)
-
         verify { loadAllCandidatesUseCase.execute() }
     }
 
+    @Test
+    fun loadFilteredCandidates_withNoFilter_ShouldNotFilter() = testScope.runTest {
+
+        preloadCandidates()
+
+        viewModel.loadFilteredCandidates(" ")
+        advanceUntilIdle()
+
+        val state = viewModel.homeStateFlow.value
+        assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
+        state as HomeViewModel.HomeUiState.CandidatesFound
+        assertEquals(allCandidates.size, state.candidates.size)
+        verify { loadAllCandidatesUseCase.execute() }
+    }
+
+    private fun preloadCandidates() {
+        every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidates)
+        viewModel.loadAllCandidates()
+    }
 }

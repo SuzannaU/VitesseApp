@@ -68,20 +68,6 @@ class DetailFragment : Fragment() {
                         bindCandidate()
                     }
 
-//                    DetailViewModel.DetailUiState.ErrorState -> {
-//                        binding.detailScrollview.isVisible = false
-//                        binding.tvError.isVisible = true
-//                    }
-//
-//                    DetailViewModel.DetailUiState.LoadingState -> {
-//                        binding.barLoading.isVisible = true
-//                    }
-//
-//                    DetailViewModel.DetailUiState.NoCandidateFound -> {
-//                        binding.detailScrollview.isVisible = false
-//                        binding.tvNoCandidate.isVisible = true
-//                    }
-
                     DetailViewModel.DetailUiState.DeleteSuccess -> {
                         navigateToHomeFragment()
                     }

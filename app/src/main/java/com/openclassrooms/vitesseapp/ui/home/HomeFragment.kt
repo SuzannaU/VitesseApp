@@ -54,6 +54,7 @@ class HomeFragment : Fragment() {
                 binding.apply {
                     barLoading.isVisible = uiState is HomeViewModel.HomeUiState.LoadingState
                     tvNoCandidates.isVisible = uiState is HomeViewModel.HomeUiState.NoCandidateFound
+                    tvError.isVisible = uiState is HomeViewModel.HomeUiState.ErrorState
                     when (uiState) {
 
                         is HomeViewModel.HomeUiState.CandidatesFound -> {
@@ -67,6 +68,11 @@ class HomeFragment : Fragment() {
                         }
 
                         HomeViewModel.HomeUiState.NoCandidateFound -> {
+                            candidates = emptyList()
+                            adapter.updateCandidates(candidates)
+                        }
+
+                        HomeViewModel.HomeUiState.ErrorState -> {
                             candidates = emptyList()
                             adapter.updateCandidates(candidates)
                         }

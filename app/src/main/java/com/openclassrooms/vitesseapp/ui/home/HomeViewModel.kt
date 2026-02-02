@@ -6,9 +6,9 @@ import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.filterByName
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -21,13 +21,18 @@ class HomeViewModel(
 
     fun loadAllCandidates() {
         viewModelScope.launch {
-            delay(200)         // for demonstration purposes
+            _homeStateFlow.value = HomeUiState.LoadingState
             loadAllCandidatesUseCase.execute()
+                .catch {
+                    _homeStateFlow.value = HomeUiState.ErrorState
+                    return@catch
+                }
                 .collect { loadedCandidates ->
                     if (loadedCandidates.isEmpty()) {
                         _homeStateFlow.value = HomeUiState.NoCandidateFound
                     } else {
-                        allCandidates = loadedCandidates.map { candidate -> candidate.toCandidateDisplay(null) }
+                        allCandidates =
+                            loadedCandidates.map { candidate -> candidate.toCandidateDisplay(null) }
                         _homeStateFlow.value = HomeUiState.CandidatesFound(allCandidates)
                     }
                 }
@@ -35,9 +40,11 @@ class HomeViewModel(
     }
 
     fun loadFilteredCandidates(searchedText: String?) {
-        _homeStateFlow.value = HomeUiState.LoadingState
         viewModelScope.launch {
-            delay(200)         // for demonstration purposes
+            if (searchedText.isNullOrBlank()) {
+                _homeStateFlow.value = HomeUiState.CandidatesFound(allCandidates)
+                return@launch
+            }
             val filteredCandidates = allCandidates.filterByName(searchedText)
             if (filteredCandidates.isEmpty()) {
                 _homeStateFlow.value = HomeUiState.NoCandidateFound
@@ -50,11 +57,11 @@ class HomeViewModel(
 
     sealed class HomeUiState {
         object LoadingState : HomeUiState()
+        object NoCandidateFound : HomeUiState()
+        object ErrorState : HomeUiState()
 
         data class CandidatesFound(
             val candidates: List<CandidateDisplay>
         ) : HomeUiState()
-
-        object NoCandidateFound : HomeUiState()
     }
 }
