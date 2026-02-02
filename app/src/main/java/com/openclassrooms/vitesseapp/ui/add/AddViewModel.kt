@@ -6,6 +6,8 @@ import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.ui.model.toDomain
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AddViewModel(
@@ -13,12 +15,30 @@ class AddViewModel(
     private val saveImageUseCase: SaveImageUseCase,
 ) : ViewModel() {
 
+    private val _addUiState = MutableStateFlow<AddUiState>(AddUiState.LoadedState)
+    val addUiState = _addUiState.asStateFlow()
+
     fun saveCandidate(candidateFormUI: CandidateFormUI) {
         viewModelScope.launch {
-            val photoPath = candidateFormUI.photoUri?.let {
-                saveImageUseCase.execute(candidateFormUI.photoUri)
+            val photoPath: String? = candidateFormUI.photoUri?.let {
+                runCatching {
+                    saveImageUseCase.execute(candidateFormUI.photoUri)
+                }.onFailure {
+                    _addUiState.value = AddUiState.ErrorState
+                    return@launch
+                }.getOrNull()
             }
-            saveCandidateUseCase.execute(candidateFormUI.toDomain(photoPath))
+            runCatching {
+                saveCandidateUseCase.execute(candidateFormUI.toDomain(photoPath))
+            }.onFailure {
+                _addUiState.value = AddUiState.ErrorState
+                return@launch
+            }
         }
+    }
+
+    sealed class AddUiState {
+        object LoadedState : AddUiState()
+        object ErrorState : AddUiState()
     }
 }

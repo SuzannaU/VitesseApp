@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.datepicker.CalendarConstraints
@@ -41,11 +42,21 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeUiState()
         setupNavigation()
         setupDatePicker()
         setupPhotoPicker()
         setupSaveButton()
         setupEmailListener()
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launch {
+            viewModel.addUiState.collect { uiState ->
+                binding.tvError.isVisible = uiState is AddViewModel.AddUiState.ErrorState
+                binding.addScrollview.isVisible = uiState is AddViewModel.AddUiState.LoadedState
+            }
+        }
     }
 
     private fun setupNavigation() {

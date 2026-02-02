@@ -12,19 +12,88 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CandidateRepositoryImplTest {
 
     val candidateDao: CandidateDao = mockk()
     val repository: CandidateRepository = CandidateRepositoryImpl(candidateDao = candidateDao)
+    lateinit var testScope: TestScope
+
+    @BeforeEach
+    fun setup() {
+        testScope = TestScope()
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
+    }
+
+    @AfterEach
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
     @Test
-    fun saveCandidate_shouldSendCandidateToDao() = runTest {
+    fun fetchCandidate_shouldCallDaoAndReturnCandidate() = testScope.runTest {
+        val expectedAge = 30
+        val birthdateMillis = createBirthdateForAge(expectedAge)
+        val candidateDto = CandidateDto(
+            candidateId = 1,
+            firstname = "firstname",
+            lastname = "lastname",
+            photoPath = "path",
+            phone = "123456",
+            email = "email",
+            birthdate = birthdateMillis,
+            notes = null,
+            salaryCentsInEur = 1,
+        )
+        val candidate = Candidate(
+            candidateId = 1,
+            firstname = "firstname",
+            lastname = "lastname",
+            photoPath = "path",
+            phone = "123456",
+            email = "email",
+            birthdate = birthdateMillis,
+            notes = null,
+            age = expectedAge,
+            salaryCentsInEur = 1,
+        )
+        val idCapture = slot<Long>()
+        coEvery { candidateDao.getCandidateById(capture(idCapture)) } returns candidateDto
+
+        val result = repository.fetchCandidate(1L)
+        assertEquals(candidate, result)
+        assertEquals(1L, idCapture.captured)
+        coVerify { candidateDao.getCandidateById(any()) }
+    }
+
+    @Test
+    fun fetchCandidate_withNoCandidateFound_shouldCallDaoAndReturnNull() = testScope.runTest {
+        val idCapture = slot<Long>()
+        coEvery { candidateDao.getCandidateById(capture(idCapture)) } returns null
+
+        val result = repository.fetchCandidate(1L)
+        assertNull(result)
+        assertEquals(1L, idCapture.captured)
+        coVerify { candidateDao.getCandidateById(any()) }
+    }
+
+    @Test
+    fun saveCandidate_shouldSendCandidateToDao() = testScope.runTest {
 
         val candidate = Candidate(
             firstname = "firstname",
@@ -37,7 +106,6 @@ class CandidateRepositoryImplTest {
             salaryCentsInEur = 1,
             age = null,
         )
-
         val expectedCandidateDto = CandidateDto(
             firstname = "firstname",
             lastname = "lastname",
@@ -48,7 +116,6 @@ class CandidateRepositoryImplTest {
             notes = null,
             salaryCentsInEur = 1,
         )
-
         val candidateDtoCapture = slot<CandidateDto>()
         coEvery { candidateDao.saveCandidate(capture(candidateDtoCapture)) } returns Unit
 
@@ -59,7 +126,20 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun fetchAllCandidates_shouldCallDaoAndReturnFlowOfCandidate() = runTest {
+    fun deleteCandidate_shouldSendCandidateIdToDao() = testScope.runTest {
+
+        val candidateId = 1L
+        val idCapture = slot<Long>()
+        coEvery { candidateDao.deleteCandidateById(capture(idCapture)) } returns Unit
+
+        repository.deleteCandidate(candidateId)
+
+        assertEquals(candidateId, idCapture.captured)
+        coVerify { candidateDao.deleteCandidateById(any()) }
+    }
+
+    @Test
+    fun fetchAllCandidates_shouldCallDaoAndReturnFlowOfCandidate() = testScope.runTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
 
