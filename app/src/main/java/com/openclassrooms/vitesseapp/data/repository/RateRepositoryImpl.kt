@@ -11,7 +11,7 @@ class RateRepositoryImpl(
     override suspend fun fetchRatesForEur(): BigDecimal? {
         val response = rateApiService.getEuroRates()
         val gbpRate = response.body()?.rates?.get("gbp")
-        if (gbpRate != null) {
+        if (response.isSuccessful && gbpRate != null) {
             return BigDecimal.valueOf(gbpRate).setScale(2, RoundingMode.UP)
         }
         return null

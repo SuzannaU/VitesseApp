@@ -16,7 +16,7 @@ interface CandidateDao {
     fun getAllCandidates(): Flow<List<CandidateDto>>
 
     @Query("SELECT * FROM candidates WHERE candidateId = :id")
-    suspend fun getCandidateById(id: Long): CandidateDto
+    suspend fun getCandidateById(id: Long): CandidateDto?
 
     @Query("DELETE FROM candidates WHERE candidateId = :id")
     suspend fun deleteCandidateById(id: Long)

@@ -23,46 +23,81 @@ class DetailViewModel(
 
     private val _detailStateFlow = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
     val detailUiState = _detailStateFlow.asStateFlow()
-    private lateinit var loadedCandidate: Candidate
-    private lateinit var candidateDisplay: CandidateDisplay
+    private var loadedCandidate: Candidate? = null
 
     fun loadCandidate(candidateId: Long) {
         viewModelScope.launch {
-            delay(500)         // for demonstration purposes
-            loadedCandidate = loadCandidateUseCase.execute(candidateId)
-            val salaryGbp = convertEurToGbpUseCase.execute(loadedCandidate.salaryCentsInEur)
+            _detailStateFlow.value = DetailUiState.LoadingState
 
-            candidateDisplay = loadedCandidate.toCandidateDisplay(salaryGbp)
-            _detailStateFlow.value = DetailUiState.CandidateFound(candidateDisplay)
+            runCatching {
+                val candidate = loadCandidateUseCase.execute(candidateId) ?: return@runCatching null
+                val salaryGbp = candidate.salaryCentsInEur?.let {
+                    convertEurToGbpUseCase.execute(candidate.salaryCentsInEur)
+                }
+                candidate to candidate.toCandidateDisplay(salaryGbp)
+            }.onSuccess { result ->
+                result?.let { (candidate, display) ->
+                    loadedCandidate = candidate
+                    _detailStateFlow.value = DetailUiState.CandidateFound(display)
+                } ?: run {
+                    loadedCandidate = null
+                    _detailStateFlow.value = DetailUiState.NoCandidateFound
+                }
+            }.onFailure {
+                loadedCandidate = null
+                _detailStateFlow.value = DetailUiState.ErrorState
+            }
         }
     }
 
-    fun updateFavoriteStatus() {
-        _detailStateFlow.value = DetailUiState.LoadingState
-        val previousFavoriteStatus = candidateDisplay.isFavorite
-        candidateDisplay.isFavorite = !previousFavoriteStatus
+    fun toggleFavoriteStatus() {
+        val currentState = _detailStateFlow.value
+        if (currentState !is DetailUiState.CandidateFound) return
+        val candidate = loadedCandidate ?: return
+
+        val newFavoriteStatus = !currentState.candidateDisplay.isFavorite
+
         viewModelScope.launch {
-            saveCandidateUseCase.execute(
-                loadedCandidate.copy(
-                    isFavorite = !previousFavoriteStatus
-                )
+            val updatedDisplay = currentState.candidateDisplay.copy(
+                isFavorite = newFavoriteStatus
             )
-            _detailStateFlow.value = DetailUiState.CandidateFound(candidateDisplay)
+            val updatedCandidate = candidate.copy(
+                isFavorite = newFavoriteStatus
+            )
+
+            runCatching {
+                saveCandidateUseCase.execute(updatedCandidate)
+            }.onSuccess {
+                _detailStateFlow.value = DetailUiState.CandidateFound(updatedDisplay)
+            }.onFailure {
+                _detailStateFlow.value = DetailUiState.ErrorState
+            }
         }
     }
 
     fun deleteCandidate(candidateId: Long) {
-        _detailStateFlow.value = DetailUiState.LoadingState
+        val currentState = _detailStateFlow.value
+        if (currentState !is DetailUiState.CandidateFound) return
+
         viewModelScope.launch {
-            deleteCandidateUseCase.execute(candidateId)
+            runCatching {
+                deleteCandidateUseCase.execute(candidateId)
+            }.onSuccess {
+                _detailStateFlow.value = DetailUiState.DeleteSuccess
+            }.onFailure {
+                _detailStateFlow.value = DetailUiState.ErrorState
+            }
         }
     }
 
     sealed class DetailUiState {
         object LoadingState : DetailUiState()
+        object NoCandidateFound : DetailUiState()
+        object ErrorState : DetailUiState()
+        object DeleteSuccess : DetailUiState()
 
         data class CandidateFound(
-            val candidate: CandidateDisplay,
+            val candidateDisplay: CandidateDisplay
         ) : DetailUiState()
     }
 }

@@ -8,17 +8,17 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentDetailBinding
+import com.openclassrooms.vitesseapp.ui.edit.EditFragment
+import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import androidx.core.net.toUri
-import com.openclassrooms.vitesseapp.ui.edit.EditFragment
-import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 
 private const val ARG_CANDIDATE_ID = "candidateId"
 
@@ -52,16 +52,41 @@ class DetailFragment : Fragment() {
         viewModel.loadCandidate(candidateId)
         setupNavigation()
         setupClickListeners()
-        setupResultListener()
+        setupDialogResultListener()
     }
 
     private fun observeUiState() {
         lifecycleScope.launch {
             viewModel.detailUiState.collect { uiState ->
                 binding.barLoading.isVisible = uiState is DetailViewModel.DetailUiState.LoadingState
-                if (uiState is DetailViewModel.DetailUiState.CandidateFound) {
-                    loadedCandidate = uiState.candidate
-                    bindCandidate()
+                binding.tvNoCandidate.isVisible = uiState is DetailViewModel.DetailUiState.NoCandidateFound
+                binding.tvError.isVisible = uiState is DetailViewModel.DetailUiState.ErrorState
+                binding.detailScrollview.isVisible = uiState is DetailViewModel.DetailUiState.CandidateFound
+                when (uiState) {
+                    is DetailViewModel.DetailUiState.CandidateFound -> {
+                        loadedCandidate = uiState.candidateDisplay
+                        bindCandidate()
+                    }
+
+//                    DetailViewModel.DetailUiState.ErrorState -> {
+//                        binding.detailScrollview.isVisible = false
+//                        binding.tvError.isVisible = true
+//                    }
+//
+//                    DetailViewModel.DetailUiState.LoadingState -> {
+//                        binding.barLoading.isVisible = true
+//                    }
+//
+//                    DetailViewModel.DetailUiState.NoCandidateFound -> {
+//                        binding.detailScrollview.isVisible = false
+//                        binding.tvNoCandidate.isVisible = true
+//                    }
+
+                    DetailViewModel.DetailUiState.DeleteSuccess -> {
+                        navigateToHomeFragment()
+                    }
+
+                    else -> Unit
                 }
             }
         }
@@ -80,7 +105,9 @@ class DetailFragment : Fragment() {
 
                 val starItem = toolbar.menu.findItem(R.id.star_icon)
                 starItem.setIcon(
-                    if(loadedCandidate?.isFavorite ?: false) R.drawable.baseline_star_24 else R.drawable.outline_star_24
+                    if (loadedCandidate?.isFavorite
+                            ?: false
+                    ) R.drawable.baseline_star_24 else R.drawable.outline_star_24
                 )
 
                 birthdayField.text = getString(
@@ -118,39 +145,24 @@ class DetailFragment : Fragment() {
             smsButton.setOnClickListener { sendSms() }
             emailButton.setOnClickListener { sensEmail() }
             toolbar.setOnMenuItemClickListener { item ->
-                when(item.itemId) {
+                when (item.itemId) {
                     R.id.star_icon -> {
                         onStarClicked(item)
                         true
                     }
+
                     R.id.edit_icon -> {
                         onEditClicked()
                         true
                     }
+
                     R.id.trash_icon -> {
                         onTrashClicked()
                         true
                     }
+
                     else -> false
                 }
-            }
-        }
-    }
-
-    private fun setupResultListener() {
-        childFragmentManager.setFragmentResultListener(
-            DeleteDialogFragment.REQUEST_KEY,
-            viewLifecycleOwner
-        ) { _, result ->
-            if(result.getBoolean("confirmed")) {
-                viewModel.deleteCandidate(loadedCandidate?.candidateId ?: 0)
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(
-                        R.id.fragment_container,
-                        HomeFragment.newInstance()
-                    )
-                    .commit()
             }
         }
     }
@@ -199,8 +211,10 @@ class DetailFragment : Fragment() {
     }
 
     private fun onStarClicked(item: MenuItem) {
-        viewModel.updateFavoriteStatus()
-        val iconRes = if(loadedCandidate?.isFavorite ?: false) R.drawable.baseline_star_24 else R.drawable.outline_star_24
+        viewModel.toggleFavoriteStatus()
+        val iconRes = if (loadedCandidate?.isFavorite
+                ?: false
+        ) R.drawable.baseline_star_24 else R.drawable.outline_star_24
         item.setIcon(iconRes)
     }
 
@@ -217,6 +231,27 @@ class DetailFragment : Fragment() {
 
     private fun onTrashClicked() {
         DeleteDialogFragment().show(childFragmentManager, "DELETE_DIALOG")
+    }
+
+    private fun setupDialogResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            DeleteDialogFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, result ->
+            if (result.getBoolean("confirmed")) {
+                viewModel.deleteCandidate(loadedCandidate?.candidateId ?: 0)
+            }
+        }
+    }
+
+    private fun navigateToHomeFragment() {
+        parentFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                HomeFragment.newInstance()
+            )
+            .commit()
     }
 
     companion object {

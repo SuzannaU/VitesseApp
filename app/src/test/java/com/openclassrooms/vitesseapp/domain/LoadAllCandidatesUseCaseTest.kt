@@ -56,7 +56,5 @@ class LoadAllCandidatesUseCaseTest {
 
         assertEquals(candidates, result)
         verify { candidateRepository.fetchAllCandidates() }
-
-
     }
 }
