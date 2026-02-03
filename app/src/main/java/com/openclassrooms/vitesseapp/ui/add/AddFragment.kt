@@ -54,7 +54,7 @@ class AddFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.addUiState.collect { uiState ->
                 binding.tvError.isVisible = uiState is AddViewModel.AddUiState.ErrorState
-                binding.addScrollview.isVisible = uiState is AddViewModel.AddUiState.LoadedState
+                binding.includeForm.formScrollview.isVisible = uiState is AddViewModel.AddUiState.LoadedState
             }
         }
     }
@@ -77,19 +77,19 @@ class AddFragment : Fragment() {
             .setCalendarConstraints(constraintsBuilder.build())
             .build()
 
-        binding.tietBirthdate.setOnClickListener {
+        binding.includeForm.tietBirthdate.setOnClickListener {
             datePicker.show(parentFragmentManager, "DATE_PICKER")
         }
 
         datePicker.addOnPositiveButtonClickListener { selection ->
             birthdateMillis = selection
-            binding.tietBirthdate.setText(datePicker.headerText)
+            binding.includeForm.tietBirthdate.setText(datePicker.headerText)
         }
     }
 
     private fun setupPhotoPicker() {
 
-        binding.ivProfilePhoto.apply {
+        binding.includeForm.ivProfilePhoto.apply {
             setImageResource(R.drawable.photo_library_72dp)
 
             val pickPhotoLauncher =
@@ -114,19 +114,19 @@ class AddFragment : Fragment() {
         binding.apply {
             btnSave.setOnClickListener {
 
-                val salaryString = tietSalary.text.toString()
+                val salaryString = includeForm.tietSalary.text.toString().trim()
                 val salaryInEur =
                     if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()) else null
 
                 val candidate = CandidateFormUI(
-                    firstname = tietFirstname.text.toString(),
-                    lastname = tietLastname.text.toString(),
+                    firstname = includeForm.tietFirstname.text.toString().trim(),
+                    lastname = includeForm.tietLastname.text.toString().trim(),
                     photoUri = photoUri,
-                    phone = tietPhone.text.toString(),
-                    email = tietEmail.text.toString(),
+                    phone = includeForm.tietPhone.text.toString().trim(),
+                    email = includeForm.tietEmail.text.toString().trim(),
                     birthdate = birthdateMillis,
                     salaryInEur = salaryInEur?.toLong(),
-                    notes = tietNotes.text.toString(),
+                    notes = includeForm.tietNotes.text.toString().trim(),
                 )
 
                 if (validateCandidate(candidate)) {
@@ -141,7 +141,7 @@ class AddFragment : Fragment() {
 
     private fun validateCandidate(candidate: CandidateFormUI): Boolean {
         var isValid = true
-        binding.apply {
+        binding.includeForm.apply {
             isValid = validateField(!candidate.firstname.isBlank(), tipFirstname) && isValid
             isValid = validateField(!candidate.lastname.isBlank(), tipLastname) && isValid
             isValid = validateField(!candidate.phone.isBlank(), tipPhone) && isValid
@@ -167,14 +167,14 @@ class AddFragment : Fragment() {
     }
 
     private fun setupEmailListener() {
-        binding.tietEmail.addTextChangedListener(object : TextWatcher {
+        binding.includeForm.tietEmail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (Patterns.EMAIL_ADDRESS.matcher(binding.tietEmail.text.toString())
+                if (Patterns.EMAIL_ADDRESS.matcher(binding.includeForm.tietEmail.text.toString())
                         .matches()
                 ) {
-                    binding.tipEmail.error = null
+                    binding.includeForm.tipEmail.error = null
                 } else {
-                    binding.tipEmail.error = getString(R.string.invalid_format)
+                    binding.includeForm.tipEmail.error = getString(R.string.invalid_format)
                 }
             }
 

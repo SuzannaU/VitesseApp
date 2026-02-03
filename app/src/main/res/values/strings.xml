@@ -46,4 +46,5 @@
     <string name="error_loading_candidate">Error loading candidate</string>
     <string name="no_candidate">No candidate found</string>
     <string name="error">An error occured</string>
+    <string name="modify_candidate">Edit a candidate</string>
 </resources>

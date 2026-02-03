@@ -31,10 +31,10 @@ class DetailViewModel(
 
             runCatching {
                 val candidate = loadCandidateUseCase.execute(candidateId) ?: return@runCatching null
-                val salaryGbp = candidate.salaryCentsInEur?.let {
+                val salaryInCentsGbp = candidate.salaryCentsInEur?.let {
                     convertEurToGbpUseCase.execute(candidate.salaryCentsInEur)
                 }
-                candidate to candidate.toCandidateDisplay(salaryGbp)
+                candidate to candidate.toCandidateDisplay(salaryInCentsGbp)
             }.onSuccess { result ->
                 result?.let { (candidate, display) ->
                     loadedCandidate = candidate

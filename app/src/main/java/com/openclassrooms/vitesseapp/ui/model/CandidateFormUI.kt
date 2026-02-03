@@ -3,7 +3,7 @@ package com.openclassrooms.vitesseapp.ui.model
 import android.net.Uri
 
 data class CandidateFormUI(
-    var candidateId: Long? = 0,
+    var candidateId: Long = 0,
     val firstname: String,
     val lastname: String,
     val photoUri: Uri?,

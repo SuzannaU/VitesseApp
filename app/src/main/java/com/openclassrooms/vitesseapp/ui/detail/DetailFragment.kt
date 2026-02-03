@@ -27,7 +27,7 @@ private const val ARG_CANDIDATE_ID = "candidateId"
 
 class DetailFragment : Fragment() {
 
-    lateinit var binding: FragmentDetailBinding
+    private lateinit var binding: FragmentDetailBinding
     private val viewModel: DetailViewModel by viewModel()
     private var candidateId: Long = 0
     private var loadedCandidate: CandidateDisplay? = null

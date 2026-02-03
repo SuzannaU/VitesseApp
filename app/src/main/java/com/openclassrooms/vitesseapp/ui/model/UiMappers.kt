@@ -6,7 +6,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.ui.formatBirthdateToString
 import com.openclassrooms.vitesseapp.ui.formatSalaryToString
 
-fun Candidate.toCandidateDisplay(salaryInGbp: Long?) : CandidateDisplay {
+fun Candidate.toCandidateDisplay(salaryInCentsGbp: Long?) : CandidateDisplay {
     return CandidateDisplay(
         candidateId = this.candidateId,
         firstname = this.firstname,
@@ -16,8 +16,23 @@ fun Candidate.toCandidateDisplay(salaryInGbp: Long?) : CandidateDisplay {
         email = this.email,
         birthdate = formatBirthdateToString(this.birthdate),
         age = calculateAge(this.birthdate),
-        salaryInEur = this.salaryCentsInEur?.let { formatSalaryToString(it) },
-        salaryInGbp = salaryInGbp?.let { formatSalaryToString(it) },
+        salaryInEur = this.salaryCentsInEur?.let { formatSalaryToString(it/100) },
+        salaryInGbp = salaryInCentsGbp?.let { formatSalaryToString(it/100) },
+        notes = this.notes,
+        isFavorite = this.isFavorite,
+    )
+}
+
+fun Candidate.toCandidateFormUI() : CandidateFormUI {
+    return CandidateFormUI(
+        candidateId = this.candidateId,
+        firstname = this.firstname,
+        lastname = this.lastname,
+        photoUri = this.photoPath?.toUri(),
+        phone = this.phone,
+        email = this.email,
+        birthdate = this.birthdate,
+        salaryInEur = this.salaryCentsInEur?.div(100L),
         notes = this.notes,
         isFavorite = this.isFavorite,
     )
@@ -26,6 +41,7 @@ fun Candidate.toCandidateDisplay(salaryInGbp: Long?) : CandidateDisplay {
 fun CandidateFormUI.toDomain(photoPath: String?) : Candidate {
     val age = calculateAge(this.birthdate)
     return Candidate(
+        candidateId = this.candidateId,
         firstname = this.firstname,
         lastname = this.lastname,
         photoPath = photoPath,

@@ -17,9 +17,9 @@ fun formatBirthdateToString(birthdate: Long) : String {
     return simpleDateFormat.format(date)
 }
 
-fun formatSalaryToString(salaryInCents: Long) : String {
+fun formatSalaryToString(salary: Long) : String {
     val locale = Locale.getDefault()
 
-    val string = String.format(locale,"%.2f", salaryInCents.toDouble()/100)
+    val string = String.format(locale,"%d", salary)
     return string
 }

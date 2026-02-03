@@ -19,6 +19,7 @@ import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
 import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
+import com.openclassrooms.vitesseapp.ui.edit.EditViewModel
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -77,5 +78,5 @@ val appModule = module {
     viewModel { AddViewModel(get(), get()) }
     viewModel { HomeViewModel(get()) }
     viewModel { DetailViewModel(get(), get(), get(), get()) }
-
+    viewModel { EditViewModel(get(), get(), get()) }
 }
