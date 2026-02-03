@@ -12,6 +12,9 @@ import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import coil3.load
+import coil3.size.Scale
+import coil3.size.ViewSizeResolver
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentDetailBinding
 import com.openclassrooms.vitesseapp.ui.edit.EditFragment
@@ -59,9 +62,11 @@ class DetailFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.detailUiState.collect { uiState ->
                 binding.barLoading.isVisible = uiState is DetailViewModel.DetailUiState.LoadingState
-                binding.tvNoCandidate.isVisible = uiState is DetailViewModel.DetailUiState.NoCandidateFound
+                binding.tvNoCandidate.isVisible =
+                    uiState is DetailViewModel.DetailUiState.NoCandidateFound
                 binding.tvError.isVisible = uiState is DetailViewModel.DetailUiState.ErrorState
-                binding.detailScrollview.isVisible = uiState is DetailViewModel.DetailUiState.CandidateFound
+                binding.detailScrollview.isVisible =
+                    uiState is DetailViewModel.DetailUiState.CandidateFound
                 when (uiState) {
                     is DetailViewModel.DetailUiState.CandidateFound -> {
                         loadedCandidate = uiState.candidateDisplay
@@ -79,42 +84,48 @@ class DetailFragment : Fragment() {
     }
 
     private fun bindCandidate() {
-        loadedCandidate?.let {
+        loadedCandidate?.let { candidateDisplay ->
             binding.apply {
 
                 val fullname = buildString {
-                    append(it.firstname)
+                    append(candidateDisplay.firstname)
                     append(" ")
-                    append(it.lastname.uppercase())
+                    append(candidateDisplay.lastname.uppercase())
                 }
                 toolbar.title = fullname
 
                 val starItem = toolbar.menu.findItem(R.id.star_icon)
                 starItem.setIcon(
-                    if (loadedCandidate?.isFavorite
-                            ?: false
+                    if (candidateDisplay.isFavorite
                     ) R.drawable.baseline_star_24 else R.drawable.outline_star_24
                 )
 
+                candidateDisplay.photoUri?.let { uri ->
+                    ivProfilePhoto.load(uri) {
+                        scale(Scale.FIT)
+                        size(ViewSizeResolver(ivProfilePhoto))
+                    }
+                }
+
                 birthdayField.text = getString(
                     R.string.birthdate_age,
-                    it.birthdate,
-                    it.age
+                    candidateDisplay.birthdate,
+                    candidateDisplay.age
                 )
 
-                if (it.salaryInEur != null) {
+                if (candidateDisplay.salaryInEur != null) {
                     salaryField.text = getString(
                         R.string.salary_eur,
-                        it.salaryInEur
+                        candidateDisplay.salaryInEur
                     )
                     convertedSalaryField.text = getString(
                         R.string.salary_gbp,
-                        it.salaryInGbp
+                        candidateDisplay.salaryInGbp
                     )
                 } else {
                     salaryField.text = getString(R.string.not_available)
                 }
-                notesFields.text = it.notes
+                notesFields.text = candidateDisplay.notes
             }
         }
     }

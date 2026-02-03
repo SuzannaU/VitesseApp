@@ -89,7 +89,7 @@ class AddFragment : Fragment() {
 
     private fun setupPhotoPicker() {
 
-        binding.profilePhoto.apply {
+        binding.ivProfilePhoto.apply {
             setImageResource(R.drawable.photo_library_72dp)
 
             val pickPhotoLauncher =

@@ -37,5 +37,4 @@ data class CandidateDto(
 
     @ColumnInfo(name = "is_favorite")
     var isFavorite: Boolean = false,
-) {
-}
+)

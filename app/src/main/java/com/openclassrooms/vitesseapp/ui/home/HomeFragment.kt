@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
                 when (tab?.position) {
                     ALL_CANDIDATES_TAB -> adapter.updateCandidates(candidates)
                     FAVORITES_TAB -> adapter.updateCandidates(
-                        candidates.filter { it.isFavorite }
+                        candidates.filter { it.isFavorite }     // move to viewmodel
                     )
                 }
             }
@@ -135,7 +135,7 @@ class HomeFragment : Fragment() {
                     .beginTransaction()
                     .replace(
                         R.id.fragment_container,
-                        DetailFragment.newInstance(item.candidateId ?: 0)
+                        DetailFragment.newInstance(item.candidateId)
                     )
                     .addToBackStack(null)
                     .commit()
