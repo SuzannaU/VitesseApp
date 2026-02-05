@@ -2,24 +2,18 @@ package com.openclassrooms.vitesseapp.ui.add
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.textfield.TextInputLayout
-import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.ui.setupFormDatePicker
+import com.openclassrooms.vitesseapp.ui.setupFormEmailListener
+import com.openclassrooms.vitesseapp.ui.setupFormPhotoPicker
+import com.openclassrooms.vitesseapp.ui.validateFormField
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -54,7 +48,8 @@ class AddFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.addUiState.collect { uiState ->
                 binding.tvError.isVisible = uiState is AddViewModel.AddUiState.ErrorState
-                binding.includeForm.formScrollview.isVisible = uiState is AddViewModel.AddUiState.LoadedState
+                binding.includeForm.formScrollview.isVisible =
+                    uiState is AddViewModel.AddUiState.LoadedState
             }
         }
     }
@@ -66,47 +61,18 @@ class AddFragment : Fragment() {
     }
 
     private fun setupDatePicker() {
-
-        val constraintsBuilder = CalendarConstraints.Builder().setValidator(
-            DateValidatorPointBackward.now()
-        )
-
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(R.string.select_a_date)
-            .setInputMode(MaterialDatePicker.INPUT_MODE_TEXT)
-            .setCalendarConstraints(constraintsBuilder.build())
-            .build()
-
-        binding.includeForm.tietBirthdate.setOnClickListener {
-            datePicker.show(parentFragmentManager, "DATE_PICKER")
-        }
-
-        datePicker.addOnPositiveButtonClickListener { selection ->
+        setupFormDatePicker(
+            view = binding.includeForm.tietBirthdate,
+        ) { selection ->
             birthdateMillis = selection
-            binding.includeForm.tietBirthdate.setText(datePicker.headerText)
         }
     }
 
     private fun setupPhotoPicker() {
-
-        binding.includeForm.ivProfilePhoto.apply {
-            setImageResource(R.drawable.photo_library_72dp)
-
-            val pickPhotoLauncher =
-                registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                    if (uri != null) {
-                        photoUri = uri
-                        setImageURI(uri)
-                    }
-                }
-
-            setOnClickListener {
-                pickPhotoLauncher.launch(
-                    PickVisualMediaRequest(
-                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                    )
-                )
-            }
+        setupFormPhotoPicker(
+            imageView = binding.includeForm.ivProfilePhoto,
+        ) { uri ->
+            photoUri = uri
         }
     }
 
@@ -116,7 +82,8 @@ class AddFragment : Fragment() {
 
                 val salaryString = includeForm.tietSalary.text.toString().trim()
                 val salaryInEur =
-                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()) else null
+                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()).toLong() else null
+
 
                 val candidate = CandidateFormUI(
                     firstname = includeForm.tietFirstname.text.toString().trim(),
@@ -125,7 +92,7 @@ class AddFragment : Fragment() {
                     phone = includeForm.tietPhone.text.toString().trim(),
                     email = includeForm.tietEmail.text.toString().trim(),
                     birthdate = birthdateMillis,
-                    salaryInEur = salaryInEur?.toLong(),
+                    salaryInEur = salaryInEur,
                     notes = includeForm.tietNotes.text.toString().trim(),
                 )
 
@@ -142,59 +109,20 @@ class AddFragment : Fragment() {
     private fun validateCandidate(candidate: CandidateFormUI): Boolean {
         var isValid = true
         binding.includeForm.apply {
-            isValid = validateField(!candidate.firstname.isBlank(), tipFirstname) && isValid
-            isValid = validateField(!candidate.lastname.isBlank(), tipLastname) && isValid
-            isValid = validateField(!candidate.phone.isBlank(), tipPhone) && isValid
-            isValid = validateField(!candidate.email.isBlank(), tipEmail) && isValid
-            isValid = validateField(candidate.birthdate != 0L, tipBirthdate) && isValid
+            isValid = validateFormField(!candidate.firstname.isBlank(), tipFirstname) && isValid
+            isValid = validateFormField(!candidate.lastname.isBlank(), tipLastname) && isValid
+            isValid = validateFormField(!candidate.phone.isBlank(), tipPhone) && isValid
+            isValid = validateFormField(!candidate.email.isBlank(), tipEmail) && isValid
+            isValid = validateFormField(candidate.birthdate != 0L, tipBirthdate) && isValid
         }
         return isValid
     }
 
-    private fun validateField(
-        validCondition: Boolean,
-        tip: TextInputLayout,
-    ) : Boolean {
-
-        val errorMessage = getString(R.string.mandatory_field)
-        if(validCondition) {
-            tip.error = null
-            return true
-        } else {
-            tip.error = errorMessage
-            return false
-        }
-    }
-
     private fun setupEmailListener() {
-        binding.includeForm.tietEmail.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (Patterns.EMAIL_ADDRESS.matcher(binding.includeForm.tietEmail.text.toString())
-                        .matches()
-                ) {
-                    binding.includeForm.tipEmail.error = null
-                } else {
-                    binding.includeForm.tipEmail.error = getString(R.string.invalid_format)
-                }
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-            }
-
-        })
+        setupFormEmailListener(
+            binding.includeForm.tipEmail,
+            binding.includeForm.tietEmail
+        )
     }
 
     companion object {
