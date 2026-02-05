@@ -3,13 +3,10 @@ package com.openclassrooms.vitesseapp.ui.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.model.Candidate
-import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
-import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.toCandidateFormUI
 import com.openclassrooms.vitesseapp.ui.model.toDomain
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,6 +61,8 @@ class EditViewModel(
             }.onFailure {
                 _editUiState.value = EditUiState.ErrorState
                 return@launch
+            }.onSuccess {
+                _editUiState.value = EditUiState.SaveSuccess
             }
         }
     }
@@ -72,6 +71,7 @@ class EditViewModel(
         object LoadingState : EditUiState()
         object NoCandidateFound : EditUiState()
         object ErrorState : EditUiState()
+        object SaveSuccess : EditUiState()
 
         data class CandidateFound(
             val candidateFormUI: CandidateFormUI

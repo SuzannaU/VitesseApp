@@ -11,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import coil3.load
 import coil3.size.Scale
 import coil3.size.ViewSizeResolver
+import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentEditBinding
 import com.openclassrooms.vitesseapp.ui.formatBirthdateToString
 import com.openclassrooms.vitesseapp.ui.formatSalaryToString
+import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.ui.setupFormDatePicker
 import com.openclassrooms.vitesseapp.ui.setupFormEmailListener
@@ -74,6 +76,16 @@ class EditFragment : Fragment() {
                     is EditViewModel.EditUiState.CandidateFound -> {
                         loadedCandidate = uiState.candidateFormUI
                         bindCandidate()
+                    }
+
+                    is EditViewModel.EditUiState.SaveSuccess -> {
+                        parentFragmentManager
+                            .beginTransaction()
+                            .replace(
+                                R.id.fragment_container,
+                                HomeFragment.newInstance()
+                            )
+                            .commit()
                     }
 
                     else -> Unit
@@ -156,7 +168,6 @@ class EditFragment : Fragment() {
                     lifecycleScope.launch {
                         viewModel.saveCandidate(candidate)
                     }
-                    parentFragmentManager.popBackStackImmediate()
                 }
             }
         }
