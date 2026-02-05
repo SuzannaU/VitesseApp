@@ -17,6 +17,7 @@ import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
+import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
 import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
 import com.openclassrooms.vitesseapp.ui.edit.EditViewModel
@@ -74,6 +75,7 @@ val appModule = module {
     factory { SaveImageUseCase(get()) }
     factory { DeleteCandidateUseCase(get()) }
     factory { ConvertEurToGbpUseCase(get()) }
+    factory { UpdateFavoriteUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
     viewModel { HomeViewModel(get()) }

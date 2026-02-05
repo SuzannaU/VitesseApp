@@ -2,14 +2,12 @@ package com.openclassrooms.vitesseapp.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
-import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
+import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,13 +15,12 @@ import kotlinx.coroutines.launch
 class DetailViewModel(
     private val loadCandidateUseCase: LoadCandidateUseCase,
     private val convertEurToGbpUseCase: ConvertEurToGbpUseCase,
-    private val saveCandidateUseCase: SaveCandidateUseCase,
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase,
     private val deleteCandidateUseCase: DeleteCandidateUseCase,
 ) : ViewModel() {
 
     private val _detailStateFlow = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
     val detailUiState = _detailStateFlow.asStateFlow()
-    private var loadedCandidate: Candidate? = null
 
     fun loadCandidate(candidateId: Long) {
         viewModelScope.launch {
@@ -36,15 +33,12 @@ class DetailViewModel(
                 }
                 candidate to candidate.toCandidateDisplay(salaryInCentsGbp)
             }.onSuccess { result ->
-                result?.let { (candidate, display) ->
-                    loadedCandidate = candidate
+                result?.let { (_, display) ->
                     _detailStateFlow.value = DetailUiState.CandidateFound(display)
                 } ?: run {
-                    loadedCandidate = null
                     _detailStateFlow.value = DetailUiState.NoCandidateFound
                 }
             }.onFailure {
-                loadedCandidate = null
                 _detailStateFlow.value = DetailUiState.ErrorState
             }
         }
@@ -53,7 +47,6 @@ class DetailViewModel(
     fun toggleFavoriteStatus() {
         val currentState = _detailStateFlow.value
         if (currentState !is DetailUiState.CandidateFound) return
-        val candidate = loadedCandidate ?: return
 
         val newFavoriteStatus = !currentState.candidateDisplay.isFavorite
 
@@ -61,12 +54,9 @@ class DetailViewModel(
             val updatedDisplay = currentState.candidateDisplay.copy(
                 isFavorite = newFavoriteStatus
             )
-            val updatedCandidate = candidate.copy(
-                isFavorite = newFavoriteStatus
-            )
 
             runCatching {
-                saveCandidateUseCase.execute(updatedCandidate)
+                updateFavoriteUseCase.execute(updatedDisplay.candidateId, newFavoriteStatus)
             }.onSuccess {
                 _detailStateFlow.value = DetailUiState.CandidateFound(updatedDisplay)
             }.onFailure {

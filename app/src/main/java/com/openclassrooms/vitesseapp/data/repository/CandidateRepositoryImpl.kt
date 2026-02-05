@@ -19,6 +19,10 @@ class CandidateRepositoryImpl(private val candidateDao: CandidateDao) : Candidat
         candidateDao.saveCandidate(candidate.toDto())
     }
 
+    override suspend fun updateCandidateIsFavorite(candidateId: Long, isFavorite: Boolean) {
+        candidateDao.updateCandidateIsFavorite(candidateId, isFavorite)
+    }
+
     override suspend fun deleteCandidate(candidateId: Long) {
         candidateDao.deleteCandidateById(candidateId)
     }

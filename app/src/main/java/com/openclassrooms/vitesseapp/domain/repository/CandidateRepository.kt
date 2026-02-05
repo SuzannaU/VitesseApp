@@ -8,6 +8,8 @@ interface CandidateRepository {
 
     suspend fun fetchCandidate(candidateId: Long): Candidate?
     suspend fun saveCandidate(candidate: Candidate)
+
+    suspend fun updateCandidateIsFavorite(candidateId: Long, isFavorite: Boolean)
     suspend fun deleteCandidate(candidateId: Long)
     fun fetchAllCandidates(): Flow<List<Candidate>>
 }

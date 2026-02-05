@@ -152,6 +152,11 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        binding.tietSearch.text?.clear()
+    }
+
     companion object {
         fun newInstance() = HomeFragment()
     }
