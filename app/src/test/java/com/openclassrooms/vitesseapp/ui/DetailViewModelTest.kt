@@ -6,7 +6,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
-import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
+import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
 import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
 import io.mockk.coEvery
@@ -34,12 +34,12 @@ class DetailViewModelTest {
 
     val loadCandidateUseCase = mockk<LoadCandidateUseCase>()
     val convertEurToGbpUseCase = mockk<ConvertEurToGbpUseCase>()
-    val saveCandidateUseCase = mockk<SaveCandidateUseCase>()
+    val updateFavoriteUseCase = mockk<UpdateFavoriteUseCase>()
     val deleteCandidateUseCase = mockk<DeleteCandidateUseCase>()
     val viewModel = DetailViewModel(
         loadCandidateUseCase,
         convertEurToGbpUseCase,
-        saveCandidateUseCase,
+        updateFavoriteUseCase,
         deleteCandidateUseCase
     )
     lateinit var testScope: TestScope
@@ -128,30 +128,32 @@ class DetailViewModelTest {
     fun toggleFavoriteStatus_shouldUpdateCandidate() = testScope.runTest {
         preloadCandidate()
         advanceUntilIdle()
-        val candidateCapture = slot<Candidate>()
-        coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
+        val idCapture = slot<Long>()
+        val isFavoriteCapture = slot<Boolean>()
+        coEvery { updateFavoriteUseCase.execute(capture(idCapture), capture(isFavoriteCapture)) } returns Unit
 
         viewModel.toggleFavoriteStatus()
         advanceUntilIdle()
 
         val state = viewModel.detailUiState.value
         assertTrue(state is DetailViewModel.DetailUiState.CandidateFound)
-        assertEquals(!candidate.isFavorite, candidateCapture.captured.isFavorite)
-        coVerify { saveCandidateUseCase.execute(any()) }
+        assertEquals(candidate.candidateId, idCapture.captured)
+        assertEquals(!candidate.isFavorite, isFavoriteCapture.captured)
+        coVerify { updateFavoriteUseCase.execute(any(), any()) }
     }
 
     @Test
-    fun toggleFavoriteStatus_withErrorWhileSaving_shouldUpdateCandidate() = testScope.runTest {
+    fun toggleFavoriteStatus_withErrorWhileUpdating_shouldUpdateState() = testScope.runTest {
         preloadCandidate()
         advanceUntilIdle()
-        coEvery { saveCandidateUseCase.execute(any()) } throws Exception("Fake exception")
+        coEvery { updateFavoriteUseCase.execute(any(), any()) } throws Exception("Fake exception")
 
         viewModel.toggleFavoriteStatus()
         advanceUntilIdle()
 
         val state = viewModel.detailUiState.value
         assertTrue(state is DetailViewModel.DetailUiState.ErrorState)
-        coVerify { saveCandidateUseCase.execute(any()) }
+        coVerify { updateFavoriteUseCase.execute(any(), any()) }
     }
 
     @Test
@@ -163,7 +165,7 @@ class DetailViewModelTest {
         viewModel.toggleFavoriteStatus()
         advanceUntilIdle()
 
-        coVerify(exactly = 0) { saveCandidateUseCase.execute(any()) }
+        coVerify(exactly = 0) { updateFavoriteUseCase.execute(any(), any()) }
     }
 
     @Test

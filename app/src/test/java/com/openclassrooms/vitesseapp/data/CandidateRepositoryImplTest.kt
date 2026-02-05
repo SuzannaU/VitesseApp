@@ -126,6 +126,22 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
+    fun updateCandidateIsFavorite_shouldSendCandidateDataToDao() = testScope.runTest {
+
+        val candidateId = 1L
+        val isFavorite = true
+        val idCapture = slot<Long>()
+        val isFavoriteCapture = slot<Boolean>()
+        coEvery { candidateDao.updateCandidateIsFavorite(capture(idCapture), capture(isFavoriteCapture)) } returns Unit
+
+        repository.updateCandidateIsFavorite(candidateId, isFavorite)
+
+        assertEquals(candidateId, idCapture.captured)
+        assertEquals(isFavorite, isFavoriteCapture.captured)
+        coVerify { candidateDao.updateCandidateIsFavorite(any(), any()) }
+    }
+
+    @Test
     fun deleteCandidate_shouldSendCandidateIdToDao() = testScope.runTest {
 
         val candidateId = 1L
