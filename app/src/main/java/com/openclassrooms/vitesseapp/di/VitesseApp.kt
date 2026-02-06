@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp
+package com.openclassrooms.vitesseapp.di
 
 import android.app.Application
 import org.koin.android.ext.koin.androidContext

@@ -1,6 +1,5 @@
-package com.openclassrooms.vitesseapp.data
+package com.openclassrooms.vitesseapp.data.entity
 
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
 import com.openclassrooms.vitesseapp.domain.calculateAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 

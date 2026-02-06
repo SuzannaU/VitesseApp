@@ -17,6 +17,7 @@ import coil3.size.Scale
 import coil3.size.ViewSizeResolver
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentDetailBinding
+import com.openclassrooms.vitesseapp.presentation.viewmodel.DetailViewModel
 import com.openclassrooms.vitesseapp.ui.edit.EditFragment
 import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay

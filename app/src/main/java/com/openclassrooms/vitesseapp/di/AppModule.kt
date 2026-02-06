@@ -1,8 +1,8 @@
-package com.openclassrooms.vitesseapp
+package com.openclassrooms.vitesseapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.openclassrooms.vitesseapp.data.AppDatabase
+import com.openclassrooms.vitesseapp.data.database.AppDatabase
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.dao.RateApiService
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
@@ -15,17 +15,16 @@ import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
-import com.openclassrooms.vitesseapp.ui.DefaultDispatcherProvider
-import com.openclassrooms.vitesseapp.ui.DispatcherProvider
-import com.openclassrooms.vitesseapp.ui.add.AddViewModel
-import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
-import com.openclassrooms.vitesseapp.ui.edit.EditViewModel
-import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
-import com.openclassrooms.vitesseapp.ui.model.AndroidBitmapDecoder
-import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
+import com.openclassrooms.vitesseapp.presentation.DefaultDispatcherProvider
+import com.openclassrooms.vitesseapp.presentation.DispatcherProvider
+import com.openclassrooms.vitesseapp.presentation.viewmodel.AddViewModel
+import com.openclassrooms.vitesseapp.presentation.viewmodel.DetailViewModel
+import com.openclassrooms.vitesseapp.presentation.viewmodel.EditViewModel
+import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
+import com.openclassrooms.vitesseapp.presentation.AndroidBitmapDecoder
+import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit

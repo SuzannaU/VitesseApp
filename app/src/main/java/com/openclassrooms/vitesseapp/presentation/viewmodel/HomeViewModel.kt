@@ -1,13 +1,13 @@
-package com.openclassrooms.vitesseapp.ui.home
+package com.openclassrooms.vitesseapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
-import com.openclassrooms.vitesseapp.ui.DispatcherProvider
-import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
+import com.openclassrooms.vitesseapp.presentation.DispatcherProvider
+import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.filterByName
-import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.mapper.toCandidateDisplay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

@@ -1,10 +1,11 @@
-package com.openclassrooms.vitesseapp.ui.model
+package com.openclassrooms.vitesseapp.presentation.mapper
 
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.domain.calculateAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
-import com.openclassrooms.vitesseapp.ui.helpers.formatBirthdateToString
-import com.openclassrooms.vitesseapp.ui.helpers.formatSalaryToString
+import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
+import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import java.io.ByteArrayOutputStream
 
 fun Candidate.toCandidateDisplay(

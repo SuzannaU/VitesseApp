@@ -1,14 +1,12 @@
-package com.openclassrooms.vitesseapp
+package com.openclassrooms.vitesseapp.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.commit
-import com.google.android.material.appbar.MaterialToolbar
+import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.ActivityMainBinding
-import com.openclassrooms.vitesseapp.ui.add.AddFragment
 
 class MainActivity : AppCompatActivity() {
 

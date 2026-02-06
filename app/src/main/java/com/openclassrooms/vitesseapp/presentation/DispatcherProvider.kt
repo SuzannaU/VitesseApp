@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.presentation
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

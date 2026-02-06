@@ -8,9 +8,9 @@ import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
-import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
-import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
-import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.viewmodel.DetailViewModel
+import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
+import com.openclassrooms.vitesseapp.presentation.mapper.toCandidateDisplay
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

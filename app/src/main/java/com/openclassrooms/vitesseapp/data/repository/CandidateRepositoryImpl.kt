@@ -1,8 +1,8 @@
 package com.openclassrooms.vitesseapp.data.repository
 
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
-import com.openclassrooms.vitesseapp.data.toDomain
-import com.openclassrooms.vitesseapp.data.toDto
+import com.openclassrooms.vitesseapp.data.entity.toDomain
+import com.openclassrooms.vitesseapp.data.entity.toDto
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import kotlinx.coroutines.flow.Flow

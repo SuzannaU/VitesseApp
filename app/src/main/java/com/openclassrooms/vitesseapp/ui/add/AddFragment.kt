@@ -12,6 +12,7 @@ import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.toBitmap
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
+import com.openclassrooms.vitesseapp.presentation.viewmodel.AddViewModel
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.ui.helpers.setupFormDatePicker
 import com.openclassrooms.vitesseapp.ui.helpers.setupFormEmailListener

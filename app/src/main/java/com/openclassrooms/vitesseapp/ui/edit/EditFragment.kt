@@ -16,8 +16,9 @@ import coil3.size.ViewSizeResolver
 import coil3.toBitmap
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentEditBinding
-import com.openclassrooms.vitesseapp.ui.helpers.formatBirthdateToString
-import com.openclassrooms.vitesseapp.ui.helpers.formatSalaryToString
+import com.openclassrooms.vitesseapp.presentation.viewmodel.EditViewModel
+import com.openclassrooms.vitesseapp.presentation.mapper.formatBirthdateToString
+import com.openclassrooms.vitesseapp.presentation.mapper.formatSalaryToString
 import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.ui.helpers.setupFormDatePicker

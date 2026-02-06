@@ -1,6 +1,6 @@
 package com.openclassrooms.vitesseapp
 
-import com.openclassrooms.vitesseapp.ui.DispatcherProvider
+import com.openclassrooms.vitesseapp.presentation.DispatcherProvider
 import kotlinx.coroutines.test.TestDispatcher
 
 class TestDispatcherProvider(

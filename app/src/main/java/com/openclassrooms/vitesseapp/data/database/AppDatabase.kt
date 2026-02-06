@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.data
+package com.openclassrooms.vitesseapp.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

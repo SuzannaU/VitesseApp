@@ -5,7 +5,7 @@ import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
-import com.openclassrooms.vitesseapp.ui.add.AddViewModel
+import com.openclassrooms.vitesseapp.presentation.viewmodel.AddViewModel
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import io.mockk.coEvery
 import io.mockk.coVerify

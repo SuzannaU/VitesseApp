@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentHomeBinding
+import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
 import com.openclassrooms.vitesseapp.ui.add.AddFragment
 import com.openclassrooms.vitesseapp.ui.detail.DetailFragment
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay

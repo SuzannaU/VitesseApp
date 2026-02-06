@@ -5,9 +5,9 @@ import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
-import com.openclassrooms.vitesseapp.ui.helpers.formatBirthdateToString
-import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
-import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
+import com.openclassrooms.vitesseapp.presentation.mapper.formatBirthdateToString
+import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
+import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import io.mockk.every
 import io.mockk.mockk
