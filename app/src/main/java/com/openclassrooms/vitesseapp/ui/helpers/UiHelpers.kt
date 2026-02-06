@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.ui.helpers
 
 import java.text.SimpleDateFormat
 import java.util.Date

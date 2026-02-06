@@ -13,21 +13,22 @@ import org.junit.jupiter.api.Test
 
 class LoadCandidateUseCaseTest {
 
-    val candidateRepository = mockk<CandidateRepository>()
-    val loadCandidateUseCase = LoadCandidateUseCase(candidateRepository)
-    lateinit var candidate: Candidate
+    private val candidateRepository = mockk<CandidateRepository>()
+    private val loadCandidateUseCase = LoadCandidateUseCase(candidateRepository)
+    private lateinit var candidate: Candidate
 
     @Test
     fun execute_shouldCallRepositoryAndReturnCandidate() = runTest {
         val candidateId = 1L
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
+        val bytes = ByteArray(1)
 
         candidate = Candidate(
             candidateId = candidateId,
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = bytes,
             phone = "123456",
             email = "email",
             birthdate = birthdateMillis,

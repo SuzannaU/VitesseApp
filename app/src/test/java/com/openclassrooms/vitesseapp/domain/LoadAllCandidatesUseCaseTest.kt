@@ -14,21 +14,22 @@ import org.junit.jupiter.api.Test
 
 class LoadAllCandidatesUseCaseTest {
 
-    val candidateRepository: CandidateRepository = mockk()
-    val loadAllCandidatesUseCase = LoadAllCandidatesUseCase(candidateRepository)
-    lateinit var candidates: List<Candidate>
+    private val candidateRepository: CandidateRepository = mockk()
+    private val loadAllCandidatesUseCase = LoadAllCandidatesUseCase(candidateRepository)
+    private lateinit var candidates: List<Candidate>
 
     @Test
     fun execute_shouldReturnFlowOfCandidates() = runTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
+        val bytes = ByteArray(1)
 
         candidates = listOf(
             Candidate(
                 candidateId = 1,
                 firstname = "firstname",
                 lastname = "lastname",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdateMillis,
@@ -40,7 +41,7 @@ class LoadAllCandidatesUseCaseTest {
                 candidateId = 2,
                 firstname = "firstname",
                 lastname = "lastname",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdateMillis,

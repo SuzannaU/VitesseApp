@@ -13,8 +13,8 @@ import kotlin.test.assertEquals
 
 class SaveCandidateUseCaseTest {
 
-    val candidateRepository : CandidateRepository = mockk()
-    val saveCandidateUseCase = SaveCandidateUseCase(candidateRepository)
+    private val candidateRepository : CandidateRepository = mockk()
+    private val saveCandidateUseCase = SaveCandidateUseCase(candidateRepository)
 
     @Test
     fun execute_shouldSendCandidateToRepository() = runTest {
@@ -22,7 +22,7 @@ class SaveCandidateUseCaseTest {
         val candidate = Candidate(
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = ByteArray(1),
             phone = "123456",
             email = "email",
             birthdate = 1L,

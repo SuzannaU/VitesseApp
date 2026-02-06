@@ -7,8 +7,6 @@ import com.openclassrooms.vitesseapp.data.dao.CandidateDao
 import com.openclassrooms.vitesseapp.data.dao.RateApiService
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
 import com.openclassrooms.vitesseapp.data.repository.RateRepositoryImpl
-import com.openclassrooms.vitesseapp.domain.repository.ImageRepository
-import com.openclassrooms.vitesseapp.data.storage.InternalImageStorage
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.repository.RateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
@@ -16,12 +14,15 @@ import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
-import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
+import com.openclassrooms.vitesseapp.ui.DefaultDispatcherProvider
+import com.openclassrooms.vitesseapp.ui.DispatcherProvider
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
 import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
 import com.openclassrooms.vitesseapp.ui.edit.EditViewModel
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
+import com.openclassrooms.vitesseapp.ui.model.AndroidBitmapDecoder
+import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.koin.android.ext.koin.androidContext
@@ -65,20 +66,20 @@ val appModule = module {
     single { provideCandidateDao(get()) }
     single { provideRateApiService(get()) }
 
+    single<DispatcherProvider> { DefaultDispatcherProvider() }
     single<CandidateRepository> { CandidateRepositoryImpl(get()) }
-    single<ImageRepository> { InternalImageStorage(context = androidContext()) }
     single<RateRepository> { RateRepositoryImpl(get()) }
+    single<BitmapDecoder> { AndroidBitmapDecoder() }
 
     factory { LoadCandidateUseCase(get()) }
     factory { LoadAllCandidatesUseCase(get()) }
     factory { SaveCandidateUseCase(get()) }
-    factory { SaveImageUseCase(get()) }
     factory { DeleteCandidateUseCase(get()) }
     factory { ConvertEurToGbpUseCase(get()) }
     factory { UpdateFavoriteUseCase(get()) }
 
     viewModel { AddViewModel(get(), get()) }
-    viewModel { HomeViewModel(get()) }
-    viewModel { DetailViewModel(get(), get(), get(), get()) }
-    viewModel { EditViewModel(get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get()) }
+    viewModel { DetailViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { EditViewModel(get(), get(), get(), get()) }
 }

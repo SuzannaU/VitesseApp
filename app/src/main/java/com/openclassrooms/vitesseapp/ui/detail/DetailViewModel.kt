@@ -6,17 +6,22 @@ import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
+import com.openclassrooms.vitesseapp.ui.DispatcherProvider
+import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailViewModel(
+    private val dispatcherProvider: DispatcherProvider,
     private val loadCandidateUseCase: LoadCandidateUseCase,
     private val convertEurToGbpUseCase: ConvertEurToGbpUseCase,
     private val updateFavoriteUseCase: UpdateFavoriteUseCase,
     private val deleteCandidateUseCase: DeleteCandidateUseCase,
+    private val bitmapDecoder: BitmapDecoder,
 ) : ViewModel() {
 
     private val _detailStateFlow = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
@@ -25,17 +30,18 @@ class DetailViewModel(
     fun loadCandidate(candidateId: Long) {
         viewModelScope.launch {
             _detailStateFlow.value = DetailUiState.LoadingState
-
             runCatching {
-                val candidate = loadCandidateUseCase.execute(candidateId) ?: return@runCatching null
-                val salaryInCentsGbp = candidate.salaryCentsInEur?.let {
-                    convertEurToGbpUseCase.execute(candidate.salaryCentsInEur)
+                withContext(dispatcherProvider.io) {
+                    val candidate = loadCandidateUseCase.execute(candidateId)
+                    val salaryInCentsGbp = candidate?.salaryCentsInEur?.let {
+                        convertEurToGbpUseCase.execute(candidate.salaryCentsInEur)
+                    }
+                    candidate?.toCandidateDisplay(salaryInCentsGbp, bitmapDecoder)
                 }
-                candidate to candidate.toCandidateDisplay(salaryInCentsGbp)
-            }.onSuccess { result ->
-                result?.let { (_, display) ->
-                    _detailStateFlow.value = DetailUiState.CandidateFound(display)
-                } ?: run {
+            }.onSuccess { candidateDisplay ->
+                if (candidateDisplay != null) {
+                    _detailStateFlow.value = DetailUiState.CandidateFound(candidateDisplay)
+                } else {
                     _detailStateFlow.value = DetailUiState.NoCandidateFound
                 }
             }.onFailure {
@@ -56,7 +62,9 @@ class DetailViewModel(
             )
 
             runCatching {
-                updateFavoriteUseCase.execute(updatedDisplay.candidateId, newFavoriteStatus)
+                withContext(dispatcherProvider.io) {
+                    updateFavoriteUseCase.execute(updatedDisplay.candidateId, newFavoriteStatus)
+                }
             }.onSuccess {
                 _detailStateFlow.value = DetailUiState.CandidateFound(updatedDisplay)
             }.onFailure {
@@ -71,7 +79,9 @@ class DetailViewModel(
 
         viewModelScope.launch {
             runCatching {
-                deleteCandidateUseCase.execute(candidateId)
+                withContext(dispatcherProvider.io) {
+                    deleteCandidateUseCase.execute(candidateId)
+                }
             }.onSuccess {
                 _detailStateFlow.value = DetailUiState.DeleteSuccess
             }.onFailure {

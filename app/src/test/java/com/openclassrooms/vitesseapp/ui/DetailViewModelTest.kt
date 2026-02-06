@@ -1,6 +1,7 @@
 package com.openclassrooms.vitesseapp.ui
 
-import android.net.Uri
+import android.graphics.Bitmap
+import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.ConvertEurToGbpUseCase
@@ -8,17 +9,16 @@ import com.openclassrooms.vitesseapp.domain.usecase.DeleteCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
 import com.openclassrooms.vitesseapp.ui.detail.DetailViewModel
+import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.slot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -32,36 +32,46 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class DetailViewModelTest {
 
-    val loadCandidateUseCase = mockk<LoadCandidateUseCase>()
-    val convertEurToGbpUseCase = mockk<ConvertEurToGbpUseCase>()
-    val updateFavoriteUseCase = mockk<UpdateFavoriteUseCase>()
-    val deleteCandidateUseCase = mockk<DeleteCandidateUseCase>()
-    val viewModel = DetailViewModel(
-        loadCandidateUseCase,
-        convertEurToGbpUseCase,
-        updateFavoriteUseCase,
-        deleteCandidateUseCase
-    )
-    lateinit var testScope: TestScope
-    lateinit var candidate: Candidate
-    val uri = mockk<Uri>(relaxed = true)
+    private val testDispatcher = StandardTestDispatcher()
+    private val dispatcher = TestDispatcherProvider(testDispatcher)
+    private lateinit var bitmapDecoder: BitmapDecoder
+    private lateinit var loadCandidateUseCase: LoadCandidateUseCase
+    private lateinit var convertEurToGbpUseCase: ConvertEurToGbpUseCase
+    private lateinit var updateFavoriteUseCase: UpdateFavoriteUseCase
+    private lateinit var deleteCandidateUseCase: DeleteCandidateUseCase
+    private lateinit var viewModel: DetailViewModel
+    private lateinit var candidate: Candidate
 
     @BeforeEach
     fun setup() {
-        testScope = TestScope()
-        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
+        Dispatchers.setMain(testDispatcher)
 
-        mockkStatic(Uri::class)
-        every { Uri.parse(any()) } returns uri
+        bitmapDecoder = mockk<BitmapDecoder>()
+        loadCandidateUseCase = mockk<LoadCandidateUseCase>()
+        convertEurToGbpUseCase = mockk<ConvertEurToGbpUseCase>()
+        updateFavoriteUseCase = mockk<UpdateFavoriteUseCase>()
+        deleteCandidateUseCase = mockk<DeleteCandidateUseCase>()
+        viewModel = DetailViewModel(
+            dispatcher,
+            loadCandidateUseCase,
+            convertEurToGbpUseCase,
+            updateFavoriteUseCase,
+            deleteCandidateUseCase,
+            bitmapDecoder
+        )
 
         val age = 50
         val birthdate = createBirthdateForAge(age)
         val salaryCentsInEur = 100L
+        val bytes = ByteArray(1)
+        val bitmap = mockk<Bitmap>(relaxed = true)
+        every { bitmapDecoder.decode(any()) } returns bitmap
+
         candidate = Candidate(
             candidateId = 1,
             firstname = "firstname1",
             lastname = "lastname1",
-            photoPath = "path",
+            photoByteArray = bytes,
             phone = "123456",
             email = "email",
             birthdate = birthdate,
@@ -77,9 +87,9 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun loadCandidate_shouldCallUseCasesAndUpdateUiState() = testScope.runTest {
+    fun loadCandidate_shouldCallUseCasesAndUpdateUiState() = runTest {
         val convertedSalary = 150L
-        val expectedCandidateDisplay = candidate.toCandidateDisplay(convertedSalary)
+        val expectedCandidateDisplay = candidate.toCandidateDisplay(convertedSalary, bitmapDecoder)
         coEvery { loadCandidateUseCase.execute(any()) } returns candidate
         coEvery { convertEurToGbpUseCase.execute(any()) } returns convertedSalary
 
@@ -99,7 +109,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun loadCandidate_withNoCandidate_shouldCallUseCasesAndUpdateUiState() = testScope.runTest {
+    fun loadCandidate_withNoCandidate_shouldCallUseCasesAndUpdateUiState() = runTest {
         coEvery { loadCandidateUseCase.execute(any()) } returns null
 
         viewModel.loadCandidate(candidate.candidateId)
@@ -112,7 +122,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun loadCandidate_withFailureToLoad_shouldCallUseCasesAndUpdateUiState() = testScope.runTest {
+    fun loadCandidate_withFailureToLoad_shouldCallUseCasesAndUpdateUiState() = runTest {
         coEvery { loadCandidateUseCase.execute(any()) } throws Exception("Fake exception")
 
         viewModel.loadCandidate(candidate.candidateId)
@@ -125,12 +135,17 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun toggleFavoriteStatus_shouldUpdateCandidate() = testScope.runTest {
+    fun toggleFavoriteStatus_shouldUpdateCandidate() = runTest {
         preloadCandidate()
         advanceUntilIdle()
         val idCapture = slot<Long>()
         val isFavoriteCapture = slot<Boolean>()
-        coEvery { updateFavoriteUseCase.execute(capture(idCapture), capture(isFavoriteCapture)) } returns Unit
+        coEvery {
+            updateFavoriteUseCase.execute(
+                capture(idCapture),
+                capture(isFavoriteCapture)
+            )
+        } returns Unit
 
         viewModel.toggleFavoriteStatus()
         advanceUntilIdle()
@@ -143,7 +158,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun toggleFavoriteStatus_withErrorWhileUpdating_shouldUpdateState() = testScope.runTest {
+    fun toggleFavoriteStatus_withErrorWhileUpdating_shouldUpdateState() = runTest {
         preloadCandidate()
         advanceUntilIdle()
         coEvery { updateFavoriteUseCase.execute(any(), any()) } throws Exception("Fake exception")
@@ -157,7 +172,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun toggleFavoriteStatus_whileInWrongState_shouldReturn() = testScope.runTest {
+    fun toggleFavoriteStatus_whileInWrongState_shouldReturn() = runTest {
         coEvery { loadCandidateUseCase.execute(any()) } returns null
         viewModel.loadCandidate(candidate.candidateId)
         advanceUntilIdle()
@@ -169,7 +184,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun deleteCandidate_shouldCallUseCaseAndUpdateState() = testScope.runTest {
+    fun deleteCandidate_shouldCallUseCaseAndUpdateState() = runTest {
         preloadCandidate()
         advanceUntilIdle()
         coEvery { deleteCandidateUseCase.execute(any()) } returns Unit
@@ -183,7 +198,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun deleteCandidate_withFailure_shouldCallUseCaseAndUpdateState() = testScope.runTest {
+    fun deleteCandidate_withFailure_shouldCallUseCaseAndUpdateState() = runTest {
         preloadCandidate()
         advanceUntilIdle()
         coEvery { deleteCandidateUseCase.execute(any()) } throws Exception("Fake exception")
@@ -197,7 +212,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun deleteCandidate_withWrongState_shouldReturnAndNotCallUseCase() = testScope.runTest {
+    fun deleteCandidate_withWrongState_shouldReturnAndNotCallUseCase() = runTest {
         coEvery { loadCandidateUseCase.execute(any()) } returns null
         viewModel.loadCandidate(candidate.candidateId)
         advanceUntilIdle()

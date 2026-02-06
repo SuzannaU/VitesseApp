@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.ui.helpers
 
 import android.net.Uri
 import android.text.Editable
@@ -46,7 +46,6 @@ fun Fragment.setupFormPhotoPicker(
 ) {
 
     imageView.apply {
-        setImageResource(R.drawable.photo_library_72dp)
 
         val pickPhotoLauncher =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

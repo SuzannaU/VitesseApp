@@ -1,6 +1,6 @@
 package com.openclassrooms.vitesseapp.ui.add
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.toBitmap
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
-import com.openclassrooms.vitesseapp.ui.setupFormDatePicker
-import com.openclassrooms.vitesseapp.ui.setupFormEmailListener
-import com.openclassrooms.vitesseapp.ui.setupFormPhotoPicker
-import com.openclassrooms.vitesseapp.ui.validateFormField
+import com.openclassrooms.vitesseapp.ui.helpers.setupFormDatePicker
+import com.openclassrooms.vitesseapp.ui.helpers.setupFormEmailListener
+import com.openclassrooms.vitesseapp.ui.helpers.setupFormPhotoPicker
+import com.openclassrooms.vitesseapp.ui.helpers.validateFormField
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,7 +26,7 @@ class AddFragment : Fragment() {
     private val viewModel: AddViewModel by viewModel()
 
     private var birthdateMillis: Long = 0
-    private var photoUri: Uri? = null
+    private var photoBitmap: Bitmap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,7 +75,12 @@ class AddFragment : Fragment() {
         setupFormPhotoPicker(
             imageView = binding.includeForm.ivProfilePhoto,
         ) { uri ->
-            photoUri = uri
+            val request = ImageRequest.Builder(requireContext())
+                .data(uri)
+                .build()
+            lifecycleScope.launch {
+                photoBitmap = requireContext().imageLoader.execute(request).image?.toBitmap()
+            }
         }
     }
 
@@ -84,11 +92,10 @@ class AddFragment : Fragment() {
                 val salaryInEur =
                     if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()).toLong() else null
 
-
                 val candidate = CandidateFormUI(
                     firstname = includeForm.tietFirstname.text.toString().trim(),
                     lastname = includeForm.tietLastname.text.toString().trim(),
-                    photoUri = photoUri,
+                    photoBitmap = photoBitmap,
                     phone = includeForm.tietPhone.text.toString().trim(),
                     email = includeForm.tietEmail.text.toString().trim(),
                     birthdate = birthdateMillis,

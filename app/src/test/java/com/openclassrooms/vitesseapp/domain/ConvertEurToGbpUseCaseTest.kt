@@ -13,8 +13,8 @@ import java.math.BigDecimal
 
 class ConvertEurToGbpUseCaseTest {
 
-    val rateRepository = mockk<RateRepository>()
-    val convertEurToGbpUseCase = ConvertEurToGbpUseCase(rateRepository)
+    private val rateRepository = mockk<RateRepository>()
+    private val convertEurToGbpUseCase = ConvertEurToGbpUseCase(rateRepository)
 
     @Test
     fun execute_shouldCallRepositoryAndReturnRate() = runTest {

@@ -1,21 +1,22 @@
 package com.openclassrooms.vitesseapp.ui
 
-import android.net.Uri
+import android.graphics.Bitmap
+import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
+import com.openclassrooms.vitesseapp.ui.helpers.formatBirthdateToString
 import com.openclassrooms.vitesseapp.ui.home.HomeViewModel
+import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -29,32 +30,40 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    val loadAllCandidatesUseCase = mockk<LoadAllCandidatesUseCase>()
-    val viewModel = HomeViewModel(loadAllCandidatesUseCase)
-    lateinit var testScope: TestScope
-    lateinit var allCandidates: List<Candidate>
-    lateinit var filteredCandidates: List<CandidateDisplay>
-    lateinit var filter: String
-    val uri = mockk<Uri>(relaxed = true)
+    private val testDispatcher = StandardTestDispatcher()
+    private val dispatcher = TestDispatcherProvider(testDispatcher)
+    private lateinit var bitmapDecoder: BitmapDecoder
+    private lateinit var loadAllCandidatesUseCase: LoadAllCandidatesUseCase
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var allCandidates: List<Candidate>
+    private lateinit var filteredCandidates: List<CandidateDisplay>
+    private lateinit var filter: String
 
     @BeforeEach
     fun setup() {
-        testScope = TestScope()
-        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
+        Dispatchers.setMain(testDispatcher)
 
-        mockkStatic(Uri::class)
-        every { Uri.parse(any()) } returns uri
+        bitmapDecoder = mockk<BitmapDecoder>()
+        loadAllCandidatesUseCase = mockk<LoadAllCandidatesUseCase>()
+        viewModel = HomeViewModel(
+            dispatcher,
+            loadAllCandidatesUseCase,
+            bitmapDecoder
+        )
 
         filter = "firstname1"
         val age = 50
         val birthdate = createBirthdateForAge(age)
+        val bytes = ByteArray(0)
+        val bitmap = mockk<Bitmap>(relaxed = true)
+        every { bitmapDecoder.decode(any()) } returns bitmap
 
         allCandidates = listOf(
             Candidate(
                 candidateId = 1,
                 firstname = filter,
                 lastname = "lastname1",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdate,
@@ -66,7 +75,7 @@ class HomeViewModelTest {
                 candidateId = 2,
                 firstname = "firstname2",
                 lastname = "lastname2",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = 1L,
@@ -81,7 +90,7 @@ class HomeViewModelTest {
                 candidateId = 1,
                 firstname = filter,
                 lastname = "lastname1",
-                photoUri = uri,
+                photoBitmap = bitmap,
                 phone = "123456",
                 email = "email",
                 birthdate = formatBirthdateToString(birthdate),
@@ -98,7 +107,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadAllCandidates_shouldUpdateUiState() = testScope.runTest {
+    fun loadAllCandidates_shouldUpdateUiState() = runTest {
 
         every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidates)
 
@@ -115,7 +124,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadAllCandidates_withNoCandidates_shouldUpdateUiState() = testScope.runTest {
+    fun loadAllCandidates_withNoCandidates_shouldUpdateUiState() = runTest {
 
         every { loadAllCandidatesUseCase.execute() } returns flowOf(emptyList())
 
@@ -129,7 +138,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadAllCandidates_withErrorWhileLoading_shouldUpdateUiState() = testScope.runTest {
+    fun loadAllCandidates_withErrorWhileLoading_shouldUpdateUiState() = runTest {
 
         every { loadAllCandidatesUseCase.execute() } returns flow { throw Exception("Fake Exception") }
 
@@ -143,9 +152,10 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadFilteredCandidates_shouldUpdateUiState() = testScope.runTest {
+    fun loadFilteredCandidates_shouldUpdateUiState() = runTest {
 
         preloadCandidates()
+        advanceUntilIdle()
 
         viewModel.loadFilteredCandidates(filter)
         advanceUntilIdle()
@@ -153,14 +163,17 @@ class HomeViewModelTest {
         val state = viewModel.homeStateFlow.value
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
         state as HomeViewModel.HomeUiState.CandidatesFound
+        val result = state.candidates
+        println(result)
         assertEquals(filteredCandidates, state.candidates)
         verify { loadAllCandidatesUseCase.execute() }
     }
 
     @Test
-    fun loadFilteredCandidates_withNoFilteredCandidates_ShouldUpdateUiState() = testScope.runTest {
+    fun loadFilteredCandidates_withNoFilteredCandidates_ShouldUpdateUiState() = runTest {
 
         preloadCandidates()
+        advanceUntilIdle()
 
         viewModel.loadFilteredCandidates("wrong filter")
         advanceUntilIdle()
@@ -171,9 +184,10 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadFilteredCandidates_withNoFilter_ShouldNotFilter() = testScope.runTest {
+    fun loadFilteredCandidates_withNoFilter_ShouldNotFilter() = runTest {
 
         preloadCandidates()
+        advanceUntilIdle()
 
         viewModel.loadFilteredCandidates(" ")
         advanceUntilIdle()

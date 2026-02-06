@@ -3,16 +3,19 @@ package com.openclassrooms.vitesseapp.ui.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
-import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
+import com.openclassrooms.vitesseapp.ui.DispatcherProvider
+import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.ui.model.toDomain
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddViewModel(
+    private val dispatcherProvider: DispatcherProvider,
     private val saveCandidateUseCase: SaveCandidateUseCase,
-    private val saveImageUseCase: SaveImageUseCase,
 ) : ViewModel() {
 
     private val _addUiState = MutableStateFlow<AddUiState>(AddUiState.LoadedState)
@@ -20,16 +23,10 @@ class AddViewModel(
 
     fun saveCandidate(candidateFormUI: CandidateFormUI) {
         viewModelScope.launch {
-            val photoPath: String? = candidateFormUI.photoUri?.let {
-                runCatching {
-                    saveImageUseCase.execute(candidateFormUI.photoUri)
-                }.onFailure {
-                    _addUiState.value = AddUiState.ErrorState
-                    return@launch
-                }.getOrNull()
-            }
             runCatching {
-                saveCandidateUseCase.execute(candidateFormUI.toDomain(photoPath))
+                withContext(dispatcherProvider.io) {
+                    saveCandidateUseCase.execute(candidateFormUI.toDomain())
+                }
             }.onFailure {
                 _addUiState.value = AddUiState.ErrorState
                 return@launch

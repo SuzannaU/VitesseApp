@@ -100,8 +100,10 @@ class DetailFragment : Fragment() {
                     ) R.drawable.baseline_star_24 else R.drawable.outline_star_24
                 )
 
-                candidateDisplay.photoUri?.let { uri ->
-                    ivProfilePhoto.load(uri) {
+                if (candidateDisplay.photoBitmap == null) {
+                    ivProfilePhoto.setImageResource(R.drawable.photo_library_72dp)
+                } else {
+                    ivProfilePhoto.load(candidateDisplay.photoBitmap) {
                         scale(Scale.FIT)
                         size(ViewSizeResolver(ivProfilePhoto))
                     }

@@ -1,10 +1,10 @@
 package com.openclassrooms.vitesseapp.ui
 
-import android.net.Uri
+import android.graphics.Bitmap
+import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
-import com.openclassrooms.vitesseapp.domain.usecase.SaveImageUseCase
 import com.openclassrooms.vitesseapp.ui.add.AddViewModel
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
 import io.mockk.coEvery
@@ -14,8 +14,6 @@ import io.mockk.slot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -29,26 +27,29 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddViewModelTest {
 
-    val saveCandidateUseCase = mockk<SaveCandidateUseCase>()
-    val saveImageUseCase = mockk<SaveImageUseCase>()
-    val viewModel = AddViewModel(saveCandidateUseCase, saveImageUseCase)
-    lateinit var testScope: TestScope
-    lateinit var candidateFormUi: CandidateFormUI
-    lateinit var expectedCandidate: Candidate
-    val uri = mockk<Uri>(relaxed = true)
+    private val testDispatcher = StandardTestDispatcher()
+    private val dispatcher = TestDispatcherProvider(testDispatcher)
+    private lateinit var saveCandidateUseCase: SaveCandidateUseCase
+    private lateinit var viewModel: AddViewModel
+    private lateinit var candidateFormUi: CandidateFormUI
+    private lateinit var expectedCandidate: Candidate
 
     @BeforeEach
     fun setup() {
-        testScope = TestScope()
-        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
+        Dispatchers.setMain(testDispatcher)
+
+        saveCandidateUseCase = mockk<SaveCandidateUseCase>()
+        viewModel = AddViewModel(dispatcher, saveCandidateUseCase)
 
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
+        val bytes = ByteArray(1)
+        val bitmap = mockk<Bitmap>(relaxed = true)
 
         candidateFormUi = CandidateFormUI(
             firstname = "firstname",
             lastname = "lastname",
-            photoUri = uri,
+            photoBitmap = bitmap,
             phone = "123456",
             email = "email",
             birthdate = birthdateMillis,
@@ -60,7 +61,7 @@ class AddViewModelTest {
             candidateId = 0,
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = ByteArray(0),
             phone = "123456",
             email = "email",
             birthdate = birthdateMillis,
@@ -77,10 +78,9 @@ class AddViewModelTest {
     }
 
     @Test
-    fun saveCandidateTest_shouldCallUseCasesAndUpdateState() = testScope.runTest {
+    fun saveCandidateTest_shouldCallUseCasesAndUpdateState() = runTest {
 
         val candidateCapture = slot<Candidate>()
-        coEvery { saveImageUseCase.execute(any()) } returns "path"
         coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
 
         viewModel.saveCandidate(candidateFormUi)
@@ -89,49 +89,12 @@ class AddViewModelTest {
         val state = viewModel.addUiState.value
         assertTrue(state is AddViewModel.AddUiState.LoadedState)
         assertEquals(expectedCandidate, candidateCapture.captured)
-        coVerify {
-            saveImageUseCase.execute(any())
-            saveCandidateUseCase.execute(any())
-        }
-    }
-
-    @Test
-    fun saveCandidateTest_withNullPhotoUri_shouldOnlyCallCandidateUseCase() = testScope.runTest {
-
-        val candidateCapture = slot<Candidate>()
-        val candUi = candidateFormUi.copy(photoUri = null)
-        val expCand = expectedCandidate.copy(photoPath = null)
-        coEvery { saveImageUseCase.execute(any()) } returns "path"
-        coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
-
-        viewModel.saveCandidate(candUi)
-        advanceUntilIdle()
-
-        val state = viewModel.addUiState.value
-        assertTrue(state is AddViewModel.AddUiState.LoadedState)
-        assertEquals(expCand, candidateCapture.captured)
-        coVerify(exactly = 0) { saveImageUseCase.execute(any()) }
         coVerify { saveCandidateUseCase.execute(any()) }
     }
 
     @Test
-    fun saveCandidateTest_withErrorWhileSavingImage_shouldUpdateUiState() = testScope.runTest {
+    fun saveCandidateTest_withErrorWhileSavingCandidate_shouldUpdateUiState() = runTest {
 
-        coEvery { saveImageUseCase.execute(any()) } throws Exception("Fake exception")
-
-        viewModel.saveCandidate(candidateFormUi)
-        advanceUntilIdle()
-
-        val state = viewModel.addUiState.value
-        assertTrue(state is AddViewModel.AddUiState.ErrorState)
-        coVerify { saveImageUseCase.execute(any()) }
-        coVerify(exactly = 0) { saveCandidateUseCase.execute(any()) }
-    }
-
-    @Test
-    fun saveCandidateTest_withErrorWhileSavingCandidate_shouldUpdateUiState() = testScope.runTest {
-
-        coEvery { saveImageUseCase.execute(any()) } returns "path"
         coEvery { saveCandidateUseCase.execute(any()) } throws Exception("Fake exception")
 
         viewModel.saveCandidate(candidateFormUi)
@@ -139,7 +102,6 @@ class AddViewModelTest {
 
         val state = viewModel.addUiState.value
         assertTrue(state is AddViewModel.AddUiState.ErrorState)
-        coVerify { saveImageUseCase.execute(any()) }
         coVerify { saveCandidateUseCase.execute(any()) }
     }
 }

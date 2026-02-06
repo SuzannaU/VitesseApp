@@ -1,12 +1,12 @@
 package com.openclassrooms.vitesseapp.ui.model
 
-import android.net.Uri
+import android.graphics.Bitmap
 
 data class CandidateDisplay(
     val candidateId: Long = 0,
     val firstname: String,
     val lastname: String,
-    val photoUri: Uri?,
+    val photoBitmap: Bitmap?,
     val phone: String,
     val email: String,
     val birthdate: String,

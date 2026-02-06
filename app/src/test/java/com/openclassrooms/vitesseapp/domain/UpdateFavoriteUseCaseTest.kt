@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 
 class UpdateFavoriteUseCaseTest {
 
-    val candidateRepository = mockk<CandidateRepository>()
-    val updateFavoriteUseCase = UpdateFavoriteUseCase(candidateRepository)
+    private val candidateRepository = mockk<CandidateRepository>()
+    private val updateFavoriteUseCase = UpdateFavoriteUseCase(candidateRepository)
 
     @Test
     fun execute_shouldSendDataToRepository() = runTest {

@@ -3,6 +3,7 @@ package com.openclassrooms.vitesseapp.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.ItemCandidateBinding
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 
@@ -56,7 +57,11 @@ class CandidateAdapter(
             }
 
             binding.apply {
-                ivThumbnail.setImageURI(candidate.photoUri)
+                if(candidate.photoBitmap == null) {
+                    ivThumbnail.setImageResource(R.drawable.photo_library_72dp)
+                } else {
+                    ivThumbnail.setImageBitmap(candidate.photoBitmap)
+                }
                 tvName.text = fullname
                 tvNotes.text = candidate.notes
                 root.setOnClickListener { listener.onItemCLick(candidate) }

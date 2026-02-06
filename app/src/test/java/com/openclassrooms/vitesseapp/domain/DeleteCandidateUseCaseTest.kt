@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 
 class DeleteCandidateUseCaseTest {
 
-    val candidateRepository = mockk<CandidateRepository>()
-    val deleteCandidateUseCase = DeleteCandidateUseCase(candidateRepository)
+    private val candidateRepository = mockk<CandidateRepository>()
+    private val deleteCandidateUseCase = DeleteCandidateUseCase(candidateRepository)
 
     @Test
     fun execute_shouldCallRepository() = runTest {

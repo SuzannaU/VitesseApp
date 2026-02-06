@@ -1,6 +1,6 @@
 package com.openclassrooms.vitesseapp.ui.edit
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +8,22 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import coil3.imageLoader
 import coil3.load
+import coil3.request.ImageRequest
 import coil3.size.Scale
 import coil3.size.ViewSizeResolver
+import coil3.toBitmap
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentEditBinding
-import com.openclassrooms.vitesseapp.ui.formatBirthdateToString
-import com.openclassrooms.vitesseapp.ui.formatSalaryToString
+import com.openclassrooms.vitesseapp.ui.helpers.formatBirthdateToString
+import com.openclassrooms.vitesseapp.ui.helpers.formatSalaryToString
 import com.openclassrooms.vitesseapp.ui.home.HomeFragment
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
-import com.openclassrooms.vitesseapp.ui.setupFormDatePicker
-import com.openclassrooms.vitesseapp.ui.setupFormEmailListener
-import com.openclassrooms.vitesseapp.ui.setupFormPhotoPicker
-import com.openclassrooms.vitesseapp.ui.validateFormField
+import com.openclassrooms.vitesseapp.ui.helpers.setupFormDatePicker
+import com.openclassrooms.vitesseapp.ui.helpers.setupFormEmailListener
+import com.openclassrooms.vitesseapp.ui.helpers.setupFormPhotoPicker
+import com.openclassrooms.vitesseapp.ui.helpers.validateFormField
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,7 +35,7 @@ class EditFragment : Fragment() {
     private val viewModel: EditViewModel by viewModel()
 
     private var birthdateMillis: Long = 0
-    private var photoUri: Uri? = null
+    private var photoBitmap: Bitmap? = null
     private var candidateId: Long = 0
     private var loadedCandidate: CandidateFormUI? = null
 
@@ -98,12 +101,13 @@ class EditFragment : Fragment() {
         loadedCandidate?.let { candidate ->
             binding.includeForm.apply {
 
-                candidate.photoUri?.let { uri ->
-                    ivProfilePhoto.load(uri) {
+                if (candidate.photoBitmap == null) {
+                    ivProfilePhoto.setImageResource(R.drawable.photo_library_72dp)
+                } else {
+                    ivProfilePhoto.load(candidate.photoBitmap) {
                         scale(Scale.FIT)
                         size(ViewSizeResolver(ivProfilePhoto))
                     }
-                    photoUri = uri
                 }
 
                 tietFirstname.setText(candidate.firstname)
@@ -140,7 +144,12 @@ class EditFragment : Fragment() {
         setupFormPhotoPicker(
             imageView = binding.includeForm.ivProfilePhoto,
         ) { uri ->
-            photoUri = uri
+            val request = ImageRequest.Builder(requireContext())
+                .data(uri)
+                .build()
+            lifecycleScope.launch {
+                photoBitmap = requireContext().imageLoader.execute(request).image?.toBitmap()
+            }
         }
     }
 
@@ -150,13 +159,15 @@ class EditFragment : Fragment() {
 
                 val salaryString = includeForm.tietSalary.text.toString()
                 val salaryInEur =
-                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim()).toLong() else null
+                    if (salaryString.isNotEmpty()) Integer.parseInt(salaryString.trim())
+                        .toLong() else null
 
                 val candidate = CandidateFormUI(
                     candidateId = loadedCandidate?.candidateId ?: 0L,
                     firstname = includeForm.tietFirstname.text.toString(),
                     lastname = includeForm.tietLastname.text.toString(),
-                    photoUri = photoUri,
+                    photoBitmap = photoBitmap,
+                    //photoUri = photoUri,
                     phone = includeForm.tietPhone.text.toString(),
                     email = includeForm.tietEmail.text.toString(),
                     birthdate = birthdateMillis,

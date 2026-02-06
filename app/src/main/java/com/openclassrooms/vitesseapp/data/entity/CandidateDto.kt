@@ -18,7 +18,7 @@ data class CandidateDto(
     var lastname: String,
 
     @ColumnInfo(name = "photo")
-    var photoPath: String?,
+    var photoByteArray: ByteArray?,
 
     @ColumnInfo(name = "phone")
     var phone: String,

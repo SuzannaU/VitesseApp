@@ -16,8 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -30,14 +29,13 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class CandidateRepositoryImplTest {
 
-    val candidateDao: CandidateDao = mockk()
-    val repository: CandidateRepository = CandidateRepositoryImpl(candidateDao = candidateDao)
-    lateinit var testScope: TestScope
+    private val testDispatcher = StandardTestDispatcher()
+    private val candidateDao: CandidateDao = mockk()
+    private val repository: CandidateRepository = CandidateRepositoryImpl(candidateDao = candidateDao)
 
     @BeforeEach
     fun setup() {
-        testScope = TestScope()
-        Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testScheduler))
+        Dispatchers.setMain(testDispatcher)
     }
 
     @AfterEach
@@ -46,14 +44,15 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun fetchCandidate_shouldCallDaoAndReturnCandidate() = testScope.runTest {
+    fun fetchCandidate_shouldCallDaoAndReturnCandidate() = runTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
+        val bytes = ByteArray(1)
         val candidateDto = CandidateDto(
             candidateId = 1,
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = bytes,
             phone = "123456",
             email = "email",
             birthdate = birthdateMillis,
@@ -64,7 +63,7 @@ class CandidateRepositoryImplTest {
             candidateId = 1,
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = bytes,
             phone = "123456",
             email = "email",
             birthdate = birthdateMillis,
@@ -82,7 +81,7 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun fetchCandidate_withNoCandidateFound_shouldCallDaoAndReturnNull() = testScope.runTest {
+    fun fetchCandidate_withNoCandidateFound_shouldCallDaoAndReturnNull() = runTest {
         val idCapture = slot<Long>()
         coEvery { candidateDao.getCandidateById(capture(idCapture)) } returns null
 
@@ -93,12 +92,13 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun saveCandidate_shouldSendCandidateToDao() = testScope.runTest {
+    fun saveCandidate_shouldSendCandidateToDao() = runTest {
 
+        val bytes = ByteArray(1)
         val candidate = Candidate(
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = bytes,
             phone = "123456",
             email = "email",
             birthdate = 1L,
@@ -109,7 +109,7 @@ class CandidateRepositoryImplTest {
         val expectedCandidateDto = CandidateDto(
             firstname = "firstname",
             lastname = "lastname",
-            photoPath = "path",
+            photoByteArray = bytes,
             phone = "123456",
             email = "email",
             birthdate = 1L,
@@ -126,7 +126,7 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun updateCandidateIsFavorite_shouldSendCandidateDataToDao() = testScope.runTest {
+    fun updateCandidateIsFavorite_shouldSendCandidateDataToDao() = runTest {
 
         val candidateId = 1L
         val isFavorite = true
@@ -142,7 +142,7 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun deleteCandidate_shouldSendCandidateIdToDao() = testScope.runTest {
+    fun deleteCandidate_shouldSendCandidateIdToDao() = runTest {
 
         val candidateId = 1L
         val idCapture = slot<Long>()
@@ -155,16 +155,17 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
-    fun fetchAllCandidates_shouldCallDaoAndReturnFlowOfCandidate() = testScope.runTest {
+    fun fetchAllCandidates_shouldCallDaoAndReturnFlowOfCandidate() = runTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
+        val bytes = ByteArray(1)
 
         val candidatesDto = listOf(
             CandidateDto(
                 candidateId = 1,
                 firstname = "firstname",
                 lastname = "lastname",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdateMillis,
@@ -175,7 +176,7 @@ class CandidateRepositoryImplTest {
                 candidateId = 2,
                 firstname = "firstname",
                 lastname = "lastname",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdateMillis,
@@ -189,7 +190,7 @@ class CandidateRepositoryImplTest {
                 candidateId = 1,
                 firstname = "firstname",
                 lastname = "lastname",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdateMillis,
@@ -201,7 +202,7 @@ class CandidateRepositoryImplTest {
                 candidateId = 2,
                 firstname = "firstname",
                 lastname = "lastname",
-                photoPath = "path",
+                photoByteArray = bytes,
                 phone = "123456",
                 email = "email",
                 birthdate = birthdateMillis,

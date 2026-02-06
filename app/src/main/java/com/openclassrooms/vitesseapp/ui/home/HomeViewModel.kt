@@ -3,6 +3,8 @@ package com.openclassrooms.vitesseapp.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
+import com.openclassrooms.vitesseapp.ui.DispatcherProvider
+import com.openclassrooms.vitesseapp.ui.model.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.ui.model.filterByName
 import com.openclassrooms.vitesseapp.ui.model.toCandidateDisplay
@@ -10,9 +12,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeViewModel(
+    private val dispatcherProvider: DispatcherProvider,
     private val loadAllCandidatesUseCase: LoadAllCandidatesUseCase,
+    private val bitmapDecoder: BitmapDecoder,
 ) : ViewModel() {
 
     private val _homeStateFlow = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
@@ -22,7 +27,9 @@ class HomeViewModel(
     fun loadAllCandidates() {
         viewModelScope.launch {
             _homeStateFlow.value = HomeUiState.LoadingState
-            loadAllCandidatesUseCase.execute()
+            withContext(dispatcherProvider.io) {
+                loadAllCandidatesUseCase.execute()
+            }
                 .catch {
                     _homeStateFlow.value = HomeUiState.ErrorState
                     return@catch
@@ -32,7 +39,7 @@ class HomeViewModel(
                         _homeStateFlow.value = HomeUiState.NoCandidateFound
                     } else {
                         allCandidates =
-                            loadedCandidates.map { candidate -> candidate.toCandidateDisplay(null) }
+                            loadedCandidates.map { candidate -> candidate.toCandidateDisplay(null, bitmapDecoder) }
                         _homeStateFlow.value = HomeUiState.CandidatesFound(allCandidates)
                     }
                 }

@@ -17,8 +17,8 @@ import kotlin.test.assertEquals
 
 class RateRepositoryImplTest {
 
-    val rateApiService  = mockk<RateApiService>()
-    val repository = RateRepositoryImpl(rateApiService = rateApiService)
+    private val rateApiService  = mockk<RateApiService>()
+    private val repository = RateRepositoryImpl(rateApiService = rateApiService)
 
     @Test
     fun fetchRatesForEur_shouldCallApiAndOnlyReturnGbpRate() = runTest {
