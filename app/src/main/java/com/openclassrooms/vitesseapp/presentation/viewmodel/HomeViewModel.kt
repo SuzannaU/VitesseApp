@@ -46,6 +46,14 @@ class HomeViewModel(
         }
     }
 
+    fun loadFavoritesTab() : List<CandidateDisplay> {
+        if(_homeStateFlow.value is HomeUiState.CandidatesFound) {
+            val currentCandidates = (_homeStateFlow.value as HomeUiState.CandidatesFound).candidates
+            return currentCandidates.filter { it.isFavorite }
+        }
+        return emptyList()
+    }
+
     fun loadFilteredCandidates(searchedText: String?) {
         viewModelScope.launch {
             if (searchedText.isNullOrBlank()) {

@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.presentation
 
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.TestDispatcherProvider

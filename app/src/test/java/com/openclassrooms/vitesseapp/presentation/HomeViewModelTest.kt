@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.presentation
 
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.TestDispatcherProvider
@@ -7,7 +7,6 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.presentation.mapper.formatBirthdateToString
 import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
-import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
 import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
 import io.mockk.every
 import io.mockk.mockk
@@ -82,6 +81,7 @@ class HomeViewModelTest {
                 age = 1,
                 notes = null,
                 salaryCentsInEur = null,
+                isFavorite = true,
             ),
         )
 
@@ -148,6 +148,31 @@ class HomeViewModelTest {
         val state = viewModel.homeStateFlow.value
         println(state.toString())
         assertTrue(state is HomeViewModel.HomeUiState.ErrorState)
+        verify { loadAllCandidatesUseCase.execute() }
+    }
+
+    @Test
+    fun loadFavoritesTab_ShouldReturnFavoriteCandidates() = runTest {
+
+        preloadCandidates()
+        advanceUntilIdle()
+
+        val result = viewModel.loadFavoritesTab()
+
+        assertTrue(result.size == 1)
+        verify { loadAllCandidatesUseCase.execute() }
+    }
+
+    @Test
+    fun loadFavoritesTab_fromWrongState_ShouldReturnEmptyList() = runTest {
+
+        every { loadAllCandidatesUseCase.execute() } returns flowOf(emptyList())
+        viewModel.loadAllCandidates()
+        advanceUntilIdle()
+
+        val result = viewModel.loadFavoritesTab()
+
+        assertTrue(result.isEmpty())
         verify { loadAllCandidatesUseCase.execute() }
     }
 

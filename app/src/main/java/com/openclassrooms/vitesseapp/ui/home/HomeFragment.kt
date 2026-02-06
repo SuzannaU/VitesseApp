@@ -98,11 +98,18 @@ class HomeFragment : Fragment() {
         val tabLayout = binding.tabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.position) {
-                    ALL_CANDIDATES_TAB -> adapter.updateCandidates(candidates)
-                    FAVORITES_TAB -> adapter.updateCandidates(
-                        candidates.filter { it.isFavorite }     // move to viewmodel
-                    )
+                if (viewModel.homeStateFlow.value is HomeViewModel.HomeUiState.CandidatesFound) {
+                    when (tab?.position) {
+
+                        ALL_CANDIDATES_TAB -> adapter.updateCandidates(
+                            (viewModel.homeStateFlow.value as HomeViewModel.HomeUiState.CandidatesFound)
+                                .candidates
+                        )
+
+                        FAVORITES_TAB -> adapter.updateCandidates(
+                            viewModel.loadFavoritesTab()
+                        )
+                    }
                 }
             }
 
