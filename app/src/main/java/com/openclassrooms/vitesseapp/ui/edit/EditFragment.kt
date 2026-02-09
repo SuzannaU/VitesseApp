@@ -2,6 +2,7 @@ package com.openclassrooms.vitesseapp.ui.edit
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -168,7 +169,6 @@ class EditFragment : Fragment() {
                     firstname = includeForm.tietFirstname.text.toString(),
                     lastname = includeForm.tietLastname.text.toString(),
                     photoBitmap = photoBitmap,
-                    //photoUri = photoUri,
                     phone = includeForm.tietPhone.text.toString(),
                     email = includeForm.tietEmail.text.toString(),
                     birthdate = birthdateMillis,
@@ -193,6 +193,13 @@ class EditFragment : Fragment() {
             isValid = validateFormField(!candidate.phone.isBlank(), tipPhone) && isValid
             isValid = validateFormField(!candidate.email.isBlank(), tipEmail) && isValid
             isValid = validateFormField(candidate.birthdate != 0L, tipBirthdate) && isValid
+
+            if(Patterns.EMAIL_ADDRESS.matcher(tietEmail.text.toString()).matches()) {
+                isValid = true && isValid
+            } else {
+                tipEmail.error = getString(R.string.invalid_format)
+                isValid = false
+            }
         }
         return isValid
     }

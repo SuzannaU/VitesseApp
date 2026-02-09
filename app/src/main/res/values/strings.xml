@@ -45,6 +45,7 @@
     <string name="deletion_message">Are you sure you want to delete this candidate? This action cannot be undone.</string>
     <string name="error_loading_candidate">Error loading candidate</string>
     <string name="no_candidate">No candidate found</string>
-    <string name="error">An error occured</string>
+    <string name="error">An error occurred</string>
     <string name="modify_candidate">Edit a candidate</string>
+    <string name="edit">Edit</string>
 </resources>

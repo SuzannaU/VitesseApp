@@ -14,7 +14,7 @@
         app:showAsAction="always"
         app:iconTint="?attr/colorOnSurfaceVariant"
         android:orderInCategory="2"
-        android:title="@string/modify" />
+        android:title="@string/edit" />
     <item
         android:id="@+id/trash_icon"
         android:icon="@drawable/outline_delete_24"

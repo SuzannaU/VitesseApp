@@ -2,6 +2,7 @@ package com.openclassrooms.vitesseapp.ui.add
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.toBitmap
+import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.presentation.viewmodel.AddViewModel
 import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
@@ -122,6 +124,13 @@ class AddFragment : Fragment() {
             isValid = validateFormField(!candidate.phone.isBlank(), tipPhone) && isValid
             isValid = validateFormField(!candidate.email.isBlank(), tipEmail) && isValid
             isValid = validateFormField(candidate.birthdate != 0L, tipBirthdate) && isValid
+
+            if(Patterns.EMAIL_ADDRESS.matcher(tietEmail.text.toString()).matches()) {
+                isValid = true && isValid
+            } else {
+                tipEmail.error = getString(R.string.invalid_format)
+                isValid = false
+            }
         }
         return isValid
     }
