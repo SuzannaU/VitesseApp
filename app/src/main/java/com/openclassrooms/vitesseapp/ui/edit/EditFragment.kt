@@ -110,6 +110,7 @@ class EditFragment : Fragment() {
                         scale(Scale.FIT)
                         size(ViewSizeResolver(ivProfilePhoto))
                     }
+                    photoBitmap = candidate.photoBitmap
                 }
 
                 tietFirstname.setText(candidate.firstname)
