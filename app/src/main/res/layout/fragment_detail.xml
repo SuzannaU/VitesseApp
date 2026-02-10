@@ -55,6 +55,7 @@
                     android:id="@+id/call_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/call"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:icon="@drawable/call_24dp_000000"/>
@@ -64,6 +65,7 @@
                     android:id="@+id/sms_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/sms"
                     app:layout_constraintTop_toTopOf="@id/call_button"
                     app:layout_constraintStart_toEndOf="@id/call_button"
                     android:layout_marginStart="26dp"
@@ -74,6 +76,7 @@
                     android:id="@+id/email_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/e_mail"
                     app:layout_constraintTop_toTopOf="@id/call_button"
                     app:layout_constraintStart_toEndOf="@id/sms_button"
                     android:layout_marginStart="26dp"
