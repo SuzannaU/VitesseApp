@@ -9,6 +9,9 @@ It was built as part of the Android Developer course from OpenClassrooms.
 - Search widget to easily find candidates
 - Currency conversion to display salary in GBP
 
+![home_screen](app/src/main/res/drawable/home_screen_screenshot.png)
+![detail_screen](app/src/main/res/drawable/detail_screen_screenshot.png)
+
 ## Tech stack
 - Android Studio
 - Gradle 9.1.0
