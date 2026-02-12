@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.edit
+package com.openclassrooms.vitesseapp.presentation.ui.edit
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -20,12 +20,12 @@ import com.openclassrooms.vitesseapp.databinding.FragmentEditBinding
 import com.openclassrooms.vitesseapp.presentation.viewmodel.EditViewModel
 import com.openclassrooms.vitesseapp.presentation.mapper.formatBirthdateToString
 import com.openclassrooms.vitesseapp.presentation.mapper.formatSalaryToString
-import com.openclassrooms.vitesseapp.ui.home.HomeFragment
-import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
-import com.openclassrooms.vitesseapp.ui.helpers.setupFormDatePicker
-import com.openclassrooms.vitesseapp.ui.helpers.setupFormEmailListener
-import com.openclassrooms.vitesseapp.ui.helpers.setupFormPhotoPicker
-import com.openclassrooms.vitesseapp.ui.helpers.validateFormField
+import com.openclassrooms.vitesseapp.presentation.ui.home.HomeFragment
+import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.setupFormDatePicker
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.setupFormEmailListener
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.setupFormPhotoPicker
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.validateFormField
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.helpers
+package com.openclassrooms.vitesseapp.presentation.ui.helpers
 
 import android.net.Uri
 import android.text.Editable

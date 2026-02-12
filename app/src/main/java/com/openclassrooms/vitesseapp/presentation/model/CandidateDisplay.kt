@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.model
+package com.openclassrooms.vitesseapp.presentation.model
 
 import android.graphics.Bitmap
 

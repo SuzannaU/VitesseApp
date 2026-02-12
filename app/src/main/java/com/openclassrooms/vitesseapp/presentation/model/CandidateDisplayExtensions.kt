@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.model
+package com.openclassrooms.vitesseapp.presentation.model
 
 fun List<CandidateDisplay>.filterByName(searchText: String): List<CandidateDisplay> {
     return filter {

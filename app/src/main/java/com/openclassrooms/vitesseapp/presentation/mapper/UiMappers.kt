@@ -4,8 +4,8 @@ import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.domain.calculateAge
 import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
-import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
 import java.io.ByteArrayOutputStream
 
 fun Candidate.toCandidateDisplay(

@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.add
+package com.openclassrooms.vitesseapp.presentation.ui.add
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -15,11 +15,11 @@ import coil3.toBitmap
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentAddBinding
 import com.openclassrooms.vitesseapp.presentation.viewmodel.AddViewModel
-import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
-import com.openclassrooms.vitesseapp.ui.helpers.setupFormDatePicker
-import com.openclassrooms.vitesseapp.ui.helpers.setupFormEmailListener
-import com.openclassrooms.vitesseapp.ui.helpers.setupFormPhotoPicker
-import com.openclassrooms.vitesseapp.ui.helpers.validateFormField
+import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.setupFormDatePicker
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.setupFormEmailListener
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.setupFormPhotoPicker
+import com.openclassrooms.vitesseapp.presentation.ui.helpers.validateFormField
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

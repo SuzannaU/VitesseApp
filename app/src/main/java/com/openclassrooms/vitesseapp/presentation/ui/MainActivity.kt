@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui
+package com.openclassrooms.vitesseapp.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

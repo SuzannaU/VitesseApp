@@ -8,7 +8,7 @@ import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.UpdateFavoriteUseCase
 import com.openclassrooms.vitesseapp.presentation.DispatcherProvider
 import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.presentation.mapper.toCandidateDisplay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,12 +24,12 @@ class DetailViewModel(
     private val bitmapDecoder: BitmapDecoder,
 ) : ViewModel() {
 
-    private val _detailStateFlow = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
-    val detailUiState = _detailStateFlow.asStateFlow()
+    private val _detailUiState = MutableStateFlow<DetailUiState>(DetailUiState.LoadingState)
+    val detailUiState = _detailUiState.asStateFlow()
 
     fun loadCandidate(candidateId: Long) {
         viewModelScope.launch {
-            _detailStateFlow.value = DetailUiState.LoadingState
+            _detailUiState.value = DetailUiState.LoadingState
             runCatching {
                 withContext(dispatcherProvider.io) {
                     val candidate = loadCandidateUseCase.execute(candidateId)
@@ -40,18 +40,18 @@ class DetailViewModel(
                 }
             }.onSuccess { candidateDisplay ->
                 if (candidateDisplay != null) {
-                    _detailStateFlow.value = DetailUiState.CandidateFound(candidateDisplay)
+                    _detailUiState.value = DetailUiState.CandidateFound(candidateDisplay)
                 } else {
-                    _detailStateFlow.value = DetailUiState.NoCandidateFound
+                    _detailUiState.value = DetailUiState.NoCandidateFound
                 }
             }.onFailure {
-                _detailStateFlow.value = DetailUiState.ErrorState
+                _detailUiState.value = DetailUiState.ErrorState
             }
         }
     }
 
     fun toggleFavoriteStatus() {
-        val currentState = _detailStateFlow.value
+        val currentState = _detailUiState.value
         if (currentState !is DetailUiState.CandidateFound) return
 
         val newFavoriteStatus = !currentState.candidateDisplay.isFavorite
@@ -66,15 +66,15 @@ class DetailViewModel(
                     updateFavoriteUseCase.execute(updatedDisplay.candidateId, newFavoriteStatus)
                 }
             }.onSuccess {
-                _detailStateFlow.value = DetailUiState.CandidateFound(updatedDisplay)
+                _detailUiState.value = DetailUiState.CandidateFound(updatedDisplay)
             }.onFailure {
-                _detailStateFlow.value = DetailUiState.ErrorState
+                _detailUiState.value = DetailUiState.ErrorState
             }
         }
     }
 
     fun deleteCandidate(candidateId: Long) {
-        val currentState = _detailStateFlow.value
+        val currentState = _detailUiState.value
         if (currentState !is DetailUiState.CandidateFound) return
 
         viewModelScope.launch {
@@ -83,9 +83,9 @@ class DetailViewModel(
                     deleteCandidateUseCase.execute(candidateId)
                 }
             }.onSuccess {
-                _detailStateFlow.value = DetailUiState.DeleteSuccess
+                _detailUiState.value = DetailUiState.DeleteSuccess
             }.onFailure {
-                _detailStateFlow.value = DetailUiState.ErrorState
+                _detailUiState.value = DetailUiState.ErrorState
             }
         }
     }

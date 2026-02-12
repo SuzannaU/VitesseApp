@@ -6,7 +6,7 @@ import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.presentation.DispatcherProvider
 import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
-import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.presentation.mapper.toCandidateFormUI
 import com.openclassrooms.vitesseapp.presentation.mapper.toDomain
 import kotlinx.coroutines.flow.MutableStateFlow

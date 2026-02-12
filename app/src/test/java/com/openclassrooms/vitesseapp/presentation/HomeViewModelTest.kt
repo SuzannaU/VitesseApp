@@ -7,7 +7,7 @@ import com.openclassrooms.vitesseapp.domain.model.Candidate
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.presentation.mapper.formatBirthdateToString
 import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -114,7 +114,7 @@ class HomeViewModelTest {
         viewModel.loadAllCandidates()
         advanceUntilIdle()
 
-        val state = viewModel.homeStateFlow.value
+        val state = viewModel.homeUiState.value
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
 
         val foundState = state as HomeViewModel.HomeUiState.CandidatesFound
@@ -131,7 +131,7 @@ class HomeViewModelTest {
         viewModel.loadAllCandidates()
         advanceUntilIdle()
 
-        val state = viewModel.homeStateFlow.value
+        val state = viewModel.homeUiState.value
         assertTrue(state is HomeViewModel.HomeUiState.NoCandidateFound)
 
         verify { loadAllCandidatesUseCase.execute() }
@@ -145,7 +145,7 @@ class HomeViewModelTest {
         viewModel.loadAllCandidates()
         advanceUntilIdle()
 
-        val state = viewModel.homeStateFlow.value
+        val state = viewModel.homeUiState.value
         println(state.toString())
         assertTrue(state is HomeViewModel.HomeUiState.ErrorState)
         verify { loadAllCandidatesUseCase.execute() }
@@ -185,7 +185,7 @@ class HomeViewModelTest {
         viewModel.loadFilteredCandidates(filter)
         advanceUntilIdle()
 
-        val state = viewModel.homeStateFlow.value
+        val state = viewModel.homeUiState.value
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
         state as HomeViewModel.HomeUiState.CandidatesFound
         val result = state.candidates
@@ -203,7 +203,7 @@ class HomeViewModelTest {
         viewModel.loadFilteredCandidates("wrong filter")
         advanceUntilIdle()
 
-        val state = viewModel.homeStateFlow.value
+        val state = viewModel.homeUiState.value
         assertTrue(state is HomeViewModel.HomeUiState.NoCandidateFound)
         verify { loadAllCandidatesUseCase.execute() }
     }
@@ -217,7 +217,7 @@ class HomeViewModelTest {
         viewModel.loadFilteredCandidates(" ")
         advanceUntilIdle()
 
-        val state = viewModel.homeStateFlow.value
+        val state = viewModel.homeUiState.value
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
         state as HomeViewModel.HomeUiState.CandidatesFound
         assertEquals(allCandidates.size, state.candidates.size)

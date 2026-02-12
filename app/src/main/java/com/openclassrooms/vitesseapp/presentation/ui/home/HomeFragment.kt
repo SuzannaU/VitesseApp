@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.home
+package com.openclassrooms.vitesseapp.presentation.ui.home
 
 import android.os.Bundle
 import android.text.Editable
@@ -14,9 +14,9 @@ import com.google.android.material.tabs.TabLayout
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentHomeBinding
 import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
-import com.openclassrooms.vitesseapp.ui.add.AddFragment
-import com.openclassrooms.vitesseapp.ui.detail.DetailFragment
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.ui.add.AddFragment
+import com.openclassrooms.vitesseapp.presentation.ui.detail.DetailFragment
+import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
 
     private fun observeUiState() {
         lifecycleScope.launch {
-            viewModel.homeStateFlow.collect { uiState ->
+            viewModel.homeUiState.collect { uiState ->
                 binding.apply {
                     barLoading.isVisible = uiState is HomeViewModel.HomeUiState.LoadingState
                     tvNoCandidates.isVisible = uiState is HomeViewModel.HomeUiState.NoCandidateFound
@@ -98,11 +98,11 @@ class HomeFragment : Fragment() {
         val tabLayout = binding.tabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (viewModel.homeStateFlow.value is HomeViewModel.HomeUiState.CandidatesFound) {
+                if (viewModel.homeUiState.value is HomeViewModel.HomeUiState.CandidatesFound) {
                     when (tab?.position) {
 
                         ALL_CANDIDATES_TAB -> adapter.updateCandidates(
-                            (viewModel.homeStateFlow.value as HomeViewModel.HomeUiState.CandidatesFound)
+                            (viewModel.homeUiState.value as HomeViewModel.HomeUiState.CandidatesFound)
                                 .candidates
                         )
 

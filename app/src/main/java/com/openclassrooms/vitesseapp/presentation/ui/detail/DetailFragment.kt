@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.detail
+package com.openclassrooms.vitesseapp.presentation.ui.detail
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,9 +18,9 @@ import coil3.size.ViewSizeResolver
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.FragmentDetailBinding
 import com.openclassrooms.vitesseapp.presentation.viewmodel.DetailViewModel
-import com.openclassrooms.vitesseapp.ui.edit.EditFragment
-import com.openclassrooms.vitesseapp.ui.home.HomeFragment
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.ui.edit.EditFragment
+import com.openclassrooms.vitesseapp.presentation.ui.home.HomeFragment
+import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

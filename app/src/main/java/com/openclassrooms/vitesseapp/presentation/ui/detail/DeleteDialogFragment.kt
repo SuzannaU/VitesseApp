@@ -1,4 +1,4 @@
-package com.openclassrooms.vitesseapp.ui.detail
+package com.openclassrooms.vitesseapp.presentation.ui.detail
 
 import android.app.AlertDialog
 import android.app.Dialog

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.presentation.DispatcherProvider
-import com.openclassrooms.vitesseapp.ui.model.CandidateFormUI
+import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
 import com.openclassrooms.vitesseapp.presentation.mapper.toDomain
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

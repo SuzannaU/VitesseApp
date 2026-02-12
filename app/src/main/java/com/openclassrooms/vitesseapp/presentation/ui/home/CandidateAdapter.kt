@@ -1,11 +1,11 @@
-package com.openclassrooms.vitesseapp.ui.home
+package com.openclassrooms.vitesseapp.presentation.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.vitesseapp.R
 import com.openclassrooms.vitesseapp.databinding.ItemCandidateBinding
-import com.openclassrooms.vitesseapp.ui.model.CandidateDisplay
+import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
 
 class CandidateAdapter(
     var candidates: List<CandidateDisplay>,
