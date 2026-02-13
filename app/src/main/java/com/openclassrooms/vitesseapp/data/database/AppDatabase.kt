@@ -3,10 +3,10 @@ package com.openclassrooms.vitesseapp.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
+import com.openclassrooms.vitesseapp.data.entity.CandidateEntity
 
 @Database(
-    entities = [CandidateDto::class],
+    entities = [CandidateEntity::class],
     version = 1,
     exportSchema = false,
 )

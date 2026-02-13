@@ -3,7 +3,7 @@ package com.openclassrooms.vitesseapp.presentation
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import com.openclassrooms.vitesseapp.presentation.mapper.formatBirthdateToString
 import com.openclassrooms.vitesseapp.presentation.viewmodel.HomeViewModel
@@ -34,7 +34,7 @@ class HomeViewModelTest {
     private lateinit var bitmapDecoder: BitmapDecoder
     private lateinit var loadAllCandidatesUseCase: LoadAllCandidatesUseCase
     private lateinit var viewModel: HomeViewModel
-    private lateinit var allCandidates: List<Candidate>
+    private lateinit var allCandidatesDto: List<CandidateDto>
     private lateinit var filteredCandidates: List<CandidateDisplay>
     private lateinit var filter: String
 
@@ -57,8 +57,8 @@ class HomeViewModelTest {
         val bitmap = mockk<Bitmap>(relaxed = true)
         every { bitmapDecoder.decode(any()) } returns bitmap
 
-        allCandidates = listOf(
-            Candidate(
+        allCandidatesDto = listOf(
+            CandidateDto(
                 candidateId = 1,
                 firstname = filter,
                 lastname = "lastname1",
@@ -70,7 +70,7 @@ class HomeViewModelTest {
                 age = age,
                 salaryCentsInEur = null,
             ),
-            Candidate(
+            CandidateDto(
                 candidateId = 2,
                 firstname = "firstname2",
                 lastname = "lastname2",
@@ -109,7 +109,7 @@ class HomeViewModelTest {
     @Test
     fun loadAllCandidates_shouldUpdateUiState() = runTest {
 
-        every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidates)
+        every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidatesDto)
 
         viewModel.loadAllCandidates()
         advanceUntilIdle()
@@ -118,7 +118,7 @@ class HomeViewModelTest {
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
 
         val foundState = state as HomeViewModel.HomeUiState.CandidatesFound
-        assertEquals(allCandidates.size, foundState.candidates.size)
+        assertEquals(allCandidatesDto.size, foundState.candidates.size)
 
         verify { loadAllCandidatesUseCase.execute() }
     }
@@ -220,12 +220,12 @@ class HomeViewModelTest {
         val state = viewModel.homeUiState.value
         assertTrue(state is HomeViewModel.HomeUiState.CandidatesFound)
         state as HomeViewModel.HomeUiState.CandidatesFound
-        assertEquals(allCandidates.size, state.candidates.size)
+        assertEquals(allCandidatesDto.size, state.candidates.size)
         verify { loadAllCandidatesUseCase.execute() }
     }
 
     private fun preloadCandidates() {
-        every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidates)
+        every { loadAllCandidatesUseCase.execute() } returns flowOf(allCandidatesDto)
         viewModel.loadAllCandidates()
     }
 }

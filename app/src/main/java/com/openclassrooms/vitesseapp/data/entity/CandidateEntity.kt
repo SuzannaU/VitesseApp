@@ -1,27 +1,51 @@
-package com.openclassrooms.vitesseapp.domain.model
+package com.openclassrooms.vitesseapp.data.entity
 
-data class Candidate(
-    val candidateId: Long = 0,
-    val firstname: String,
-    val lastname: String,
-    val photoByteArray: ByteArray?,
-    val phone: String,
-    val email: String,
-    val birthdate: Long,
-    val age: Int?,
-    val salaryCentsInEur: Long?,
-    val notes: String?,
-    val isFavorite: Boolean = false,
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "candidates")
+data class CandidateEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "candidateId")
+    var candidateId: Long = 0,
+
+    @ColumnInfo(name = "firstname")
+    var firstname: String,
+
+    @ColumnInfo(name = "lastname")
+    var lastname: String,
+
+    @ColumnInfo(name = "photo")
+    var photoByteArray: ByteArray?,
+
+    @ColumnInfo(name = "phone")
+    var phone: String,
+
+    @ColumnInfo(name = "email")
+    var email: String,
+
+    @ColumnInfo(name = "birthdate")
+    var birthdate: Long,
+
+    @ColumnInfo(name = "salary_in_cents_euro")
+    var salaryCentsInEur: Long?,
+
+    @ColumnInfo(name = "notes")
+    var notes: String?,
+
+    @ColumnInfo(name = "is_favorite")
+    var isFavorite: Boolean = false,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Candidate
+        other as CandidateEntity
 
         if (candidateId != other.candidateId) return false
         if (birthdate != other.birthdate) return false
-        if (age != other.age) return false
         if (salaryCentsInEur != other.salaryCentsInEur) return false
         if (isFavorite != other.isFavorite) return false
         if (firstname != other.firstname) return false
@@ -37,7 +61,6 @@ data class Candidate(
     override fun hashCode(): Int {
         var result = candidateId.hashCode()
         result = 31 * result + birthdate.hashCode()
-        result = 31 * result + (age ?: 0)
         result = 31 * result + (salaryCentsInEur?.hashCode() ?: 0)
         result = 31 * result + isFavorite.hashCode()
         result = 31 * result + firstname.hashCode()

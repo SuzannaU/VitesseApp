@@ -1,6 +1,6 @@
 package com.openclassrooms.vitesseapp.domain
 
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.LoadAllCandidatesUseCase
 import io.mockk.every
@@ -16,7 +16,7 @@ class LoadAllCandidatesUseCaseTest {
 
     private val candidateRepository: CandidateRepository = mockk()
     private val loadAllCandidatesUseCase = LoadAllCandidatesUseCase(candidateRepository)
-    private lateinit var candidates: List<Candidate>
+    private lateinit var candidateDtos: List<CandidateDto>
 
     @Test
     fun execute_shouldReturnFlowOfCandidates() = runTest {
@@ -24,8 +24,8 @@ class LoadAllCandidatesUseCaseTest {
         val birthdateMillis = createBirthdateForAge(expectedAge)
         val bytes = ByteArray(1)
 
-        candidates = listOf(
-            Candidate(
+        candidateDtos = listOf(
+            CandidateDto(
                 candidateId = 1,
                 firstname = "firstname",
                 lastname = "lastname",
@@ -37,7 +37,7 @@ class LoadAllCandidatesUseCaseTest {
                 age = expectedAge,
                 salaryCentsInEur = 1,
             ),
-            Candidate(
+            CandidateDto(
                 candidateId = 2,
                 firstname = "firstname",
                 lastname = "lastname",
@@ -51,11 +51,11 @@ class LoadAllCandidatesUseCaseTest {
             ),
         )
 
-        every { candidateRepository.fetchAllCandidates() } returns flowOf(candidates)
+        every { candidateRepository.fetchAllCandidates() } returns flowOf(candidateDtos)
 
         val result = loadAllCandidatesUseCase.execute().first()
 
-        assertEquals(candidates, result)
+        assertEquals(candidateDtos, result)
         verify { candidateRepository.fetchAllCandidates() }
     }
 }

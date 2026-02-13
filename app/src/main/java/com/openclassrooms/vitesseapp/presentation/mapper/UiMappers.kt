@@ -2,13 +2,13 @@ package com.openclassrooms.vitesseapp.presentation.mapper
 
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.domain.calculateAge
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.presentation.BitmapDecoder
 import com.openclassrooms.vitesseapp.presentation.model.CandidateDisplay
 import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
 import java.io.ByteArrayOutputStream
 
-fun Candidate.toCandidateDisplay(
+fun CandidateDto.toCandidateDisplay(
     salaryInCentsGbp: Long?,
     bitmapDecoder: BitmapDecoder
 ): CandidateDisplay {
@@ -30,7 +30,7 @@ fun Candidate.toCandidateDisplay(
     )
 }
 
-fun Candidate.toCandidateFormUI(
+fun CandidateDto.toCandidateFormUI(
     bitmapDecoder: BitmapDecoder
 ): CandidateFormUI {
     val bitmap = this.photoByteArray?.let { bitmapDecoder.decode(it) }
@@ -49,7 +49,7 @@ fun Candidate.toCandidateFormUI(
     )
 }
 
-fun CandidateFormUI.toDomain(): Candidate {
+fun CandidateFormUI.toDomain(): CandidateDto {
     val byteArray = this.photoBitmap?.let {
         val stream = ByteArrayOutputStream()
         it.compress(Bitmap.CompressFormat.JPEG, 90, stream)
@@ -57,7 +57,7 @@ fun CandidateFormUI.toDomain(): Candidate {
     }
     val age = calculateAge(this.birthdate)
 
-    return Candidate(
+    return CandidateDto(
         candidateId = this.candidateId,
         firstname = this.firstname,
         lastname = this.lastname,

@@ -3,7 +3,7 @@ package com.openclassrooms.vitesseapp.presentation
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.presentation.viewmodel.AddViewModel
 import com.openclassrooms.vitesseapp.presentation.model.CandidateFormUI
@@ -32,7 +32,7 @@ class AddViewModelTest {
     private lateinit var saveCandidateUseCase: SaveCandidateUseCase
     private lateinit var viewModel: AddViewModel
     private lateinit var candidateFormUi: CandidateFormUI
-    private lateinit var expectedCandidate: Candidate
+    private lateinit var expectedCandidateDto: CandidateDto
 
     @BeforeEach
     fun setup() {
@@ -57,7 +57,7 @@ class AddViewModelTest {
             notes = null,
         )
 
-        expectedCandidate = Candidate(
+        expectedCandidateDto = CandidateDto(
             candidateId = 0,
             firstname = "firstname",
             lastname = "lastname",
@@ -80,15 +80,15 @@ class AddViewModelTest {
     @Test
     fun saveCandidateTest_shouldCallUseCasesAndUpdateState() = runTest {
 
-        val candidateCapture = slot<Candidate>()
-        coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
+        val candidateDtoCapture = slot<CandidateDto>()
+        coEvery { saveCandidateUseCase.execute(capture(candidateDtoCapture)) } returns Unit
 
         viewModel.saveCandidate(candidateFormUi)
         advanceUntilIdle()
 
         val state = viewModel.addUiState.value
         assertTrue(state is AddViewModel.AddUiState.LoadedState)
-        assertEquals(expectedCandidate, candidateCapture.captured)
+        assertEquals(expectedCandidateDto, candidateDtoCapture.captured)
         coVerify { saveCandidateUseCase.execute(any()) }
     }
 

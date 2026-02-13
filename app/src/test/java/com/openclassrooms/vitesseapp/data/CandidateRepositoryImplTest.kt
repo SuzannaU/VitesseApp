@@ -1,10 +1,10 @@
 package com.openclassrooms.vitesseapp.data
 
 import com.openclassrooms.vitesseapp.data.dao.CandidateDao
-import com.openclassrooms.vitesseapp.data.entity.CandidateDto
+import com.openclassrooms.vitesseapp.data.entity.CandidateEntity
 import com.openclassrooms.vitesseapp.data.repository.CandidateRepositoryImpl
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -48,7 +48,7 @@ class CandidateRepositoryImplTest {
         val expectedAge = 30
         val birthdateMillis = createBirthdateForAge(expectedAge)
         val bytes = ByteArray(1)
-        val candidateDto = CandidateDto(
+        val candidateEntity = CandidateEntity(
             candidateId = 1,
             firstname = "firstname",
             lastname = "lastname",
@@ -59,7 +59,7 @@ class CandidateRepositoryImplTest {
             notes = null,
             salaryCentsInEur = 1,
         )
-        val candidate = Candidate(
+        val candidateDto = CandidateDto(
             candidateId = 1,
             firstname = "firstname",
             lastname = "lastname",
@@ -72,10 +72,10 @@ class CandidateRepositoryImplTest {
             salaryCentsInEur = 1,
         )
         val idCapture = slot<Long>()
-        coEvery { candidateDao.getCandidateById(capture(idCapture)) } returns candidateDto
+        coEvery { candidateDao.getCandidateById(capture(idCapture)) } returns candidateEntity
 
         val result = repository.fetchCandidate(1L)
-        assertEquals(candidate, result)
+        assertEquals(candidateDto, result)
         assertEquals(1L, idCapture.captured)
         coVerify { candidateDao.getCandidateById(any()) }
     }
@@ -95,7 +95,7 @@ class CandidateRepositoryImplTest {
     fun saveCandidate_shouldSendCandidateToDao() = runTest {
 
         val bytes = ByteArray(1)
-        val candidate = Candidate(
+        val candidateDto = CandidateDto(
             firstname = "firstname",
             lastname = "lastname",
             photoByteArray = bytes,
@@ -106,7 +106,7 @@ class CandidateRepositoryImplTest {
             salaryCentsInEur = 1,
             age = null,
         )
-        val expectedCandidateDto = CandidateDto(
+        val expectedCandidateEntity = CandidateEntity(
             firstname = "firstname",
             lastname = "lastname",
             photoByteArray = bytes,
@@ -116,12 +116,12 @@ class CandidateRepositoryImplTest {
             notes = null,
             salaryCentsInEur = 1,
         )
-        val candidateDtoCapture = slot<CandidateDto>()
-        coEvery { candidateDao.saveCandidate(capture(candidateDtoCapture)) } returns Unit
+        val candidateEntityCapture = slot<CandidateEntity>()
+        coEvery { candidateDao.saveCandidate(capture(candidateEntityCapture)) } returns Unit
 
-        repository.saveCandidate(candidate)
+        repository.saveCandidate(candidateDto)
 
-        assertEquals(expectedCandidateDto, candidateDtoCapture.captured)
+        assertEquals(expectedCandidateEntity, candidateEntityCapture.captured)
         coVerify { candidateDao.saveCandidate(any()) }
     }
 
@@ -161,7 +161,7 @@ class CandidateRepositoryImplTest {
         val bytes = ByteArray(1)
 
         val candidatesDto = listOf(
-            CandidateDto(
+            CandidateEntity(
                 candidateId = 1,
                 firstname = "firstname",
                 lastname = "lastname",
@@ -172,7 +172,7 @@ class CandidateRepositoryImplTest {
                 notes = null,
                 salaryCentsInEur = 1,
             ),
-            CandidateDto(
+            CandidateEntity(
                 candidateId = 2,
                 firstname = "firstname",
                 lastname = "lastname",
@@ -185,8 +185,8 @@ class CandidateRepositoryImplTest {
             ),
         )
 
-        val candidates = listOf(
-            Candidate(
+        val candidateDtos = listOf(
+            CandidateDto(
                 candidateId = 1,
                 firstname = "firstname",
                 lastname = "lastname",
@@ -198,7 +198,7 @@ class CandidateRepositoryImplTest {
                 age = expectedAge,
                 salaryCentsInEur = 1,
             ),
-            Candidate(
+            CandidateDto(
                 candidateId = 2,
                 firstname = "firstname",
                 lastname = "lastname",
@@ -216,7 +216,7 @@ class CandidateRepositoryImplTest {
 
         val result = repository.fetchAllCandidates().first()
 
-        assertEquals(candidates, result)
+        assertEquals(candidateDtos, result)
         verify { candidateDao.getAllCandidates() }
     }
 }

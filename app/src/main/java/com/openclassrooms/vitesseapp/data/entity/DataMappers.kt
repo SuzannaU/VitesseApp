@@ -1,10 +1,10 @@
 package com.openclassrooms.vitesseapp.data.entity
 
 import com.openclassrooms.vitesseapp.domain.calculateAge
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 
-fun Candidate.toDto() : CandidateDto {
-    return CandidateDto(
+fun CandidateDto.toEntity() : CandidateEntity {
+    return CandidateEntity(
         candidateId = this.candidateId,
         firstname = this.firstname,
         lastname = this.lastname,
@@ -18,9 +18,9 @@ fun Candidate.toDto() : CandidateDto {
     )
 }
 
-fun CandidateDto.toDomain() : Candidate {
+fun CandidateEntity.toDomain() : CandidateDto {
     val age = calculateAge(this.birthdate)
-    return Candidate(
+    return CandidateDto(
         this.candidateId,
         this.firstname,
         this.lastname,

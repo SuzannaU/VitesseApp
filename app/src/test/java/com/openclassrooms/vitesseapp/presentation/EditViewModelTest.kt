@@ -3,7 +3,7 @@ package com.openclassrooms.vitesseapp.presentation
 import android.graphics.Bitmap
 import com.openclassrooms.vitesseapp.TestDispatcherProvider
 import com.openclassrooms.vitesseapp.domain.createBirthdateForAge
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import com.openclassrooms.vitesseapp.presentation.viewmodel.EditViewModel
@@ -36,7 +36,7 @@ class EditViewModelTest {
     private lateinit var loadCandidateUseCase: LoadCandidateUseCase
     private lateinit var saveCandidateUseCase: SaveCandidateUseCase
     private lateinit var viewModel: EditViewModel
-    private lateinit var candidate: Candidate
+    private lateinit var candidateDto: CandidateDto
     private lateinit var candidateFormUi: CandidateFormUI
 
     @BeforeEach
@@ -61,7 +61,7 @@ class EditViewModelTest {
         val bitmap = mockk<Bitmap>(relaxed = true)
         every { bitmapDecoder.decode(any()) } returns bitmap
 
-        candidate = Candidate(
+        candidateDto = CandidateDto(
             candidateId = 1,
             firstname = "firstname",
             lastname = "lastname",
@@ -94,10 +94,10 @@ class EditViewModelTest {
 
     @Test
     fun loadCandidate_shouldCallUseCasesAndUpdateUiState() = runTest {
-        val expectedCandidateFormUI = candidate.toCandidateFormUI(bitmapDecoder)
-        coEvery { loadCandidateUseCase.execute(any()) } returns candidate
+        val expectedCandidateFormUI = candidateDto.toCandidateFormUI(bitmapDecoder)
+        coEvery { loadCandidateUseCase.execute(any()) } returns candidateDto
 
-        viewModel.loadCandidate(candidate.candidateId)
+        viewModel.loadCandidate(candidateDto.candidateId)
         advanceUntilIdle()
 
         val state = viewModel.editUiState.value
@@ -112,7 +112,7 @@ class EditViewModelTest {
     fun loadCandidate_withNoCandidate_shouldCallUseCasesAndUpdateUiState() = runTest {
         coEvery { loadCandidateUseCase.execute(any()) } returns null
 
-        viewModel.loadCandidate(candidate.candidateId)
+        viewModel.loadCandidate(candidateDto.candidateId)
         advanceUntilIdle()
 
         val state = viewModel.editUiState.value
@@ -124,7 +124,7 @@ class EditViewModelTest {
     fun loadCandidate_withFailureToLoad_shouldCallUseCasesAndUpdateUiState() = runTest {
         coEvery { loadCandidateUseCase.execute(any()) } throws Exception("Fake exception")
 
-        viewModel.loadCandidate(candidate.candidateId)
+        viewModel.loadCandidate(candidateDto.candidateId)
         advanceUntilIdle()
 
         val state = viewModel.editUiState.value
@@ -135,8 +135,8 @@ class EditViewModelTest {
     @Test
     fun saveCandidateTest_shouldCallUseCasesAndUpdateState() = runTest {
 
-        val candidateCapture = slot<Candidate>()
-        coEvery { saveCandidateUseCase.execute(capture(candidateCapture)) } returns Unit
+        val candidateDtoCapture = slot<CandidateDto>()
+        coEvery { saveCandidateUseCase.execute(capture(candidateDtoCapture)) } returns Unit
 
         viewModel.saveCandidate(candidateFormUi)
         advanceUntilIdle()
@@ -144,7 +144,7 @@ class EditViewModelTest {
         val state = viewModel.editUiState.value
         println("state is $state")
         assertTrue(state is EditViewModel.EditUiState.SaveSuccess)
-        assertEquals(candidate, candidateCapture.captured)
+        assertEquals(candidateDto, candidateDtoCapture.captured)
         coVerify { saveCandidateUseCase.execute(any()) }
     }
 

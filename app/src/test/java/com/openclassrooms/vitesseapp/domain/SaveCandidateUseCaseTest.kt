@@ -1,6 +1,6 @@
 package com.openclassrooms.vitesseapp.domain
 
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.SaveCandidateUseCase
 import io.mockk.coEvery
@@ -19,7 +19,7 @@ class SaveCandidateUseCaseTest {
     @Test
     fun execute_shouldSendCandidateToRepository() = runTest {
 
-        val candidate = Candidate(
+        val candidateDto = CandidateDto(
             firstname = "firstname",
             lastname = "lastname",
             photoByteArray = ByteArray(1),
@@ -31,12 +31,12 @@ class SaveCandidateUseCaseTest {
             age = null,
         )
 
-        val candidateCapture = slot<Candidate>()
-        coEvery { candidateRepository.saveCandidate(capture(candidateCapture)) } returns Unit
+        val candidateDtoCapture = slot<CandidateDto>()
+        coEvery { candidateRepository.saveCandidate(capture(candidateDtoCapture)) } returns Unit
 
-        saveCandidateUseCase.execute(candidate)
+        saveCandidateUseCase.execute(candidateDto)
 
-        assertEquals(candidate, candidateCapture.captured)
+        assertEquals(candidateDto, candidateDtoCapture.captured)
         coVerify { candidateRepository.saveCandidate(any()) }
     }
 }

@@ -1,6 +1,6 @@
 package com.openclassrooms.vitesseapp.domain
 
-import com.openclassrooms.vitesseapp.domain.model.Candidate
+import com.openclassrooms.vitesseapp.domain.model.CandidateDto
 import com.openclassrooms.vitesseapp.domain.repository.CandidateRepository
 import com.openclassrooms.vitesseapp.domain.usecase.LoadCandidateUseCase
 import io.mockk.coEvery
@@ -15,7 +15,7 @@ class LoadCandidateUseCaseTest {
 
     private val candidateRepository = mockk<CandidateRepository>()
     private val loadCandidateUseCase = LoadCandidateUseCase(candidateRepository)
-    private lateinit var candidate: Candidate
+    private lateinit var candidateDto: CandidateDto
 
     @Test
     fun execute_shouldCallRepositoryAndReturnCandidate() = runTest {
@@ -24,7 +24,7 @@ class LoadCandidateUseCaseTest {
         val birthdateMillis = createBirthdateForAge(expectedAge)
         val bytes = ByteArray(1)
 
-        candidate = Candidate(
+        candidateDto = CandidateDto(
             candidateId = candidateId,
             firstname = "firstname",
             lastname = "lastname",
@@ -37,12 +37,12 @@ class LoadCandidateUseCaseTest {
             salaryCentsInEur = 1,
         )
         val idCapture = slot<Long>()
-        coEvery { candidateRepository.fetchCandidate(capture(idCapture)) } returns candidate
+        coEvery { candidateRepository.fetchCandidate(capture(idCapture)) } returns candidateDto
 
         val result = loadCandidateUseCase.execute(candidateId)
         
         assertEquals(candidateId, idCapture.captured)
-        assertEquals(candidate, result)
+        assertEquals(candidateDto, result)
         coVerify { candidateRepository.fetchCandidate(any()) }
     }
 }
